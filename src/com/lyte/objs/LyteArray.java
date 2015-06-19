@@ -4,10 +4,10 @@ import com.lyte.core.LyteScope;
 
 import java.util.ArrayList;
 
-public class LyteArray implements LyteValue {
+public class LyteArray extends LyteObject {
   private ArrayList<LyteValue> mList;
 
-  private LyteArray(ArrayList<LyteValue> list) {
+  public LyteArray(ArrayList<LyteValue> list) {
     mList = list;
   }
 
@@ -20,11 +20,27 @@ public class LyteArray implements LyteValue {
     return "list";
   }
 
-  public LyteValue get(int index) {
-    return mList.get(index);
+  @Override
+  public LyteValue get(String index) {
+    return get(Integer.parseInt(index));
   }
 
-  public void set(int index, LyteValue value) {
+  public LyteValue get(int index) {
+    try {
+      return mList.get(index);
+    } catch (ArrayIndexOutOfBoundsException e) {
+      // TODO Change to undefined
+      return null;
+    }
+  }
+
+  @Override
+  public LyteValue set(String key, LyteValue value) {
+    return set(Integer.parseInt(key), value);
+  }
+
+  public LyteValue set(int index, LyteValue value) {
+    LyteValue oldValue = get(index);
     // Expand the list up to the given index
     for (int i = mList.size(); i <= index; i++) {
       // TODO Change to Undefined
@@ -32,27 +48,20 @@ public class LyteArray implements LyteValue {
     }
     // Then finally perform the set
     mList.set(index, value);
+    return oldValue;
   }
 
   public void add(LyteValue value) {
     mList.add(value);
   }
 
-  public LyteArray map(LyteBlock block) {
-    ArrayList<LyteValue> newList = new ArrayList<LyteValue>();
-
-    for (LyteValue obj : mList) {
-      // Invoke the function with the obj as an argument
-      block.invoke(obj);
-      // And add the result to the list
-      newList.add(block.getScope().pop());
-    }
-
-    return new LyteArray(newList);
-  }
-
   @Override
   public LyteValue clone(LyteScope scope) {
     return null;
+  }
+
+  @Override
+  public String toString() {
+    return mList.toString();
   }
 }

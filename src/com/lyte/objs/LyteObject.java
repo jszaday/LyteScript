@@ -69,4 +69,9 @@ public class LyteObject implements LyteValue {
   public String typeOf() {
     return "object";
   }
+
+  @Override
+  public String toString() {
+    return mProperties.toString();
+  }
 }

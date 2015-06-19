@@ -1,13 +1,13 @@
 package com.lyte;
 
-import com.lyte.core.LyteBindStatement;
-import com.lyte.core.LyteInvokeStatement;
-import com.lyte.core.LytePushStatement;
-import com.lyte.core.LyteStatement;
+import com.lyte.core.*;
 import com.lyte.gen.LyteBaseVisitor;
 import com.lyte.gen.LyteLexer;
 import com.lyte.gen.LyteParser;
 import com.lyte.objs.*;
+import com.lyte.stdlib.LyteIf;
+import com.lyte.stdlib.LyteInstantiate;
+import com.lyte.stdlib.LyteNativeBlock;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -45,7 +45,9 @@ public class Main extends LyteBaseVisitor<Object> {
     }
 
     try {
-      (new Main(args[0])).printIntermediateResults();
+      Main main = new Main(args[0]);
+      main.printIntermediateResults();
+      main.run();
     } catch (IOException e) {
       System.err.println("Error, could not open file " + args[0]);
     }
@@ -55,6 +57,14 @@ public class Main extends LyteBaseVisitor<Object> {
     for (LyteStatement statement : mGlobal.getStatements()) {
       System.out.println(statement);
     }
+  }
+
+  public void run(LyteValue... args) {
+    LyteScope global = LyteScope.newGlobal();
+    global.injectNative(LyteInstantiate.class);
+    global.injectNative(LyteIf.class);
+    LyteBlock main = (LyteBlock) mGlobal.clone(global);
+    main.invoke(args);
   }
 
   @Override
@@ -173,8 +183,10 @@ public class Main extends LyteBaseVisitor<Object> {
     // If there is only one child
     String primaryIdentifier = ctx.Identifier().getText();
     if (ctx.getChildCount() == 1) {
+      // Simply return a simple invokable
       return new LyteInvokeStatement(primaryIdentifier);
     } else {
+      // Otherwise, construct the list of designators
       List<LyteInvokeStatement.LyteSpecifier> designators = new ArrayList<LyteInvokeStatement.LyteSpecifier>();
       LyteInvokeStatement.LyteSpecifier designator;
 

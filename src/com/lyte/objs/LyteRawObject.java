@@ -21,7 +21,7 @@ public class LyteRawObject implements LyteValue  {
   public LyteValue clone(LyteScope scope) {
     HashMap<String, LyteValue> properties = new HashMap<String, LyteValue>();
     for (String key : mProperties.keySet()) {
-      // TODO Implement Checking To See If Only Value Is Pushed
+      // TODO Implement Checking To See If Only One Value Is Pushed
       mProperties.get(key).applyTo(scope);
       properties.put(key, scope.pop());
     }

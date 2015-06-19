@@ -1,16 +1,18 @@
 package com.lyte.core;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.lyte.objs.LyteValue;
+import com.lyte.stdlib.LyteNativeBlock;
 
 public class LyteScope {
-  public HashMap<String, LyteValue> mVariables;
-  public ArrayDeque<LyteValue> mStack;
-  public LyteScope mParent;
+  private HashMap<String, LyteValue> mVariables;
+  private ArrayDeque<LyteValue> mStack;
+  private LyteScope mParent;
 
-  public LyteScope(LyteScope parent, boolean useParentStack) {
+  private LyteScope(LyteScope parent, boolean useParentStack) {
     mParent = parent;
     mVariables = new HashMap<String, LyteValue>();
 
@@ -21,8 +23,8 @@ public class LyteScope {
     }
   }
 
-  public LyteScope(LyteScope parent) {
-    this(parent, false);
+  private LyteScope(LyteScope parent) {
+    this(parent, true);
   }
 
   public LyteValue getVariable(String name) {
@@ -46,7 +48,7 @@ public class LyteScope {
   }
 
   public void putVariable(String name, LyteValue value) {
-    if (mParent.hasVariable(name)) {
+    if (mParent != null && mParent.hasVariable(name)) {
       mParent.putVariable(name, value);
     } else {
       mVariables.put(name, value);
@@ -62,15 +64,53 @@ public class LyteScope {
     }
   }
 
+  public LyteValue peek() {
+    return mStack.peek();
+  }
+
   public void push(LyteValue obj) {
-    mStack.push(obj);
+    if (obj != null) {
+      mStack.push(obj);
+    }
+  }
+
+  public void injectNative(Class nativeClass) {
+    try {
+      LyteNativeBlock nativeBlock = (LyteNativeBlock) nativeClass.getDeclaredConstructor(LyteScope.class).newInstance(this);
+      putVariable(nativeBlock.getSymbol(), nativeBlock);
+    } catch (Exception e) {
+      System.err.println("Could not inject native of type " + nativeClass.getName());
+      e.printStackTrace();
+    }
   }
 
   private ArrayDeque<LyteValue> getStack() {
     return mStack;
   }
 
-  public static LyteScope generateRootScope() {
-    return new LyteScope(null);
+  public LyteScope enter() {
+    return new LyteScope(this);
+  }
+
+  public LyteScope leave() {
+    return mParent;
+  }
+
+  public static LyteScope newGlobal() {
+    return new LyteScope(null, false);
+  }
+
+  private static void printStackTrace(LyteScope scope) {
+    System.out.println(scope.toString());
+
+    if(scope.mParent != null) {
+      printStackTrace(scope.mParent);
+    }
+  }
+
+  public void printStackTrace() {
+    System.out.println(toString() + " called by:");
+    printStackTrace(mParent);
+    System.out.println("Stack is currently: " + mStack);
   }
 }

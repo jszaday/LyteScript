@@ -12,7 +12,7 @@ Person <- %{
         })
     },
     dance: @(danceName) {
-        if (danceName Undefined?, {
+        If (danceName Undefined?, {
             `Echo` "I'm doing my own thing!"
         }, {
             Echo("I'm doing the " `++` danceName)
@@ -21,7 +21,7 @@ Person <- %{
 }
 
 %{"astronaut helmet", "fedora", "feathered hat", "baseball hat"} -> billsHats
-`new` Person("Bill", billsHats) -> bill
+Instantiate(Person, "Bill", billsHats) -> bill
 
 bill.introduce()
 bill.printHats()

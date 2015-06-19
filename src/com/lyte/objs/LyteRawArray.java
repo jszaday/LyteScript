@@ -10,28 +10,35 @@ import java.util.ArrayList;
  */
 public class LyteRawArray implements LyteValue {
 
-    private ArrayList<LyteStatement> mStatements;
+  private ArrayList<LyteStatement> mStatements;
 
-    public LyteRawArray() {
-        mStatements = new ArrayList<LyteStatement>();
+  public LyteRawArray() {
+    mStatements = new ArrayList<LyteStatement>();
+  }
+
+  public boolean add(LyteStatement statement) {
+    return mStatements.add(statement);
+  }
+
+  @Override
+  public String typeOf() {
+    return "rawArray";
+  }
+
+  @Override
+  public String toString() {
+    return mStatements.toString();
+  }
+
+  @Override
+  public LyteValue clone(LyteScope scope) {
+    ArrayList<LyteValue> values = new ArrayList<LyteValue>();
+
+    for (LyteStatement statement : mStatements) {
+      statement.applyTo(scope);
+      values.add(scope.pop());
     }
 
-    public boolean add(LyteStatement statement) {
-        return mStatements.add(statement);
-    }
-
-    @Override
-    public String typeOf() {
-        return "rawArray";
-    }
-
-    @Override
-    public String toString() {
-        return mStatements.toString();
-    }
-
-    @Override
-    public LyteValue clone(LyteScope scope) {
-        return null;
-    }
+    return new LyteArray(values);
+  }
 }

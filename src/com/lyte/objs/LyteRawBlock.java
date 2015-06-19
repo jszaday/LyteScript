@@ -51,7 +51,7 @@ public class LyteRawBlock implements LyteValue {
 
   @Override
   public LyteValue clone(LyteScope scope) {
-    return new LyteBlock(scope, mStatements.toArray(new LyteStatement[mStatements.size()]), mArgs.toArray(new String[mArgs.size()]));
+    return new LyteBlock(scope, mStatements, mArgs);
   }
 
   @Override
