@@ -1,0 +1,29 @@
+Person <- %{
+    __constructor: @(name, hats) {
+        name -> @name
+        hats -> @hats
+    },
+    numHats: { @hats.length },
+    introduce: { Echo("I'm " `++` @name `++` " and I have " `++` @numHats `++` " hats.") },
+    printHats: {
+        `Echo` "My hat collection includes:"
+        For(0, @numHats, @(i) {
+            `Echo` @hats[i]
+        })
+    },
+    dance: @(danceName) {
+        if (danceName Undefined?, {
+            `Echo` "I'm doing my own thing!"
+        }, {
+            Echo("I'm doing the " `++` danceName)
+        })
+    }
+}
+
+%{"astronaut helmet", "fedora", "feathered hat", "baseball hat"} -> billsHats
+`new` Person("Bill", billsHats) -> bill
+
+bill.introduce()
+bill.printHats()
+bill.dance("tango")
+0b1010 0x1FF0 01067 144 -144.76 1e-6 - -567
