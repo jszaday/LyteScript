@@ -1,29 +1,17 @@
-Person <- %{
-    __constructor: @(name, hats) {
-        name -> @name
-        hats -> @hats
-    },
-    numHats: { @hats.length },
-    introduce: { Echo("I'm " `++` @name `++` " and I have " `++` @numHats `++` " hats.") },
-    printHats: {
-        `Echo` "My hat collection includes:"
-        For(0, @numHats, @(i) {
-            `Echo` @hats[i]
-        })
-    },
-    dance: @(danceName) {
-        If (danceName Undefined?, {
-            `Echo` "I'm doing my own thing!"
-        }, {
-            Echo("I'm doing the " `++` danceName)
-        })
-    }
+Echo("Hello, World!")
+2 `+` 2 Echo
+
+%{1, 2, 3} -> A
+5 -> A[5]
+Echo(A)
+
+B <- @(C) {
+  `Echo` C
 }
 
-%{"astronaut helmet", "fedora", "feathered hat", "baseball hat"} -> billsHats
-Instantiate(Person, "Bill", billsHats) -> bill
+bob <- %{
+  name: "Bob",
+  favoriteHat: "Squirrel Hat"
+}
 
-bill.introduce()
-bill.printHats()
-bill.dance("tango")
-0b1010 0x1FF0 01067 144 -144.76 1e-6 - -567
+B(bob.name)

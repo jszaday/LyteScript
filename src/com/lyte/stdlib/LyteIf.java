@@ -1,6 +1,7 @@
 package com.lyte.stdlib;
 
 import com.lyte.core.LyteScope;
+import com.lyte.core.LyteStack;
 import com.lyte.objs.LyteBlock;
 import com.lyte.objs.LyteValue;
 
@@ -19,17 +20,21 @@ public class LyteIf extends LyteNativeBlock {
   }
 
   @Override
-  public void invoke() {
-    LyteValue condition = mScope.pop();
-    LyteBlock trueBlock = (LyteBlock) mScope.pop();
-    LyteBlock falseBlock = (LyteBlock) mScope.pop();
+  public void invoke(LyteStack stack) {
+    LyteValue condition = stack.pop();
+    LyteBlock trueBlock = (LyteBlock) stack.pop();
+    LyteBlock falseBlock = (LyteBlock) stack.pop();
 
     if (condition.typeOf().equals("block")) {
-      ((LyteBlock) condition).invoke();
+      ((LyteBlock) condition).invoke(stack);
       System.out.println(condition);
-      condition = mScope.pop();
+      condition = stack.pop();
     }
 
-    // Coercion Would Occur Here!
+    if (condition.isTruthy()) {
+      trueBlock.invoke(stack);
+    } else {
+      falseBlock.invoke(stack);
+    }
   }
 }

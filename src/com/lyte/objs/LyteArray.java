@@ -28,23 +28,21 @@ public class LyteArray extends LyteObject {
   public LyteValue get(int index) {
     try {
       return mList.get(index);
-    } catch (ArrayIndexOutOfBoundsException e) {
-      // TODO Change to undefined
-      return null;
+    } catch (IndexOutOfBoundsException e) {
+      return LyteUndefined.UNDEFINED;
     }
   }
 
   @Override
   public LyteValue set(String key, LyteValue value) {
-    return set(Integer.parseInt(key), value);
+    return set((int) Double.parseDouble(key), value);
   }
 
   public LyteValue set(int index, LyteValue value) {
     LyteValue oldValue = get(index);
     // Expand the list up to the given index
     for (int i = mList.size(); i <= index; i++) {
-      // TODO Change to Undefined
-      mList.add(null);
+      mList.add(LyteUndefined.UNDEFINED);
     }
     // Then finally perform the set
     mList.set(index, value);
@@ -53,6 +51,11 @@ public class LyteArray extends LyteObject {
 
   public void add(LyteValue value) {
     mList.add(value);
+  }
+
+  @Override
+  public boolean isTruthy() {
+    return !mList.isEmpty();
   }
 
   @Override

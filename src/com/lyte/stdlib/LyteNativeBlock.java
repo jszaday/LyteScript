@@ -1,6 +1,7 @@
 package com.lyte.stdlib;
 
 import com.lyte.core.LyteScope;
+import com.lyte.core.LyteStack;
 import com.lyte.objs.LyteBlock;
 import com.lyte.objs.LyteValue;
 
@@ -16,7 +17,7 @@ public abstract class LyteNativeBlock extends LyteBlock {
   public abstract String getSymbol();
 
   @Override
-  public abstract void invoke();
+  public abstract void invoke(LyteStack stack);
 
   @Override
   public LyteValue clone(LyteScope scope) {

@@ -5,9 +5,7 @@ import com.lyte.gen.LyteBaseVisitor;
 import com.lyte.gen.LyteLexer;
 import com.lyte.gen.LyteParser;
 import com.lyte.objs.*;
-import com.lyte.stdlib.LyteIf;
-import com.lyte.stdlib.LyteInstantiate;
-import com.lyte.stdlib.LyteNativeBlock;
+import com.lyte.stdlib.*;
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -46,7 +44,7 @@ public class Main extends LyteBaseVisitor<Object> {
 
     try {
       Main main = new Main(args[0]);
-      main.printIntermediateResults();
+//      main.printIntermediateResults();
       main.run();
     } catch (IOException e) {
       System.err.println("Error, could not open file " + args[0]);
@@ -61,10 +59,10 @@ public class Main extends LyteBaseVisitor<Object> {
 
   public void run(LyteValue... args) {
     LyteScope global = LyteScope.newGlobal();
-    global.injectNative(LyteInstantiate.class);
-    global.injectNative(LyteIf.class);
+    LyteStack stack = new LyteStack();
+    global.injectNative(LyteInstantiate.class, LyteIf.class, LyteAdd.class, LyteEcho.class);
     LyteBlock main = (LyteBlock) mGlobal.clone(global);
-    main.invoke(args);
+    main.invoke(stack, args);
   }
 
   @Override

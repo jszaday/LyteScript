@@ -9,18 +9,11 @@ import com.lyte.stdlib.LyteNativeBlock;
 
 public class LyteScope {
   private HashMap<String, LyteValue> mVariables;
-  private ArrayDeque<LyteValue> mStack;
   private LyteScope mParent;
 
   private LyteScope(LyteScope parent, boolean useParentStack) {
     mParent = parent;
     mVariables = new HashMap<String, LyteValue>();
-
-    if (useParentStack) {
-      mStack = parent.getStack();
-    } else {
-      mStack = new ArrayDeque<LyteValue>();
-    }
   }
 
   private LyteScope(LyteScope parent) {
@@ -55,37 +48,17 @@ public class LyteScope {
     }
   }
 
-  public LyteValue pop() {
-    if (mStack.isEmpty()) {
-      // TODO Change to Undefined
-      return null;
-    } else {
-      return mStack.pop();
-    }
-  }
-
-  public LyteValue peek() {
-    return mStack.peek();
-  }
-
-  public void push(LyteValue obj) {
-    if (obj != null) {
-      mStack.push(obj);
-    }
-  }
-
-  public void injectNative(Class nativeClass) {
+  public void injectNative(Class... nativeClasses) {
+    Class nativeClass = null;
     try {
-      LyteNativeBlock nativeBlock = (LyteNativeBlock) nativeClass.getDeclaredConstructor(LyteScope.class).newInstance(this);
-      putVariable(nativeBlock.getSymbol(), nativeBlock);
+      for (int i = 0; i < nativeClasses.length; i++) {
+        nativeClass = nativeClasses[i];
+        LyteNativeBlock nativeBlock = (LyteNativeBlock) nativeClass.getDeclaredConstructor(LyteScope.class).newInstance(this);
+        putVariable(nativeBlock.getSymbol(), nativeBlock);
+      }
     } catch (Exception e) {
       System.err.println("Could not inject native of type " + nativeClass.getName());
-      e.printStackTrace();
     }
-  }
-
-  private ArrayDeque<LyteValue> getStack() {
-    return mStack;
   }
 
   public LyteScope enter() {
@@ -111,6 +84,5 @@ public class LyteScope {
   public void printStackTrace() {
     System.out.println(toString() + " called by:");
     printStackTrace(mParent);
-    System.out.println("Stack is currently: " + mStack);
   }
 }

@@ -1,9 +1,6 @@
 package com.lyte.core;
 
-import com.lyte.objs.LyteBlock;
-import com.lyte.objs.LyteObject;
-import com.lyte.objs.LyteRawBlock;
-import com.lyte.objs.LyteValue;
+import com.lyte.objs.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +23,16 @@ public class LyteInvokeStatement implements LyteStatement {
   }
 
   @Override
-  public void applyTo(LyteScope scope) {
+  public void applyTo(LyteScope scope, LyteStack stack) {
     if (isSimpleInvokation()) {
-      scope.push(scope.getVariable(mPrimaryIdentifier));
+      LyteValue value = scope.getVariable(mPrimaryIdentifier);
+      if (value.typeOf().equals("block")) {
+        ((LyteBlock) value).invoke(stack);
+      } else {
+        stack.push(value);
+      }
     } else {
-      scope.push(resolveToValue(scope));
+      stack.push(resolveToValue(scope, stack));
     }
   }
 
@@ -47,7 +49,7 @@ public class LyteInvokeStatement implements LyteStatement {
   }
 
 
-  public LyteValue resolveToValue(LyteScope scope) {
+  public LyteValue resolveToValue(LyteScope scope, LyteStack stack) {
     LyteValue obj;
     try {
       obj = scope.getVariable(mPrimaryIdentifier);
@@ -57,8 +59,8 @@ public class LyteInvokeStatement implements LyteStatement {
           obj = ((LyteObject) obj).get(specifier.identifier);
         } else if (specifier.invokable != null) {
           // TODO Ensure only one result is pushed onto the stack
-          specifier.invokable.applyTo(scope);
-          obj = ((LyteObject) obj).get(scope.pop().toString());
+          specifier.invokable.applyTo(scope, stack);
+          obj = ((LyteObject) obj).get(stack.pop().toString());
         } else {
           List<LyteValue> arguments = new ArrayList<LyteValue>();
           // TODO Check if the ordering is correct & ensure that the block only has one result
@@ -67,20 +69,19 @@ public class LyteInvokeStatement implements LyteStatement {
             arguments.add(specifier.arguments.get(i).clone(scope));
           }
           // Then invoke the block itself w/ those arguments
-          ((LyteBlock) obj).invoke(arguments);
+          ((LyteBlock) obj).invoke(stack, arguments);
           // And pop the result into the object
-          obj = scope.pop();
+          obj = stack.pop();
         }
       }
     } catch (Exception e) {
       System.err.println("Cannot resolve " + toString(false));
-      // TODO Change to undefined
-      return null;
+      return LyteUndefined.UNDEFINED;
     }
     return obj;
   }
 
-  public LyteObject resolveToObject(LyteScope scope) {
+  public LyteValue resolveToObject(LyteScope scope, LyteStack stack) {
     LyteValue obj;
     try {
       obj = scope.getVariable(mPrimaryIdentifier);
@@ -92,8 +93,8 @@ public class LyteInvokeStatement implements LyteStatement {
           obj = ((LyteObject) obj).get(specifier.identifier);
         } else if (specifier.invokable != null) {
           // TODO Ensure only one result is pushed onto the stack
-          specifier.invokable.applyTo(scope);
-          obj = ((LyteObject) obj).get(scope.pop().toString());
+          specifier.invokable.applyTo(scope, stack);
+          obj = ((LyteObject) obj).get(stack.pop().toString());
         } else {
           List<LyteValue> arguments = new ArrayList<LyteValue>();
           // TODO Check if the ordering is correct & ensure that the block only has one result
@@ -102,17 +103,16 @@ public class LyteInvokeStatement implements LyteStatement {
             arguments.add(argument.clone(scope));
           }
           // Then invoke the block itself w/ those arguments
-          ((LyteBlock) obj).invoke(arguments);
+          ((LyteBlock) obj).invoke(stack, arguments);
           // And pop the result into the object
-          obj = scope.pop();
+          obj = stack.pop();
         }
       }
     } catch (Exception e) {
       System.err.println("Cannot resolve " + toString(false));
-      // TODO Change to undefined
-      return null;
+      return LyteUndefined.UNDEFINED;
     }
-    return (LyteObject) obj;
+    return obj;
   }
 
   public boolean isFunctionInvokation() {

@@ -1,6 +1,7 @@
 package com.lyte.stdlib;
 
 import com.lyte.core.LyteScope;
+import com.lyte.core.LyteStack;
 import com.lyte.objs.LyteBlock;
 import com.lyte.objs.LyteObject;
 import com.lyte.objs.LyteValue;
@@ -20,14 +21,12 @@ public class LyteInstantiate extends LyteNativeBlock {
   }
 
   @Override
-  public void invoke() {
+  public void invoke(LyteStack stack) {
     // TODO this assumes the two things are on the same stack, we have to move scoping out of blocks!!!
-    LyteScope scope = mScope;
-
-    LyteValue value = scope.pop();
+    LyteValue value = stack.pop();
     if (value.typeOf().equals("block")) {
-      ((LyteBlock) value).invoke();
-      value = scope.pop();
+      ((LyteBlock) value).invoke(stack);
+      value = stack.pop();
     }
     if (!value.typeOf().equals("object")) {
       System.err.println("Cannot Instantiate a(n) " + value.typeOf() + ".");
@@ -36,8 +35,8 @@ public class LyteInstantiate extends LyteNativeBlock {
     if (!((LyteObject) value).containsKey("__constructor")) {
       System.err.println("Error, object has no constructor!");
     }
-    LyteObject obj = (LyteObject) value.clone(scope);
-    ((LyteBlock) obj.get("__constructor")).invoke();
-    scope.push(obj);
+    LyteObject obj = ((LyteObject) value).clone();
+    ((LyteBlock) obj.get("__constructor")).invoke(stack);
+    stack.push(obj);
   }
 }

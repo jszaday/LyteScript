@@ -1,6 +1,7 @@
 package com.lyte.core;
 
 import com.lyte.objs.LyteObject;
+import com.lyte.objs.LyteValue;
 
 /**
  * Created by jszaday on 6/18/15.
@@ -23,20 +24,23 @@ public class LyteBindStatement implements LyteStatement {
   }
 
   @Override
-  public void applyTo(LyteScope scope) {
-    System.out.println("Popping '" + scope.peek() + "' into " + mTarget);
+  public void applyTo(LyteScope scope, LyteStack stack) {
     if (mTarget.isSimpleInvokation() && !scope.hasVariable(mTarget.getPrimaryIdentifier())) {
-      scope.putVariable(mTarget.getPrimaryIdentifier(), scope.pop());
+      scope.putVariable(mTarget.getPrimaryIdentifier(), stack.pop());
     } else {
-      LyteObject obj = mTarget.resolveToObject(scope);
+      LyteValue val = mTarget.resolveToObject(scope, stack);
+      if (!(val.typeOf().equals("object") || val.typeOf().equals("list"))) {
+        throw new RuntimeException("Cannot resolve " + mTarget.getLastSpecifier() + " from " + val.typeOf() + ".");
+      }
+      LyteObject obj = (LyteObject) val;
       LyteInvokeStatement.LyteSpecifier specifier = mTarget.getLastSpecifier();
       if (specifier.identifier != null) {
-        obj.set(specifier.identifier, scope.pop());
+        obj.set(specifier.identifier, stack.pop());
       } else {
         // TODO Ensure the invokable only pops one result
-        specifier.invokable.applyTo(scope);
+        specifier.invokable.applyTo(scope, stack);
         // TODO Double Check the key is correct
-        obj.set(scope.pop().toString(), scope.pop());
+        obj.set(stack.pop().toString(), stack.pop());
       }
     }
   }

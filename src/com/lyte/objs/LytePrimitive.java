@@ -35,4 +35,10 @@ public class LytePrimitive<T> implements LyteValue {
     public LyteValue clone(LyteScope scope) {
         return new LytePrimitive<T>(mValue);
     }
+
+    @Override
+    public boolean isTruthy() {
+        // TODO Implement this
+        return false;
+    }
 }

@@ -1,6 +1,7 @@
 package com.lyte.objs;
 
 import com.lyte.core.LyteScope;
+import com.lyte.core.LyteStack;
 import com.lyte.core.LyteStatement;
 
 import java.util.ArrayList;
@@ -26,35 +27,40 @@ public class LyteBlock implements LyteValue {
     mArgs = args;
   }
 
-  private void popArgs() {
+  private void popArgs(LyteStack stack) {
     if (mArgs == null) {
       return;
     }
     // For each of our args
     for (String arg : mArgs) {
       // Pop off a value and bind it to the arg's name
-      mScope.putVariable(arg, mScope.pop());
+      mScope.putVariable(arg, stack.pop());
     }
   }
 
-  public void invoke(LyteValue... args) {
-    invoke(Arrays.asList(args));
+  public void invoke(LyteStack stack, LyteValue... args) {
+    invoke(stack, Arrays.asList(args));
   }
 
-  public void invoke(List<LyteValue> args) {
+  public void invoke(LyteStack stack, List<LyteValue> args) {
     for (int i = (args.size() - 1); i >= 0; i--) {
-      mScope.push(args.get(i));
+      stack.push(args.get(i));
     }
-    invoke();
+    invoke(stack);
   }
 
-  public void invoke() {
+  public void invoke(LyteStack stack) {
     // Pop any named arguments
-    popArgs();
+    popArgs(stack);
     // Then apply each of our statements to our scope
     for (LyteStatement statement : mStatements) {
-      statement.applyTo(mScope);
+      statement.applyTo(mScope, stack);
     }
+  }
+
+  @Override
+  public boolean isTruthy() {
+    return true;
   }
 
   @Override

@@ -1,5 +1,5 @@
 package com.lyte.core;
 
 public interface LyteStatement {
-  void applyTo(LyteScope scope);
+  void applyTo(LyteScope scope, LyteStack stack);
 }

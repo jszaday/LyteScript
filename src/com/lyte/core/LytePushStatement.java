@@ -11,11 +11,11 @@ public class LytePushStatement implements LyteStatement {
   }
 
   @Override
-  public void applyTo(LyteScope scope) {
+  public void applyTo(LyteScope scope, LyteStack stack) {
     // Instantiate a new instance of the object
     LyteValue obj = mValue.clone(scope);
     // And push it onto the stack
-    scope.push(obj);
+    stack.push(obj);
   }
 
   @Override

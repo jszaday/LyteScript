@@ -24,6 +24,11 @@ public class LyteNumber extends LytePrimitive<Double> {
     }
 
     @Override
+    public boolean isTruthy() {
+        return (get() != 0);
+    }
+
+    @Override
     public String typeOf() {
         return "number";
     }

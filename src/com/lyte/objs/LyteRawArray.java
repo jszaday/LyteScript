@@ -1,6 +1,7 @@
 package com.lyte.objs;
 
 import com.lyte.core.LyteScope;
+import com.lyte.core.LyteStack;
 import com.lyte.core.LyteStatement;
 
 import java.util.ArrayList;
@@ -31,12 +32,22 @@ public class LyteRawArray implements LyteValue {
   }
 
   @Override
+  public boolean isTruthy() {
+    return false;
+  }
+
+  @Override
   public LyteValue clone(LyteScope scope) {
     ArrayList<LyteValue> values = new ArrayList<LyteValue>();
 
+    // TODO Use a more "global" stack...
+    LyteStack stack = new LyteStack();
     for (LyteStatement statement : mStatements) {
-      statement.applyTo(scope);
-      values.add(scope.pop());
+      statement.applyTo(scope, stack);
+      if (stack.size() > 1) {
+        throw new RuntimeException("Expected only one argument on the stack, instead found " + stack.size());
+      }
+      values.add(stack.pop());
     }
 
     return new LyteArray(values);

@@ -63,4 +63,9 @@ public class LyteRawBlock implements LyteValue {
   public String typeOf() {
     return "rawBlock";
   }
+
+  @Override
+  public boolean isTruthy() {
+    return false;
+  }
 }

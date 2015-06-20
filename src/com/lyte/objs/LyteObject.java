@@ -50,6 +50,15 @@ public class LyteObject implements LyteValue {
     }
   }
 
+  public LyteObject clone() {
+    if (mBase != null) {
+      return ((LyteObject) mBase.clone()).mixWith(this);
+    } else {
+      // TODO Implement this
+      return null;
+    }
+  }
+
   @Override
   public LyteValue clone(LyteScope scope) {
     if (mBase != null) {
@@ -58,6 +67,11 @@ public class LyteObject implements LyteValue {
       // TODO Implement this
       return null;
     }
+  }
+
+  @Override
+  public boolean isTruthy() {
+    return true;
   }
 
   @Override
