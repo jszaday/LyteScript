@@ -4,12 +4,14 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.lyte.objs.LyteObject;
 import com.lyte.objs.LyteValue;
 import com.lyte.stdlib.LyteNativeBlock;
 
 public class LyteScope {
   private HashMap<String, LyteValue> mVariables;
   private LyteScope mParent;
+  private LyteObject mSelf;
 
   private LyteScope(LyteScope parent, boolean useParentStack) {
     mParent = parent;
@@ -21,7 +23,9 @@ public class LyteScope {
   }
 
   public LyteValue getVariable(String name) {
-    if (mVariables.containsKey(name)) {
+    if (name.startsWith("@")) {
+      return mSelf.get(name.substring(1));
+    } else if (mVariables.containsKey(name)) {
       return mVariables.get(name);
     } else if (mParent != null) {
       return mParent.getVariable(name);
@@ -31,7 +35,9 @@ public class LyteScope {
   }
 
   public boolean hasVariable(String name) {
-    if (mVariables.containsKey(name)) {
+    if (name.startsWith("@")) {
+      return mSelf.hasProperty(name.substring(1));
+    } else if (mVariables.containsKey(name)) {
       return true;
     } else if (mParent != null) {
       return mParent.hasVariable(name);
@@ -41,7 +47,9 @@ public class LyteScope {
   }
 
   public void putVariable(String name, LyteValue value) {
-    if (mParent != null && mParent.hasVariable(name)) {
+    if (name.startsWith("@")) {
+      mSelf.set(name.substring(1), value);
+    } else if (mParent != null && mParent.hasVariable(name)) {
       mParent.putVariable(name, value);
     } else {
       mVariables.put(name, value);
@@ -84,5 +92,15 @@ public class LyteScope {
   public void printStackTrace() {
     System.out.println(toString() + " called by:");
     printStackTrace(mParent);
+  }
+
+  public void setSelf(LyteObject self) {
+    if (self != null || mSelf == null) {
+      mSelf = self;
+    }
+  }
+
+  public LyteObject getSelf() {
+    return mSelf;
   }
 }

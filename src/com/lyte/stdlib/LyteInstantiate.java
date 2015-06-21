@@ -21,11 +21,11 @@ public class LyteInstantiate extends LyteNativeBlock {
   }
 
   @Override
-  public void invoke(LyteStack stack) {
+  public void invoke(LyteObject self, LyteStack stack) {
     // TODO this assumes the two things are on the same stack, we have to move scoping out of blocks!!!
     LyteValue value = stack.pop();
     if (value.typeOf().equals("block")) {
-      ((LyteBlock) value).invoke(stack);
+      ((LyteBlock) value).invoke(self, stack);
       value = stack.pop();
     }
     if (!value.typeOf().equals("object")) {
@@ -36,7 +36,8 @@ public class LyteInstantiate extends LyteNativeBlock {
       System.err.println("Error, object has no constructor!");
     }
     LyteObject obj = ((LyteObject) value).clone();
-    ((LyteBlock) obj.get("__constructor")).invoke(stack);
+    ((LyteBlock) obj.get("__constructor")).invoke(obj, stack);
+    obj.unset("__constructor");
     stack.push(obj);
   }
 }

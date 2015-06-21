@@ -28,7 +28,7 @@ public class LyteBindStatement implements LyteStatement {
     if (mTarget.isSimpleInvokation() && !scope.hasVariable(mTarget.getPrimaryIdentifier())) {
       scope.putVariable(mTarget.getPrimaryIdentifier(), stack.pop());
     } else {
-      LyteValue val = mTarget.resolveToObject(scope, stack);
+      LyteValue val = mTarget.resolve(scope, stack, false);
       if (!(val.typeOf().equals("object") || val.typeOf().equals("list"))) {
         throw new RuntimeException("Cannot resolve " + mTarget.getLastSpecifier() + " from " + val.typeOf() + ".");
       }

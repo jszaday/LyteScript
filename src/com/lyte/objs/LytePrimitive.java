@@ -28,7 +28,7 @@ public class LytePrimitive<T> implements LyteValue {
 
     @Override
     public String typeOf() {
-        return mValue.getClass().getName();
+        return mValue.getClass().getSimpleName().toLowerCase();
     }
 
     @Override

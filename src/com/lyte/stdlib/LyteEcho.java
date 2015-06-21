@@ -3,6 +3,7 @@ package com.lyte.stdlib;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 import com.lyte.objs.LyteBlock;
+import com.lyte.objs.LyteObject;
 import com.lyte.objs.LyteValue;
 
 /**
@@ -20,10 +21,10 @@ public class LyteEcho extends LyteNativeBlock {
     }
 
     @Override
-    public void invoke(LyteStack stack) {
+    public void invoke(LyteObject self, LyteStack stack) {
         LyteValue value = stack.pop();
         if (value.typeOf().equals("block")) {
-            ((LyteBlock) value).invoke(stack);
+            ((LyteBlock) value).invoke(self, stack);
             value = stack.pop();
         }
         System.out.println(value);

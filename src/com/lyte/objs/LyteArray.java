@@ -1,6 +1,7 @@
 package com.lyte.objs;
 
 import com.lyte.core.LyteScope;
+import com.lyte.core.LyteStack;
 
 import java.util.ArrayList;
 
@@ -13,11 +14,6 @@ public class LyteArray extends LyteObject {
 
   public LyteArray() {
     this(new ArrayList<LyteValue>());
-  }
-
-  @Override
-  public String typeOf() {
-    return "list";
   }
 
   @Override

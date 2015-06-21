@@ -39,14 +39,17 @@ public class LyteRawObject implements LyteValue  {
     mCachedScope = scope;
     // TODO Use a more "global" stack...
     LyteStack stack = new LyteStack();
+    LyteObject newObject = new LyteObject(this, null);
     for (String key : mProperties.keySet()) {
       mProperties.get(key).applyTo(scope, stack);
       if (stack.size() > 1) {
         throw new RuntimeException("Expected only one argument on the stack, instead found " + stack.size());
       }
-      properties.put(key, stack.pop());
+      LyteValue value = stack.pop();
+      properties.put(key, value);
     }
-    return new LyteObject(this, properties);
+    newObject.setProperties(properties);
+    return newObject;
   }
 
   @Override

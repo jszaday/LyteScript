@@ -1,6 +1,8 @@
 package com.lyte.objs;
 
+import com.lyte.core.LyteInvokeStatement;
 import com.lyte.core.LyteScope;
+import com.lyte.core.LyteStack;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -18,6 +20,10 @@ public class LyteObject implements LyteValue {
 
   protected LyteObject(LyteRawObject base, HashMap<String, LyteValue> properties) {
     mBase = base;
+    mProperties = properties;
+  }
+
+  public void setProperties(HashMap<String, LyteValue> properties) {
     mProperties = properties;
   }
 
@@ -50,6 +56,10 @@ public class LyteObject implements LyteValue {
     }
   }
 
+  public void unset(String key) {
+    mProperties.remove(key);
+  }
+
   public LyteObject clone() {
     if (mBase != null) {
       return ((LyteObject) mBase.clone()).mixWith(this);
@@ -57,6 +67,10 @@ public class LyteObject implements LyteValue {
       // TODO Implement this
       return null;
     }
+  }
+
+  public boolean hasProperty(String name) {
+    return mProperties.containsKey(name);
   }
 
   @Override
@@ -86,6 +100,10 @@ public class LyteObject implements LyteValue {
 
   @Override
   public String toString() {
-    return mProperties.toString();
+    if (hasProperty("__toString")) {
+      return LyteInvokeStatement.applyIfNeeded(get("__toString"), this, new LyteStack()).toString();
+    } else {
+      return mProperties.toString();
+    }
   }
 }

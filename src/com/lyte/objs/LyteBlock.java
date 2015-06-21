@@ -38,18 +38,20 @@ public class LyteBlock implements LyteValue {
     }
   }
 
-  public void invoke(LyteStack stack, LyteValue... args) {
-    invoke(stack, Arrays.asList(args));
+  public void invoke(LyteObject self, LyteStack stack, LyteValue... args) {
+    invoke(self, stack, Arrays.asList(args));
   }
 
-  public void invoke(LyteStack stack, List<LyteValue> args) {
+  public void invoke(LyteObject self, LyteStack stack, List<LyteValue> args) {
     for (int i = (args.size() - 1); i >= 0; i--) {
       stack.push(args.get(i));
     }
-    invoke(stack);
+    invoke(self, stack);
   }
 
-  public void invoke(LyteStack stack) {
+  public void invoke(LyteObject self, LyteStack stack) {
+    // Set the "self" object
+    mScope.setSelf(self);
     // Pop any named arguments
     popArgs(stack);
     // Then apply each of our statements to our scope

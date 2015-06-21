@@ -3,6 +3,7 @@ package com.lyte.stdlib;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 import com.lyte.objs.LyteBlock;
+import com.lyte.objs.LyteObject;
 import com.lyte.objs.LyteValue;
 
 /**
@@ -20,21 +21,21 @@ public class LyteIf extends LyteNativeBlock {
   }
 
   @Override
-  public void invoke(LyteStack stack) {
+  public void invoke(LyteObject self, LyteStack stack) {
     LyteValue condition = stack.pop();
     LyteBlock trueBlock = (LyteBlock) stack.pop();
     LyteBlock falseBlock = (LyteBlock) stack.pop();
 
     if (condition.typeOf().equals("block")) {
-      ((LyteBlock) condition).invoke(stack);
+      ((LyteBlock) condition).invoke(self, stack);
       System.out.println(condition);
       condition = stack.pop();
     }
 
     if (condition.isTruthy()) {
-      trueBlock.invoke(stack);
+      trueBlock.invoke(self, stack);
     } else {
-      falseBlock.invoke(stack);
+      falseBlock.invoke(self, stack);
     }
   }
 }

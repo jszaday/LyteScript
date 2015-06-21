@@ -1,17 +1,22 @@
-Echo("Hello, World!")
-2 `+` 2 Echo
-
-%{1, 2, 3} -> A
-5 -> A[5]
-Echo(A)
-
-B <- @(C) {
-  `Echo` C
+Person <- %{
+  __constructor: @(name, favoriteHat) {
+    name -> @name
+    favoriteHat -> @favoriteHat
+  },
+  __toString: {
+    "I'm " `++` @name `++` " and my favorite kind of hat is a(n) " `++` @favoriteHat `++` "."
+  }
 }
 
-bob <- %{
-  name: "Bob",
-  favoriteHat: "Squirrel Hat"
+Dancer <- %{
+  dance: {
+    Echo("I'm " `++` @name `++` " and I'm dancing, I'm really dancing!")
+  }
 }
 
-B(bob.name)
+Instantiate(Person, "Justin", "Iron Man Helmet") -> justin
+
+justin `MixWith` Dancer
+
+justin.dance()
+justin Echo

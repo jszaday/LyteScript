@@ -60,9 +60,9 @@ public class Main extends LyteBaseVisitor<Object> {
   public void run(LyteValue... args) {
     LyteScope global = LyteScope.newGlobal();
     LyteStack stack = new LyteStack();
-    global.injectNative(LyteInstantiate.class, LyteIf.class, LyteAdd.class, LyteEcho.class);
+    global.injectNative(LyteInstantiate.class, LyteIf.class, LyteAdd.class, LyteEcho.class, LyteConcatenate.class, LyteMixWith.class);
     LyteBlock main = (LyteBlock) mGlobal.clone(global);
-    main.invoke(stack, args);
+    main.invoke(null, stack, args);
   }
 
   @Override

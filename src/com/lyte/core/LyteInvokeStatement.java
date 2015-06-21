@@ -27,12 +27,12 @@ public class LyteInvokeStatement implements LyteStatement {
     if (isSimpleInvokation()) {
       LyteValue value = scope.getVariable(mPrimaryIdentifier);
       if (value.typeOf().equals("block")) {
-        ((LyteBlock) value).invoke(stack);
+        ((LyteBlock) value).invoke(null, stack);
       } else {
         stack.push(value);
       }
     } else {
-      stack.push(resolveToValue(scope, stack));
+      stack.push(resolve(scope, stack, true));
     }
   }
 
@@ -48,47 +48,34 @@ public class LyteInvokeStatement implements LyteStatement {
     return mSpecifiers.get(mSpecifiers.size() - 1);
   }
 
-
-  public LyteValue resolveToValue(LyteScope scope, LyteStack stack) {
-    LyteValue obj;
-    try {
-      obj = scope.getVariable(mPrimaryIdentifier);
-      // Process all specifiers including the last one
-      for (LyteSpecifier specifier : mSpecifiers) {
-        if (specifier.identifier != null) {
-          obj = ((LyteObject) obj).get(specifier.identifier);
-        } else if (specifier.invokable != null) {
-          // TODO Ensure only one result is pushed onto the stack
-          specifier.invokable.applyTo(scope, stack);
-          obj = ((LyteObject) obj).get(stack.pop().toString());
-        } else {
-          List<LyteValue> arguments = new ArrayList<LyteValue>();
-          // TODO Check if the ordering is correct & ensure that the block only has one result
-          // Add a clone of each of the arguments to the function
-          for (int i = 0; i < specifier.arguments.size(); i++) {
-            arguments.add(specifier.arguments.get(i).clone(scope));
-          }
-          // Then invoke the block itself w/ those arguments
-          ((LyteBlock) obj).invoke(stack, arguments);
-          // And pop the result into the object
-          obj = stack.pop();
-        }
-      }
-    } catch (Exception e) {
-      System.err.println("Cannot resolve " + toString(false));
-      return LyteUndefined.UNDEFINED;
+  public static LyteValue applyIfNeeded(LyteValue value, LyteValue self, LyteStack stack) {
+    if (value.typeOf().equals("block")) {
+      // TODO Verify only one result was obtained
+      ((LyteBlock) value).invoke((LyteObject) self, stack);
+      value = stack.pop();
     }
-    return obj;
+    return value;
   }
 
-  public LyteValue resolveToObject(LyteScope scope, LyteStack stack) {
-    LyteValue obj;
+  public LyteValue resolve(LyteScope scope, LyteStack stack, boolean fullyResolve) {
+    LyteValue obj, lastObj;
+    // Adjust the offset we are to fully resolve ourself
+    int offset = fullyResolve ? 1 : 2;
     try {
+      // Adjust the last object
       obj = scope.getVariable(mPrimaryIdentifier);
-      // Process all specifiers up to the last one
-      for (int i = 0; i < (mSpecifiers.size() - 1); i++) {
+      // Applying it if necessary
+      if ((!mSpecifiers.isEmpty() && (mSpecifiers.get(0).arguments == null)) || mSpecifiers.isEmpty()) {
+        obj = applyIfNeeded(obj, null, stack);
+      }
+      // And adjust the last object
+      if (obj.typeOf().equals("object")) {
+        lastObj = obj;
+      } else {
+        lastObj = scope.getSelf();
+      }
+      for (int i = 0; i <= (mSpecifiers.size() - offset); i++) {
         LyteSpecifier specifier = mSpecifiers.get(i);
-
         if (specifier.identifier != null) {
           obj = ((LyteObject) obj).get(specifier.identifier);
         } else if (specifier.invokable != null) {
@@ -103,12 +90,23 @@ public class LyteInvokeStatement implements LyteStatement {
             arguments.add(argument.clone(scope));
           }
           // Then invoke the block itself w/ those arguments
-          ((LyteBlock) obj).invoke(stack, arguments);
+          ((LyteBlock) obj).invoke((LyteObject) lastObj, stack, arguments);
           // And pop the result into the object
           obj = stack.pop();
         }
+        // Finally, apply the object if necessary (only when the next specifier is not an argument)
+        if (((i + 1) < mSpecifiers.size() && mSpecifiers.get(i + 1).arguments == null) || ((i + 1) >= mSpecifiers.size())) {
+          obj = applyIfNeeded(obj, lastObj, stack);
+        }
+        // And adjust the last object
+        if (obj.typeOf().equals("object")) {
+          lastObj = obj;
+        } else {
+          lastObj = null;
+        }
       }
     } catch (Exception e) {
+      e.printStackTrace();
       System.err.println("Cannot resolve " + toString(false));
       return LyteUndefined.UNDEFINED;
     }
