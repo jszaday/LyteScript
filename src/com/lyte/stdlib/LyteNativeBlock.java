@@ -11,11 +11,25 @@ import com.lyte.objs.LyteValue;
  */
 public abstract class LyteNativeBlock extends LyteBlock {
 
-  protected LyteNativeBlock(LyteScope parentScope) {
-    super(parentScope, null);
+  public final String alias;
+  public final String namespace;
+  public final String fullname;
+
+  public LyteNativeBlock(String namespace, String alias) {
+    this(namespace, null, alias);
   }
 
-  public abstract String getSymbol();
+  public LyteNativeBlock(String namespace, String fullname, String alias) {
+    super(null, null);
+    this.alias = alias;
+    this.namespace = namespace;
+
+    if (fullname != null) {
+      this.fullname = fullname;
+    } else {
+      this.fullname = alias;
+    }
+  }
 
   @Override
   public abstract void invoke(LyteObject self, LyteStack stack);
@@ -27,6 +41,6 @@ public abstract class LyteNativeBlock extends LyteBlock {
 
   @Override
   public String toString() {
-    return "[] => Native::"+getSymbol();
+    return "[] => Native::Lyte." + namespace + "." + fullname;
   }
 }

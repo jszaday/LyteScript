@@ -5,7 +5,8 @@ Person <- %{
   },
   __toString: {
     "I'm " `++` @name `++` " and my favorite kind of hat is a(n) " `++` @favoriteHat `++` "."
-  }
+  },
+  canLove: True
 }
 
 Dancer <- %{
@@ -20,3 +21,16 @@ justin `MixWith` Dancer
 
 justin.dance()
 justin Echo
+
+If(justin.canLove, {
+  Echo(justin.name `++` " is capable of love.")
+}, {
+  Echo(justin.name `++` " can never love.")
+})
+
+something <- @(name) {
+  {name Echo}
+}
+
+something("Bob") -> sayBob
+sayBob()

@@ -50,7 +50,7 @@ public class LyteArray extends LyteObject {
   }
 
   @Override
-  public boolean isTruthy() {
+  public boolean asBoolean() {
     return !mList.isEmpty();
   }
 

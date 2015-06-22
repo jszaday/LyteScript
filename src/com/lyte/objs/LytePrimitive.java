@@ -37,7 +37,7 @@ public class LytePrimitive<T> implements LyteValue {
     }
 
     @Override
-    public boolean isTruthy() {
+    public boolean asBoolean() {
         // TODO Implement this
         return false;
     }

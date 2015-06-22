@@ -25,7 +25,7 @@ public class LyteBindStatement implements LyteStatement {
 
   @Override
   public void applyTo(LyteScope scope, LyteStack stack) {
-    if (mTarget.isSimpleInvokation() && !scope.hasVariable(mTarget.getPrimaryIdentifier())) {
+    if (mTarget.isSimpleInvokation()) { // && !scope.hasVariable(mTarget.getPrimaryIdentifier())) {
       scope.putVariable(mTarget.getPrimaryIdentifier(), stack.pop());
     } else {
       LyteValue val = mTarget.resolve(scope, stack, false);

@@ -10,6 +10,10 @@ public class LytePushStatement implements LyteStatement {
     mValue = value;
   }
 
+  public LyteValue getValue() {
+    return mValue;
+  }
+
   @Override
   public void applyTo(LyteScope scope, LyteStack stack) {
     // Instantiate a new instance of the object

@@ -1,21 +1,24 @@
 package com.lyte.core;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import com.lyte.objs.LyteObject;
+import com.lyte.objs.LyteUndefined;
 import com.lyte.objs.LyteValue;
 import com.lyte.stdlib.LyteNativeBlock;
 
 public class LyteScope {
   private HashMap<String, LyteValue> mVariables;
+  private HashSet<String> mFinalVariables;
   private LyteScope mParent;
   private LyteObject mSelf;
 
   private LyteScope(LyteScope parent, boolean useParentStack) {
     mParent = parent;
     mVariables = new HashMap<String, LyteValue>();
+    mFinalVariables = new HashSet<String>();
   }
 
   private LyteScope(LyteScope parent) {
@@ -30,7 +33,7 @@ public class LyteScope {
     } else if (mParent != null) {
       return mParent.getVariable(name);
     } else {
-      return null;
+      return LyteUndefined.UNDEFINED;
     }
   }
 
@@ -46,27 +49,30 @@ public class LyteScope {
     }
   }
 
-  public void putVariable(String name, LyteValue value) {
+  public void putVariable(String name, LyteValue value, boolean finalVariable) {
     if (name.startsWith("@")) {
       mSelf.set(name.substring(1), value);
     } else if (mParent != null && mParent.hasVariable(name)) {
       mParent.putVariable(name, value);
     } else {
-      mVariables.put(name, value);
+      if (mFinalVariables.contains(name)) {
+        throw new RuntimeException("Cannot override the value of " + name);
+      } else {
+        mVariables.put(name, value);
+
+        if (finalVariable) {
+          mFinalVariables.add(name);
+        }
+      }
     }
   }
 
-  public void injectNative(Class... nativeClasses) {
-    Class nativeClass = null;
-    try {
-      for (int i = 0; i < nativeClasses.length; i++) {
-        nativeClass = nativeClasses[i];
-        LyteNativeBlock nativeBlock = (LyteNativeBlock) nativeClass.getDeclaredConstructor(LyteScope.class).newInstance(this);
-        putVariable(nativeBlock.getSymbol(), nativeBlock);
-      }
-    } catch (Exception e) {
-      System.err.println("Could not inject native of type " + nativeClass.getName());
-    }
+  public void putVariable(String name, LyteValue value) {
+    putVariable(name, value, false);
+  }
+
+  public void finalizeVariable(String name) {
+    mFinalVariables.add(name);
   }
 
   public LyteScope enter() {

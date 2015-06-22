@@ -95,7 +95,7 @@ public class LyteInvokeStatement implements LyteStatement {
           obj = stack.pop();
         }
         // Finally, apply the object if necessary (only when the next specifier is not an argument)
-        if (((i + 1) < mSpecifiers.size() && mSpecifiers.get(i + 1).arguments == null) || ((i + 1) >= mSpecifiers.size())) {
+        if (((i + 1) < mSpecifiers.size() && mSpecifiers.get(i + 1).arguments == null) || (((i + 1) >= mSpecifiers.size()) && (mSpecifiers.get(i).arguments == null))) {
           obj = applyIfNeeded(obj, lastObj, stack);
         }
         // And adjust the last object

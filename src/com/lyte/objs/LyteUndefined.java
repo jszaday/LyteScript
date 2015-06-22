@@ -31,7 +31,7 @@ public enum LyteUndefined implements LyteValue {
     }
 
     @Override
-    public boolean isTruthy() {
+    public boolean asBoolean() {
         return false;
     }
 }

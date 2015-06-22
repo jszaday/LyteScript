@@ -60,7 +60,7 @@ public class Main extends LyteBaseVisitor<Object> {
   public void run(LyteValue... args) {
     LyteScope global = LyteScope.newGlobal();
     LyteStack stack = new LyteStack();
-    global.injectNative(LyteInstantiate.class, LyteIf.class, LyteAdd.class, LyteEcho.class, LyteConcatenate.class, LyteMixWith.class);
+    LyteSTL.injectNatives(global);
     LyteBlock main = (LyteBlock) mGlobal.clone(global);
     main.invoke(null, stack, args);
   }
@@ -218,12 +218,14 @@ public class Main extends LyteBaseVisitor<Object> {
     mCurrentBlock = mCurrentBlock.enter();
     for (int i = 0; i < ctx.getChildCount(); i++) {
       child = ctx.getChild(i);
+      // If we hit a comma
       if (child.getText().equals(",")) {
-        parameters.add(mCurrentBlock);
+        // Add the simplified block to the parameters list
+        parameters.add(mCurrentBlock.simplify());
         // Leave back to the parent scope and re-enter a new child
         mCurrentBlock = mCurrentBlock.leave().enter();
       } else {
-        // As a statement it'll get added automagically
+        // Otherwise, It'll get added automagically by visiting the kid
         visit(child);
       }
     }

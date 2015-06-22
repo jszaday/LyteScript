@@ -27,7 +27,7 @@ public class LyteObject implements LyteValue {
     mProperties = properties;
   }
 
-  public boolean containsKey(String key) {
+  public boolean hasProperty(String key) {
     return mProperties.containsKey(key);
   }
 
@@ -48,11 +48,11 @@ public class LyteObject implements LyteValue {
   }
 
   public LyteValue get(String key) {
-    if (containsKey(key)) {
+    if (hasProperty(key)) {
       return mProperties.get(key);
     } else {
       // TODO Eventually this will grab methods within an object!
-      return null;
+      return LyteUndefined.UNDEFINED;
     }
   }
 
@@ -69,10 +69,6 @@ public class LyteObject implements LyteValue {
     }
   }
 
-  public boolean hasProperty(String name) {
-    return mProperties.containsKey(name);
-  }
-
   @Override
   public LyteValue clone(LyteScope scope) {
     if (mBase != null) {
@@ -84,7 +80,7 @@ public class LyteObject implements LyteValue {
   }
 
   @Override
-  public boolean isTruthy() {
+  public boolean asBoolean() {
     return true;
   }
 

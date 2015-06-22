@@ -1,5 +1,6 @@
 package com.lyte.objs;
 
+import com.lyte.core.LytePushStatement;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStatement;
 
@@ -49,6 +50,25 @@ public class LyteRawBlock implements LyteValue {
 
   public List<LyteStatement> getStatements() { return mStatements; }
 
+  private void setParent(LyteRawBlock parent) {
+    mParent = parent;
+  }
+
+  public LyteRawBlock simplify() {
+    if (mStatements.size() == 1 && (mStatements.get(0) instanceof LytePushStatement)) {
+      LyteValue value = ((LytePushStatement) mStatements.get(0)).getValue();
+
+      if (value instanceof LyteRawBlock) {
+        ((LyteRawBlock) value).setParent(mParent);
+        return (LyteRawBlock) value;
+      } else {
+        return this;
+      }
+    } else {
+      return this;
+    }
+  }
+
   @Override
   public LyteValue clone(LyteScope scope) {
     return new LyteBlock(scope, mStatements, mArgs);
@@ -65,7 +85,7 @@ public class LyteRawBlock implements LyteValue {
   }
 
   @Override
-  public boolean isTruthy() {
+  public boolean asBoolean() {
     return false;
   }
 }

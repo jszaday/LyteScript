@@ -22,7 +22,9 @@ public class LyteBlock implements LyteValue {
   }
 
   public LyteBlock(LyteScope parentScope, List<LyteStatement> statements, List<String> args) {
-    mScope = parentScope.enter();
+    if (parentScope != null) {
+      mScope = parentScope.enter();
+    }
     mStatements = statements;
     mArgs = args;
   }
@@ -61,7 +63,7 @@ public class LyteBlock implements LyteValue {
   }
 
   @Override
-  public boolean isTruthy() {
+  public boolean asBoolean() {
     return true;
   }
 
