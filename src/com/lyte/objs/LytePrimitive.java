@@ -5,7 +5,7 @@ import com.lyte.core.LyteScope;
 /**
  * Created by jszaday on 6/18/15.
  */
-public class LytePrimitive<T> implements LyteValue {
+public abstract class LytePrimitive<T> implements LyteValue {
 
     private T mValue;
 
@@ -33,12 +33,6 @@ public class LytePrimitive<T> implements LyteValue {
 
     @Override
     public LyteValue clone(LyteScope scope) {
-        return new LytePrimitive<T>(mValue);
-    }
-
-    @Override
-    public boolean asBoolean() {
-        // TODO Implement this
-        return false;
+        return this;
     }
 }

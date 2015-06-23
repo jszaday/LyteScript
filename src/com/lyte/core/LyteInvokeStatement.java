@@ -32,7 +32,11 @@ public class LyteInvokeStatement implements LyteStatement {
         stack.push(value);
       }
     } else {
-      stack.push(resolve(scope, stack, true));
+      LyteValue retVal = resolve(scope, stack, true);
+
+      if (!retVal.typeOf().equals("undefined")) {
+        stack.push(retVal);
+      }
     }
   }
 

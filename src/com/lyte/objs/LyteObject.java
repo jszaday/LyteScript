@@ -79,10 +79,6 @@ public class LyteObject implements LyteValue {
     }
   }
 
-  @Override
-  public boolean asBoolean() {
-    return true;
-  }
 
   @Override
   public int hashCode() {
@@ -91,7 +87,16 @@ public class LyteObject implements LyteValue {
 
   @Override
   public String typeOf() {
-    return "object";
+    if (hasProperty("__typeOf")) {
+      return LyteInvokeStatement.applyIfNeeded(get("__typeOf"), this, new LyteStack()).toString();
+    } else {
+      return "object";
+    }
+  }
+
+  @Override
+  public LyteBoolean toBoolean() {
+    return new LyteBoolean(true);
   }
 
   @Override
@@ -101,5 +106,18 @@ public class LyteObject implements LyteValue {
     } else {
       return mProperties.toString();
     }
+  }
+
+  @Override
+  public LyteNumber toNumber() {
+    if (hasProperty("__toNumber")) {
+      return (LyteNumber) LyteInvokeStatement.applyIfNeeded(get("__toNumber"), this, new LyteStack());
+    } else {
+      return new LyteNumber(mProperties.size());
+    }
+  }
+
+  public static boolean isObject(LyteValue value) {
+    return value instanceof LyteObject;
   }
 }

@@ -50,10 +50,14 @@ public class LyteArray extends LyteObject {
   }
 
   @Override
-  public boolean asBoolean() {
-    return !mList.isEmpty();
+  public LyteBoolean toBoolean() {
+    return new LyteBoolean(!mList.isEmpty());
   }
 
+  @Override
+  public LyteNumber toNumber() {
+    return new LyteNumber(mList.size());
+  }
   @Override
   public LyteValue clone(LyteScope scope) {
     return null;

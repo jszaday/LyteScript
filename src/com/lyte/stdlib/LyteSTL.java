@@ -35,8 +35,11 @@ public class LyteSTL {
                 ((LyteBlock) value2).invoke(self, stack);
                 value2 = stack.pop();
             }
-            if (!value1.typeOf().equals("number") || !value2.typeOf().equals("number")) {
-                // Type Coerce 'Em
+            while (!value1.typeOf().equals("number")) {
+                value1 = value1.toNumber();
+            }
+            while (!value2.typeOf().equals("number")) {
+                value2 = value2.toNumber();
             }
             stack.push(new LyteNumber(((LytePrimitive<Double>) value1).get() + ((LytePrimitive<Double>) value2).get()));
         }
@@ -62,7 +65,7 @@ public class LyteSTL {
             LyteValue value1 = stack.pop();
             // TODO Implement other cases
             if (value1.typeOf().equals("string")) {
-                stack.push(new LytePrimitive<String>(value1.toString() + value2.toString()));
+                stack.push(new LyteString(value1.toString() + value2.toString()));
             }
         }
     };
@@ -87,7 +90,7 @@ public class LyteSTL {
                 condition = stack.pop();
             }
 
-            if (condition.asBoolean()) {
+            if (condition.toBoolean().get()) {
                 trueBlock.invoke(self, stack);
             } else {
                 falseBlock.invoke(self, stack);
@@ -104,7 +107,7 @@ public class LyteSTL {
                 ((LyteBlock) value).invoke(self, stack);
                 value = stack.pop();
             }
-            if (!value.typeOf().equals("object")) {
+            if (!LyteObject.isObject(value)) {
                 System.err.println("Cannot Instantiate a(n) " + value.typeOf() + ".");
                 return;
             }
@@ -124,7 +127,7 @@ public class LyteSTL {
             LyteValue value2 = stack.pop();
             LyteValue value1 = stack.pop();
 
-            if (!(value1.typeOf().equals("object") && value2.typeOf().equals("object"))) {
+            if (!(LyteObject.isObject(value1) && LyteObject.isObject(value2))) {
                 throw new RuntimeException("Cannot mix " + value1 + " with " + value2);
             }
 

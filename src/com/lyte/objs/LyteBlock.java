@@ -18,12 +18,14 @@ public class LyteBlock implements LyteValue {
   protected LyteScope mScope;
 
   public LyteBlock(LyteScope parentScope, List<LyteStatement> statements) {
-    this(parentScope, statements, null);
+    this(parentScope, statements, null, true);
   }
 
-  public LyteBlock(LyteScope parentScope, List<LyteStatement> statements, List<String> args) {
-    if (parentScope != null) {
+  public LyteBlock(LyteScope parentScope, List<LyteStatement> statements, List<String> args, boolean shouldEnter) {
+    if ((parentScope != null) && shouldEnter) {
       mScope = parentScope.enter();
+    } else {
+      mScope = parentScope;
     }
     mStatements = statements;
     mArgs = args;
@@ -63,8 +65,13 @@ public class LyteBlock implements LyteValue {
   }
 
   @Override
-  public boolean asBoolean() {
-    return true;
+  public LyteBoolean toBoolean() {
+    return new LyteBoolean(true);
+  }
+
+  @Override
+  public LyteNumber toNumber() {
+    return new LyteNumber(0);
   }
 
   @Override

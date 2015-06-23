@@ -31,7 +31,12 @@ public enum LyteUndefined implements LyteValue {
     }
 
     @Override
-    public boolean asBoolean() {
-        return false;
+    public LyteBoolean toBoolean() {
+        return new LyteBoolean(false);
+    }
+
+    @Override
+    public LyteNumber toNumber() {
+        return new LyteNumber(0);
     }
 }

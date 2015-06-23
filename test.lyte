@@ -34,3 +34,17 @@ something <- @(name) {
 
 something("Bob") -> sayBob
 sayBob()
+
+Squirrel <- %{
+  __constructor: @(name, numNuts) {
+    name -> @name
+    numNuts -> @numNuts
+  },
+  __toNumber: { @numNuts }
+}
+
+Instantiate(Squirrel, "Gerald", 6) -> gerald
+
+gerald `+` 6 -> shouldBeTwelve
+
+Echo(shouldBeTwelve)

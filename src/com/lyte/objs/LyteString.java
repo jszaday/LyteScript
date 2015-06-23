@@ -1,21 +1,21 @@
 package com.lyte.objs;
 
+
 /**
  * Created by jszaday on 6/22/15.
  */
-public class LyteBoolean extends LytePrimitive<Boolean> {
-
-    public LyteBoolean(Boolean value) {
+public class LyteString extends LytePrimitive<String> {
+    public LyteString(String value) {
         super(value);
     }
 
     @Override
     public LyteBoolean toBoolean() {
-        return this;
+        return new LyteBoolean(get().length() > 0);
     }
 
     @Override
     public LyteNumber toNumber() {
-        return get() ? new LyteNumber(1) : new LyteNumber(0);
+        return new LyteNumber(Double.parseDouble(get()));
     }
 }

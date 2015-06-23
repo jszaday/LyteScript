@@ -71,7 +71,11 @@ public class LyteRawBlock implements LyteValue {
 
   @Override
   public LyteValue clone(LyteScope scope) {
-    return new LyteBlock(scope, mStatements, mArgs);
+    return clone(scope, true);
+  }
+
+  public LyteValue clone(LyteScope scope, boolean shouldEnter) {
+    return new LyteBlock(scope, mStatements, mArgs, shouldEnter);
   }
 
   @Override
@@ -85,7 +89,12 @@ public class LyteRawBlock implements LyteValue {
   }
 
   @Override
-  public boolean asBoolean() {
-    return false;
+  public LyteBoolean toBoolean() {
+    return new LyteBoolean(false);
+  }
+
+  @Override
+  public LyteNumber toNumber() {
+    return new LyteNumber(0);
   }
 }
