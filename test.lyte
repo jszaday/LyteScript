@@ -6,7 +6,7 @@ Person <- %{
   __toString: {
     "I'm " `++` @name `++` " and my favorite kind of hat is a(n) " `++` @favoriteHat `++` "."
   },
-  canLove: True
+  canLove: False
 }
 
 Dancer <- %{
@@ -28,12 +28,17 @@ If(justin.canLove, {
   Echo(justin.name `++` " can never love.")
 })
 
-something <- @(name) {
-  {name Echo}
+Cat <- @(name, meow) {
+ %{
+    name: name,
+    meow: {
+      Echo("The cat " `++` @name `++` " " `++` meow `++` "ed!")
+    }
+  }
 }
 
-something("Bob") -> sayBob
-sayBob()
+Cat("Neko", "Nyan") -> myKitty
+myKitty.meow()
 
 Squirrel <- %{
   __constructor: @(name, numNuts) {
@@ -48,3 +53,9 @@ Instantiate(Squirrel, "Gerald", 6) -> gerald
 gerald `+` 6 -> shouldBeTwelve
 
 Echo(shouldBeTwelve)
+
+If (Gregor Undefined?, {
+  Echo("Gregor ees sad Gregor does not exist.")
+}, {
+  Echo("Gregor ees happy to be alive!")
+})

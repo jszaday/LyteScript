@@ -21,6 +21,27 @@ public class LyteSTL {
         }
     };
 
+    public static LyteNativeBlock coreFalse = new LyteNativeBlock("Core", "False") {
+        @Override
+        public void invoke(LyteObject self, LyteStack stack) {
+            stack.push(new LyteBoolean(false));
+        }
+    };
+
+    public static LyteNativeBlock coreNot = new LyteNativeBlock("Core", "Not") {
+        @Override
+        public void invoke(LyteObject self, LyteStack stack) {
+            stack.push(new LyteBoolean(!stack.pop().toBoolean().get()));
+        }
+    };
+
+    public static LyteNativeBlock coreIsUndefined = new LyteNativeBlock("Core", "IsUndefined", "Undefined?") {
+        @Override
+        public void invoke(LyteObject self, LyteStack stack) {
+            stack.push(new LyteBoolean(stack.pop() == LyteUndefined.UNDEFINED));
+        }
+    };
+
     public static LyteNativeBlock coreAdd = new LyteNativeBlock("Core", "Add", "+") {
 
         @Override
@@ -89,6 +110,8 @@ public class LyteSTL {
                 ((LyteBlock) condition).invoke(self, stack);
                 condition = stack.pop();
             }
+
+//            System.out.println("Condition: " + condition + ", Blocks: " + trueBlock + " OR " + falseBlock);
 
             if (condition.toBoolean().get()) {
                 trueBlock.invoke(self, stack);

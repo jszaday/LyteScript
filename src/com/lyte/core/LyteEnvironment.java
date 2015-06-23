@@ -249,7 +249,7 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
             }
         }
         // Add the final block was to the parameters
-        parameters.add(mCurrentBlock);
+        parameters.add(mCurrentBlock.simplify());
         // Then leave it
         mCurrentBlock = mCurrentBlock.leave();
         // And return a designator object
