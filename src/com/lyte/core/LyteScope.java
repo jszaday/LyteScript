@@ -1,13 +1,11 @@
 package com.lyte.core;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import com.lyte.objs.LyteError;
 import com.lyte.objs.LyteObject;
-import com.lyte.objs.LyteUndefined;
 import com.lyte.objs.LyteValue;
-import com.lyte.stdlib.LyteNativeBlock;
 
 public class LyteScope {
   private HashMap<String, LyteValue> mVariables;
@@ -33,7 +31,7 @@ public class LyteScope {
     } else if (mParent != null) {
       return mParent.getVariable(name);
     } else {
-      return LyteUndefined.UNDEFINED;
+      throw new LyteError("Undefined variable, " + name);
     }
   }
 
@@ -56,7 +54,7 @@ public class LyteScope {
       mParent.putVariable(name, value);
     } else {
       if (mFinalVariables.contains(name)) {
-        throw new RuntimeException("Cannot override the value of " + name);
+        throw new LyteError("Cannot override the value of " + name);
       } else {
         mVariables.put(name, value);
 
@@ -87,17 +85,16 @@ public class LyteScope {
     return new LyteScope(null, false);
   }
 
-  private static void printStackTrace(LyteScope scope) {
-    System.out.println(scope.toString());
+  public String getStackTrace() {
+    return toString() + " called by:\n" + getStackTrace(mParent);
+  }
 
-    if(scope.mParent != null) {
-      printStackTrace(scope.mParent);
-    }
+  private static String getStackTrace(LyteScope scope) {
+    return scope.toString() + "\n" + (scope.mParent != null ? getStackTrace(scope.mParent) : "");
   }
 
   public void printStackTrace() {
-    System.out.println(toString() + " called by:");
-    printStackTrace(mParent);
+    System.out.print(getStackTrace());
   }
 
   public void setSelf(LyteObject self) {

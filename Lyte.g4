@@ -1,7 +1,7 @@
 grammar Lyte;
 
 program
-	: statement* EOF
+	: (statement Semicolon?)* EOF
 	;
 
 designator
@@ -87,6 +87,7 @@ arrayLiteral
 objectLiteral
   : Percent LeftBrace keyValueList? Comma? RightBrace
   ;
+
 numericLiteral
   : DecimalLiteral
   | BinaryIntegerLiteral
@@ -95,7 +96,7 @@ numericLiteral
   ;
 
 block
-	: LeftBrace statement+ RightBrace
+	: LeftBrace statement* RightBrace
 	;
 
 lambdaExpression
@@ -120,6 +121,7 @@ Hashtag:      '#';
 Atpersand:    '@';
 VerticalBar:  '|';
 Percent:			'%';
+Semicolon:    ';';
 
 Identifier
   : IdentifierStart IdentifierPart*
@@ -187,7 +189,6 @@ OctalIntegerLiteral
 StringLiteral
   : '"' ( ~'"' | '\\' '"' )* '"'
   ;
-
 
 WhiteSpaces
 	: [\t\u000B\u000C\u0020\u00A0]+ -> skip

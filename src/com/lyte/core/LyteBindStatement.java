@@ -25,13 +25,10 @@ public class LyteBindStatement implements LyteStatement {
 
   @Override
   public void applyTo(LyteScope scope, LyteStack stack) {
-    if (mTarget.isSimpleInvokation()) { // && !scope.hasVariable(mTarget.getPrimaryIdentifier())) {
+    if (mTarget.isSimpleInvokation()) {
       scope.putVariable(mTarget.getPrimaryIdentifier(), stack.pop());
     } else {
       LyteValue val = mTarget.resolve(scope, stack, false);
-      if (!(val.typeOf().equals("object") || val.typeOf().equals("list"))) {
-        throw new RuntimeException("Cannot resolve " + mTarget.getLastSpecifier() + " from " + val.typeOf() + ".");
-      }
       LyteObject obj = (LyteObject) val;
       LyteInvokeStatement.LyteSpecifier specifier = mTarget.getLastSpecifier();
       if (specifier.identifier != null) {

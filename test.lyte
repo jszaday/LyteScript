@@ -54,8 +54,27 @@ gerald `+` 6 -> shouldBeTwelve
 
 Echo(shouldBeTwelve)
 
-If (Gregor Undefined?, {
+Try(Gregor, @(error) {
   Echo("Gregor ees sad Gregor does not exist.")
-}, {
-  Echo("Gregor ees happy to be alive!")
+  Echo(error)
 })
+
+ThingBuilder <- @(isHappy, numThings) {
+  // Initialize an empty object
+  %{} -> self
+  // Setup its properties
+  isHappy -> self.isHappy
+  numThings -> self.numThings
+  self.__toString <- {
+    If (@isHappy, {
+      "Is a happy thing with " `++` @numThings `++` " other things."
+    }, {
+      "Is an unhappy thing with only " `++` @numThings `++` " other things."
+    })
+  }
+  // And finally return the newly created object
+  self
+}
+
+ThingBuilder(False, 5) -> myThing
+Echo(myThing)

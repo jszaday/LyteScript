@@ -33,10 +33,7 @@ public class LyteInvokeStatement implements LyteStatement {
       }
     } else {
       LyteValue retVal = resolve(scope, stack, true);
-
-      if (!retVal.typeOf().equals("undefined")) {
-        stack.push(retVal);
-      }
+      stack.push(retVal);
     }
   }
 
@@ -96,7 +93,11 @@ public class LyteInvokeStatement implements LyteStatement {
           // Then invoke the block itself w/ those arguments
           ((LyteBlock) obj).invoke((LyteObject) lastObj, stack, arguments);
           // And pop the result into the object
-          obj = stack.pop();
+          if (!stack.isEmpty()) {
+            obj = stack.pop();
+          } else {
+            obj = LyteUndefined.UNDEFINED;
+          }
         }
         // Finally, apply the object if necessary (only when the next specifier is not an argument)
         if (((i + 1) < mSpecifiers.size() && mSpecifiers.get(i + 1).arguments == null) || (((i + 1) >= mSpecifiers.size()) && (mSpecifiers.get(i).arguments == null))) {
@@ -109,10 +110,8 @@ public class LyteInvokeStatement implements LyteStatement {
           lastObj = null;
         }
       }
-    } catch (Exception e) {
-      e.printStackTrace();
-      System.err.println("Cannot resolve " + toString(false));
-      return LyteUndefined.UNDEFINED;
+    } catch (LyteError e) {
+      throw e;
     }
     return obj;
   }

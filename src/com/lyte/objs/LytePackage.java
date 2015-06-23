@@ -23,6 +23,6 @@ public class LytePackage extends LyteObject {
 
     @Override
     public LyteValue set(String key, LyteValue value) {
-        throw new RuntimeException("Can't assign to " + key);
+        throw new LyteError("Can't assign to " + key);
     }
 }
