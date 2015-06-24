@@ -7,7 +7,7 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="antlr-4.5-complete" level="project" />
-    <orderEntry type="library" name="commons-lang3-3.4" level="project" />
+    <orderEntry type="library" name="org.apache.commons:commons-lang3:3.4" level="project" />
+    <orderEntry type="library" name="com.tunnelvisionlabs:antlr4:4.5" level="project" />
   </component>
 </module>

@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="com.tunnelvisionlabs:antlr4:4.5" type="repository">
+    <properties maven-id="com.tunnelvisionlabs:antlr4:4.5" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/antlr4-4.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/antlr4-runtime-4.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/org.abego.treelayout.core-1.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/antlr4-annotations-4.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/antlr-runtime-3.5.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ST4-4.0.8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
