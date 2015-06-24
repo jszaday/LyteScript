@@ -78,3 +78,7 @@ ThingBuilder <- @(isHappy, numThings) {
 
 ThingBuilder(False, 5) -> myThing
 Echo(myThing)
+
+%{1, 2, 3} -> myList
+5 -> myList[6]
+Echo(myList `++` " is " `++` myList.length `++` " elements long")

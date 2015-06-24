@@ -19,13 +19,13 @@ public class LyteArray implements LyteValue<ArrayList<LyteValue>> {
     }
   }
 
-  public void setIndex(int index, LyteValue value) {
+  public void setIndex(int index, LyteValue newValue) {
     // Expand the list up to the given index
     for (int i = mList.size(); i <= index; i++) {
       mList.add(LyteUndefined.UNDEFINED);
     }
     // Then finally perform the set
-    mList.set(index, value);
+    mList.set(index, newValue);
   }
 
   @Override
@@ -86,7 +86,7 @@ public class LyteArray implements LyteValue<ArrayList<LyteValue>> {
 
   @Override
   public LyteValue apply(LyteValue self) {
-    return this.clone(null);
+    return this;
   }
 
   @Override

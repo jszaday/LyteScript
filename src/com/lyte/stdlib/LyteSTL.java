@@ -79,7 +79,7 @@ public class LyteSTL {
             LyteValue value1 = stack.pop().apply(self);
 
             // TODO Implement other cases
-            if (value1.typeOf().equals("string")) {
+            if (value1.typeOf().equals("string") || value2.typeOf().equals("string")) {
                 stack.push(value1.toString() + value2.toString());
             }
 
