@@ -33,7 +33,7 @@ public class LyteSTL {
     public static LyteNativeBlock coreNot = new LyteNativeBlock("Core", "Not") {
         @Override
         public boolean invoke(LyteObject self, LyteStack stack) {
-            stack.push(new LyteBoolean(!stack.pop().toBoolean().get()));
+            stack.push(new LyteBoolean(!stack.pop().apply(self).toBoolean()));
             return true;
         }
     };
@@ -50,23 +50,9 @@ public class LyteSTL {
 
         @Override
         public boolean invoke(LyteObject self, LyteStack stack) {
-            LyteValue value1 = stack.pop();
-            if (value1.typeOf().equals("block")) {
-                ((LyteBlock) value1).invoke(self, stack);
-                value1 = stack.pop();
-            }
-            LyteValue value2 = stack.pop();
-            if (value2.typeOf().equals("block")) {
-                ((LyteBlock) value2).invoke(self, stack);
-                value2 = stack.pop();
-            }
-            while (!value1.typeOf().equals("number")) {
-                value1 = value1.toNumber();
-            }
-            while (!value2.typeOf().equals("number")) {
-                value2 = value2.toNumber();
-            }
-            stack.push(new LyteNumber(((LytePrimitive<Double>) value1).get() + ((LytePrimitive<Double>) value2).get()));
+            double val1 = stack.pop().apply(self).toNumber();
+            double val2 = stack.pop().apply(self).toNumber();
+            stack.push(new LyteNumber(val1 + val2));
             return true;
         }
     };
@@ -89,11 +75,12 @@ public class LyteSTL {
     public static LyteNativeBlock coreConcatenate = new LyteNativeBlock("Core", "Concatenate", "++") {
         @Override
         public boolean invoke(LyteObject self, LyteStack stack) {
-            LyteValue value2 = stack.pop();
-            LyteValue value1 = stack.pop();
+            LyteValue value2 = stack.pop().apply(self);
+            LyteValue value1 = stack.pop().apply(self);
+
             // TODO Implement other cases
             if (value1.typeOf().equals("string")) {
-                stack.push(new LyteString(value1.toString() + value2.toString()));
+                stack.push(value1.toString() + value2.toString());
             }
 
             return true;
@@ -103,7 +90,7 @@ public class LyteSTL {
     public static LyteNativeBlock ioEcho = new LyteNativeBlock("IO", "Echo") {
         @Override
         public boolean invoke(LyteObject self, LyteStack stack) {
-            System.out.println(LyteInvokeStatement.applyIfNeeded(stack.pop(), self, stack));
+            System.out.println(stack.pop().apply(self));
             return true;
         }
     };
@@ -116,12 +103,7 @@ public class LyteSTL {
             LyteBlock trueBlock = (LyteBlock) stack.pop();
             LyteBlock falseBlock = (LyteBlock) stack.pop();
 
-            while (condition.typeOf().equals("block")) {
-                ((LyteBlock) condition).invoke(self, stack);
-                condition = stack.pop();
-            }
-
-            if (condition.toBoolean().get()) {
+            if (condition.apply(self).toBoolean()) {
                 trueBlock.invoke(self, stack);
             } else {
                 falseBlock.invoke(self, stack);
@@ -135,20 +117,20 @@ public class LyteSTL {
         @Override
         public boolean invoke(LyteObject self, LyteStack stack) {
             // TODO this assumes the two things are on the same stack, we have to move scoping out of blocks!!!
-            LyteValue value = stack.pop();
-            if (value.typeOf().equals("block")) {
-                ((LyteBlock) value).invoke(self, stack);
-                value = stack.pop();
-            }
-            if (!LyteObject.isObject(value)) {
+            LyteValue value = stack.pop().apply(self);
+            if (!value.typeOf().equals("object")) {
                 throw new LyteError("Cannot Instantiate a(n) " + value.typeOf() + ".");
             }
-            if (!((LyteObject) value).hasProperty("__constructor")) {
+            if (!value.hasProperty("__constructor")) {
                 throw new LyteError("Error, object has no constructor!");
             }
-            LyteObject obj = ((LyteObject) value).clone();
-            ((LyteBlock) obj.get("__constructor")).invoke(obj, stack);
-            obj.unset("__constructor");
+            LyteObject obj = (LyteObject) value.clone(null);
+            try {
+                ((LyteBlock) obj.getProperty("__constructor")).invoke(obj, stack);
+            } catch(ClassCastException e) {
+                throw new LyteError("Expected __constructor to be a block for object " + obj);
+            }
+            obj.unsetProperty("__constructor");
             stack.push(obj);
             return true;
         }
@@ -160,7 +142,7 @@ public class LyteSTL {
             LyteValue value2 = stack.pop();
             LyteValue value1 = stack.pop();
 
-            if (!(LyteObject.isObject(value1) && LyteObject.isObject(value2))) {
+            if (!(value1.typeOf().equals("object") && value2.typeOf().equals("object"))) {
                 throw new LyteError("Cannot mix " + value1 + " with " + value2);
             }
 
@@ -193,10 +175,8 @@ public class LyteSTL {
     public static LyteNativeBlock errorRaise = new LyteNativeBlock("Error", "Raise") {
         @Override
         public boolean invoke(LyteObject self, LyteStack stack) {
-            // Apply whatever is on top of the stack
-            coreApply.invoke(self, stack);
-            // And throw the result to the wolves
-            throw new LyteError(stack.pop());
+            // Throw the result to the wolves
+            throw new LyteError(stack.pop().apply(self));
         }
     };
 

@@ -1,5 +1,7 @@
 package com.lyte.objs;
 
+import com.lyte.core.LyteScope;
+
 import java.util.HashMap;
 
 /**
@@ -7,22 +9,28 @@ import java.util.HashMap;
  */
 public class LytePackage extends LyteObject {
     public LytePackage() {
-        super(null, new HashMap<String, LyteValue>());
+        super(null);
+        set(new HashMap<String, LyteValue>());
     }
 
     public LytePackage getNamespace(String key) {
         if (!hasProperty(key)) {
-            super.set(key, new LytePackage());
+            super.setProperty(key, new LytePackage());
         }
-        return (LytePackage) get(key);
+        return (LytePackage) getProperty(key);
     }
 
-    public LyteValue elevatedSet(String key, LyteValue value) {
-        return super.set(key, value);
+    public void elevatedSet(String key, LyteValue value) {
+        super.setProperty(key, value);
     }
 
     @Override
-    public LyteValue set(String key, LyteValue value) {
+    public LyteValue<HashMap<String, LyteValue>> clone(LyteScope scope) {
+        return this;
+    }
+
+    @Override
+    public void setProperty(String key, LyteValue value) {
         throw new LyteError("Can't assign to " + key);
     }
 }

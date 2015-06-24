@@ -11,7 +11,7 @@ public enum LyteUndefined implements LyteValue {
 
     private String mType;
 
-    private LyteUndefined(String value) {
+    LyteUndefined(String value) {
         mType = value;
     }
 
@@ -26,17 +26,48 @@ public enum LyteUndefined implements LyteValue {
     }
 
     @Override
+    public boolean toBoolean() {
+        return false;
+    }
+
+    @Override
+    public double toNumber() {
+        return 0;
+    }
+
+
+    @Override
+    public Object get() {
+        return this;
+    }
+
+    @Override
+    public void set(Object newValue) {
+        throw new LyteError("Cannot set the value of a(n) " + typeOf() + " value!");
+    }
+
+    @Override
+    public LyteValue getProperty(String property) {
+        throw new LyteError("Cannot get property " + property + " from a(n) " + typeOf() + "!");
+    }
+
+    @Override
+    public void setProperty(String property, LyteValue newValue) {
+        throw new LyteError("Cannot set property " + property + " from a(n) " + typeOf() + "!");
+    }
+
+    @Override
+    public boolean hasProperty(String property) {
+        return false;
+    }
+
+    @Override
     public LyteValue clone(LyteScope scope) {
         return this;
     }
 
     @Override
-    public LyteBoolean toBoolean() {
-        return new LyteBoolean(false);
-    }
-
-    @Override
-    public LyteNumber toNumber() {
-        return new LyteNumber(0);
+    public LyteValue apply(LyteValue self) {
+        return this;
     }
 }

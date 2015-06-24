@@ -11,10 +11,9 @@ import java.util.List;
 /**
  * Created by a0225785 on 6/17/2015.
  */
-public class LyteBlock implements LyteValue {
+public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
 
   private List<String> mArgs;
-  private List<LyteStatement> mStatements;
   protected LyteScope mScope;
 
   public LyteBlock(LyteScope parentScope, List<LyteStatement> statements) {
@@ -22,12 +21,12 @@ public class LyteBlock implements LyteValue {
   }
 
   public LyteBlock(LyteScope parentScope, List<LyteStatement> statements, List<String> args, boolean shouldEnter) {
+    super(statements);
     if ((parentScope != null) && shouldEnter) {
       mScope = parentScope.enter();
     } else {
       mScope = parentScope;
     }
-    mStatements = statements;
     mArgs = args;
   }
 
@@ -60,12 +59,12 @@ public class LyteBlock implements LyteValue {
     popArgs(stack);
     try {
       // Then apply each of our statements to our scope
-      for (LyteStatement statement : mStatements) {
+      for (LyteStatement statement : get()) {
         statement.applyTo(mScope, stack);
       }
     } catch (LyteError e) {
       if (stack.hasHandlers()) {
-        stack.push(e.attachScope(mScope));
+        stack.push(e);
         stack.popHandler().invoke(self, stack);
       } else {
         throw e;
@@ -78,27 +77,40 @@ public class LyteBlock implements LyteValue {
   }
 
   @Override
-  public LyteBoolean toBoolean() {
-    return new LyteBoolean(true);
-  }
-
-  @Override
-  public LyteNumber toNumber() {
-    return new LyteNumber(0);
-  }
-
-  @Override
-  public LyteValue clone(LyteScope scope) {
-    return null;
-  }
-
-  @Override
   public String typeOf() {
     return "block";
   }
 
   @Override
   public String toString() {
-    return (mArgs == null ? "[]" : mArgs) + " => " + mStatements;
+    return (mArgs == null ? "[]" : mArgs) + " => " + get();
+  }
+
+  @Override
+  public boolean toBoolean() {
+    return true;
+  }
+
+  @Override
+  public double toNumber() {
+    return get().size();
+  }
+
+  @Override
+  public LyteValue<List<LyteStatement>> clone(LyteScope scope) {
+    return new LyteBlock(mScope.clone(), get(), mArgs, false);
+  }
+
+  @Override
+  public LyteValue apply(LyteValue self) {
+    LyteStack stack = new LyteStack();
+    invoke((LyteObject) self, stack);
+    if (stack.size() > 1) {
+      throw new LyteError("Error Applying Block, " + this + ", expected 1 return value instead found " + stack.size() + "!");
+    } else if (!stack.isEmpty()) {
+      return stack.pop();
+    } else {
+      return LyteUndefined.UNDEFINED;
+    }
   }
 }

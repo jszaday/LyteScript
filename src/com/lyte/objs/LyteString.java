@@ -10,12 +10,16 @@ public class LyteString extends LytePrimitive<String> {
     }
 
     @Override
-    public LyteBoolean toBoolean() {
-        return new LyteBoolean(get().length() > 0);
+    public boolean toBoolean() {
+        return get().length() > 0;
     }
 
     @Override
-    public LyteNumber toNumber() {
-        return new LyteNumber(Double.parseDouble(get()));
+    public double toNumber() {
+        try {
+            return Double.parseDouble(get());
+        } catch (NumberFormatException e) {
+            throw new LyteError("Cannot cast string '" + get() + "' to double!");
+        }
     }
 }

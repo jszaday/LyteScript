@@ -38,4 +38,16 @@ public class LyteStack extends ArrayDeque<LyteValue> {
             throw new LyteError("No value available, stack is empty.");
         }
     }
+
+    public void push(String string) {
+        push(new LyteString(string));
+    }
+
+    public void push(Double number) {
+        push(new LyteNumber(number));
+    }
+
+    public void push(Boolean bool) {
+        push(new LyteBoolean(bool));
+    }
 }

@@ -33,7 +33,9 @@ public class LyteInvokeStatement implements LyteStatement {
       }
     } else {
       LyteValue retVal = resolve(scope, stack, true);
-      stack.push(retVal);
+      if (retVal != null) {
+        stack.push(retVal);
+      }
     }
   }
 
@@ -49,15 +51,6 @@ public class LyteInvokeStatement implements LyteStatement {
     return mSpecifiers.get(mSpecifiers.size() - 1);
   }
 
-  public static LyteValue applyIfNeeded(LyteValue value, LyteValue self, LyteStack stack) {
-    if (value.typeOf().equals("block")) {
-      // TODO Verify only one result was obtained
-      ((LyteBlock) value).invoke((LyteObject) self, stack);
-      value = stack.pop();
-    }
-    return value;
-  }
-
   public LyteValue resolve(LyteScope scope, LyteStack stack, boolean fullyResolve) {
     LyteValue obj, lastObj;
     // Adjust the offset we are to fully resolve ourself
@@ -67,7 +60,7 @@ public class LyteInvokeStatement implements LyteStatement {
       obj = scope.getVariable(mPrimaryIdentifier);
       // Applying it if necessary
       if ((!mSpecifiers.isEmpty() && (mSpecifiers.get(0).arguments == null)) || mSpecifiers.isEmpty()) {
-        obj = applyIfNeeded(obj, null, stack);
+        obj = obj.apply(null);
       }
       // And adjust the last object
       if (obj.typeOf().equals("object")) {
@@ -77,12 +70,13 @@ public class LyteInvokeStatement implements LyteStatement {
       }
       for (int i = 0; i <= (mSpecifiers.size() - offset); i++) {
         LyteSpecifier specifier = mSpecifiers.get(i);
+        boolean lastSpecifier = ((i + 1) < mSpecifiers.size());
         if (specifier.identifier != null) {
-          obj = ((LyteObject) obj).get(specifier.identifier);
+          obj = obj.getProperty(specifier.identifier);
         } else if (specifier.invokable != null) {
           // TODO Ensure only one result is pushed onto the stack
           specifier.invokable.applyTo(scope, stack);
-          obj = ((LyteObject) obj).get(stack.pop().toString());
+          obj = obj.getProperty(stack.pop().toString());
         } else {
           List<LyteValue> arguments = new ArrayList<LyteValue>();
           // TODO Check if the ordering is correct & ensure that the block only has one result
@@ -96,15 +90,15 @@ public class LyteInvokeStatement implements LyteStatement {
           if (!stack.isEmpty()) {
             obj = stack.pop();
           } else {
-            obj = LyteUndefined.UNDEFINED;
+            obj = null;
           }
         }
         // Finally, apply the object if necessary (only when the next specifier is not an argument)
-        if (((i + 1) < mSpecifiers.size() && mSpecifiers.get(i + 1).arguments == null) || (((i + 1) >= mSpecifiers.size()) && (mSpecifiers.get(i).arguments == null))) {
-          obj = applyIfNeeded(obj, lastObj, stack);
+        if ((lastSpecifier && mSpecifiers.get(i + 1).arguments == null) || (((i + 1) >= mSpecifiers.size()) && (mSpecifiers.get(i).arguments == null))) {
+          obj = obj.apply(lastObj);
         }
         // And adjust the last object
-        if (obj.typeOf().equals("object")) {
+        if (lastSpecifier && obj.typeOf().equals("object")) {
           lastObj = obj;
         } else {
           lastObj = null;

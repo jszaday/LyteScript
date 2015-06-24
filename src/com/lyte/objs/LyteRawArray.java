@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by jszaday on 6/18/15.
  */
-public class LyteRawArray implements LyteValue {
+public class LyteRawArray extends LyteRawValue<ArrayList<LyteValue>> {
 
   private ArrayList<LyteStatement> mStatements;
 
@@ -32,17 +32,7 @@ public class LyteRawArray implements LyteValue {
   }
 
   @Override
-  public LyteBoolean toBoolean() {
-    return new LyteBoolean(false);
-  }
-
-  @Override
-  public LyteNumber toNumber() {
-    return new LyteNumber(0);
-  }
-
-  @Override
-  public LyteValue clone(LyteScope scope) {
+  public LyteValue<ArrayList<LyteValue>> clone(LyteScope scope) {
     ArrayList<LyteValue> values = new ArrayList<LyteValue>();
 
     // TODO Use a more "global" stack...

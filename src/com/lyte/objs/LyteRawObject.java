@@ -6,7 +6,8 @@ import com.lyte.core.LyteStatement;
 
 import java.util.HashMap;
 
-public class LyteRawObject implements LyteValue  {
+public class LyteRawObject extends LyteRawValue<HashMap<String, LyteValue>>  {
+
   private LyteScope mCachedScope;
 
   private HashMap<String, LyteStatement> mProperties;
@@ -19,32 +20,19 @@ public class LyteRawObject implements LyteValue  {
     return mProperties.put(key, value);
   }
 
-  public LyteValue clone() {
-    if (mCachedScope == null) {
-      throw new RuntimeException("No cached scope found for Raw Object.");
-    } else {
-      return clone(mCachedScope);
-    }
-  }
-
   @Override
-  public LyteBoolean toBoolean() {
-    return new LyteBoolean(false);
-  }
-
-  @Override
-  public LyteNumber toNumber() {
-    return new LyteNumber(0);
-  }
-
-  @Override
-  public LyteValue clone(LyteScope scope) {
+  public LyteValue<HashMap<String, LyteValue>> clone(LyteScope scope) {
     HashMap<String, LyteValue> properties = new HashMap<String, LyteValue>();
-    // Cache the scope
-    mCachedScope = scope;
+    if (scope == null) {
+      // Uncache the scope
+      scope = mCachedScope;
+    } else {
+      // Cache the scope
+      mCachedScope = scope;
+    }
     // TODO Use a more "global" stack...
     LyteStack stack = new LyteStack();
-    LyteObject newObject = new LyteObject(this, null);
+    LyteObject newObject = new LyteObject(this);
     for (String key : mProperties.keySet()) {
       mProperties.get(key).applyTo(scope, stack);
       if (stack.size() > 1) {
@@ -53,17 +41,17 @@ public class LyteRawObject implements LyteValue  {
       LyteValue value = stack.pop();
       properties.put(key, value);
     }
-    newObject.setProperties(properties);
+    newObject.set(properties);
     return newObject;
+  }
+
+  @Override
+  public LyteValue apply(LyteValue self) {
+    return null;
   }
 
   @Override
   public String typeOf() {
     return "rawObject";
-  }
-
-  @Override
-  public String toString() {
-    return mProperties.toString();
   }
 }

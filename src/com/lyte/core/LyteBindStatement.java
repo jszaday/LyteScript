@@ -29,15 +29,14 @@ public class LyteBindStatement implements LyteStatement {
       scope.putVariable(mTarget.getPrimaryIdentifier(), stack.pop());
     } else {
       LyteValue val = mTarget.resolve(scope, stack, false);
-      LyteObject obj = (LyteObject) val;
       LyteInvokeStatement.LyteSpecifier specifier = mTarget.getLastSpecifier();
       if (specifier.identifier != null) {
-        obj.set(specifier.identifier, stack.pop());
+        val.setProperty(specifier.identifier, stack.pop());
       } else {
         // TODO Ensure the invokable only pops one result
         specifier.invokable.applyTo(scope, stack);
         // TODO Double Check the key is correct
-        obj.set(stack.pop().toString(), stack.pop());
+        val.setProperty(stack.pop().toString(), stack.pop());
       }
     }
   }

@@ -1,70 +1,101 @@
 package com.lyte.objs;
 
 import com.lyte.core.LyteScope;
-import com.lyte.core.LyteStack;
 
 import java.util.ArrayList;
 
-public class LyteArray extends LyteObject {
+public class LyteArray implements LyteValue<ArrayList<LyteValue>> {
   private ArrayList<LyteValue> mList;
 
   public LyteArray(ArrayList<LyteValue> list) {
     mList = list;
   }
 
-  public LyteArray() {
-    this(new ArrayList<LyteValue>());
-  }
-
-  @Override
-  public LyteValue get(String index) {
-    return get(Integer.parseInt(index));
-  }
-
-  public LyteValue get(int index) {
+  public static Integer tryParse(String str) {
     try {
-      return mList.get(index);
-    } catch (IndexOutOfBoundsException e) {
-      return LyteUndefined.UNDEFINED;
+      return (int) Double.parseDouble(str);
+    } catch (NumberFormatException nfe) {
+      return null;
     }
   }
 
-  @Override
-  public LyteValue set(String key, LyteValue value) {
-    return set((int) Double.parseDouble(key), value);
-  }
-
-  public LyteValue set(int index, LyteValue value) {
-    LyteValue oldValue = get(index);
+  public void setIndex(int index, LyteValue value) {
     // Expand the list up to the given index
     for (int i = mList.size(); i <= index; i++) {
       mList.add(LyteUndefined.UNDEFINED);
     }
     // Then finally perform the set
     mList.set(index, value);
-    return oldValue;
-  }
-
-  public void add(LyteValue value) {
-    mList.add(value);
   }
 
   @Override
-  public LyteBoolean toBoolean() {
-    return new LyteBoolean(!mList.isEmpty());
+  public ArrayList<LyteValue> get() {
+    return mList;
   }
 
   @Override
-  public LyteNumber toNumber() {
-    return new LyteNumber(mList.size());
+  public void set(ArrayList<LyteValue> newValue) {
+    mList = newValue;
   }
+
+  @Override
+  public LyteValue getProperty(String property) {
+    Integer index;
+    if ((index = tryParse(property)) != null) {
+      try {
+        return mList.get(index);
+      } catch (IndexOutOfBoundsException e) {
+        throw new LyteError("Index " + index + " out of bounds for array " + toString());
+      }
+    } else if (property.equals("length")) {
+      return new LyteNumber(mList.size());
+    } else {
+      throw new LyteError("Cannot Resolve Property " + property + " from the array " + toString());
+    }
+  }
+
+  @Override
+  public void setProperty(String property, LyteValue newValue) {
+    Integer index;
+    if ((index = tryParse(property)) != null) {
+      setIndex(index, newValue);
+    } else {
+      throw new LyteError("Cannot Set Property " + property + " of the array " + toString());
+    }
+  }
+
+  @Override
+  public boolean hasProperty(String property) {
+    return property.equals("length") || (tryParse(property) != null);
+  }
+
+  @Override
+  public boolean toBoolean() {
+    return !mList.isEmpty();
+  }
+
+  @Override
+  public double toNumber() {
+    return mList.size();
+  }
+
   @Override
   public LyteValue clone(LyteScope scope) {
-    return null;
+    return new LyteArray((ArrayList<LyteValue>) mList.clone());
+  }
+
+  @Override
+  public LyteValue apply(LyteValue self) {
+    return this.clone(null);
   }
 
   @Override
   public String toString() {
     return mList.toString();
+  }
+
+  @Override
+  public String typeOf() {
+    return "list";
   }
 }

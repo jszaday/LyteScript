@@ -5,7 +5,7 @@ import com.lyte.core.LyteScope;
 /**
  * Created by jszaday on 6/18/15.
  */
-public abstract class LytePrimitive<T> implements LyteValue {
+public abstract class LytePrimitive<T> implements LyteValue<T> {
 
     private T mValue;
 
@@ -13,12 +13,34 @@ public abstract class LytePrimitive<T> implements LyteValue {
         mValue = value;
     }
 
-    public void set(T value) {
-        mValue = value;
-    }
-
+    @Override
     public T get() {
         return mValue;
+    }
+
+    @Override
+    public void set(T newValue) {
+        mValue = newValue;
+    }
+
+    @Override
+    public LyteValue getProperty(String property) {
+        throw new LyteError("Cannot get property " + property + " from a(n) " + typeOf() + "!");
+    }
+
+    @Override
+    public void setProperty(String property, LyteValue newValue) {
+        throw new LyteError("Cannot set property " + property + " from a(n) " + typeOf() + "!");
+    }
+
+    @Override
+    public boolean hasProperty(String property) {
+        return false;
+    }
+
+    @Override
+    public LyteValue apply(LyteValue self) {
+        return this;
     }
 
     @Override
@@ -32,7 +54,7 @@ public abstract class LytePrimitive<T> implements LyteValue {
     }
 
     @Override
-    public LyteValue clone(LyteScope scope) {
+    public LyteValue<T> clone(LyteScope scope) {
         return this;
     }
 }

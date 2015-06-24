@@ -10,12 +10,12 @@ public class LyteBoolean extends LytePrimitive<Boolean> {
     }
 
     @Override
-    public LyteBoolean toBoolean() {
-        return this;
+    public boolean toBoolean() {
+        return get();
     }
 
     @Override
-    public LyteNumber toNumber() {
-        return get() ? new LyteNumber(1) : new LyteNumber(0);
+    public double toNumber() {
+        return get() ? 1 : 0;
     }
 }

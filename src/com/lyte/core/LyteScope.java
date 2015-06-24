@@ -11,7 +11,7 @@ public class LyteScope {
   private HashMap<String, LyteValue> mVariables;
   private HashSet<String> mFinalVariables;
   private LyteScope mParent;
-  private LyteObject mSelf;
+  private LyteValue mSelf;
 
   private LyteScope(LyteScope parent, boolean useParentStack) {
     mParent = parent;
@@ -25,7 +25,7 @@ public class LyteScope {
 
   public LyteValue getVariable(String name) {
     if (name.startsWith("@")) {
-      return mSelf.get(name.substring(1));
+      return mSelf.getProperty(name.substring(1));
     } else if (mVariables.containsKey(name)) {
       return mVariables.get(name);
     } else if (mParent != null) {
@@ -49,7 +49,7 @@ public class LyteScope {
 
   public void putVariable(String name, LyteValue value, boolean finalVariable) {
     if (name.startsWith("@")) {
-      mSelf.set(name.substring(1), value);
+      mSelf.setProperty(name.substring(1), value);
     } else if (mParent != null && mParent.hasVariable(name)) {
       mParent.putVariable(name, value);
     } else {
@@ -81,6 +81,12 @@ public class LyteScope {
     return mParent;
   }
 
+  public LyteScope clone() {
+    LyteScope newSibling = mParent.enter();
+    // TODO Determine Implementation
+    return newSibling;
+  }
+
   public static LyteScope newGlobal() {
     return new LyteScope(null, false);
   }
@@ -97,13 +103,13 @@ public class LyteScope {
     System.out.print(getStackTrace());
   }
 
-  public void setSelf(LyteObject self) {
+  public void setSelf(LyteValue self) {
     if (self != null || mSelf == null) {
       mSelf = self;
     }
   }
 
-  public LyteObject getSelf() {
+  public LyteValue getSelf() {
     return mSelf;
   }
 }

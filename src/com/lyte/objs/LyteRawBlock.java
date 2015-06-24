@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by a0225785 on 6/17/2015.
  */
-public class LyteRawBlock implements LyteValue {
+public class LyteRawBlock extends LyteRawValue<List<LyteStatement>> {
   private static int sNumInstances = 0;
   public final int instanceNumber;
   private ArrayList<String> mArgs;
@@ -70,11 +70,11 @@ public class LyteRawBlock implements LyteValue {
   }
 
   @Override
-  public LyteValue clone(LyteScope scope) {
+  public LyteValue<List<LyteStatement>> clone(LyteScope scope) {
     return clone(scope, true);
   }
 
-  public LyteValue clone(LyteScope scope, boolean shouldEnter) {
+  public LyteValue<List<LyteStatement>> clone(LyteScope scope, boolean shouldEnter) {
     return new LyteBlock(scope, mStatements, mArgs, shouldEnter);
   }
 
@@ -86,15 +86,5 @@ public class LyteRawBlock implements LyteValue {
   @Override
   public String typeOf() {
     return "rawBlock";
-  }
-
-  @Override
-  public LyteBoolean toBoolean() {
-    return new LyteBoolean(false);
-  }
-
-  @Override
-  public LyteNumber toNumber() {
-    return new LyteNumber(0);
   }
 }
