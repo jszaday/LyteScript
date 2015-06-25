@@ -195,10 +195,9 @@ WhiteSpaces
 	;
 
 Newline
-  :   (   '\r' '\n'?
-      |   '\n'
-      )
-      -> skip
+  : ( '\r' '\n'?
+    | '\n'
+    ) -> skip
   ;
 
 BlockComment

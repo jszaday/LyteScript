@@ -16,7 +16,7 @@ public class LyteSTL {
 
     public static LyteNativeBlock coreTrue = new LyteNativeBlock("Core", "True") {
         @Override
-        public boolean invoke(LyteObject self, LyteStack stack) {
+        public boolean invoke(LyteValue self, LyteStack stack) {
             stack.push(new LyteBoolean(true));
             return true;
         }
@@ -24,7 +24,7 @@ public class LyteSTL {
 
     public static LyteNativeBlock coreFalse = new LyteNativeBlock("Core", "False") {
         @Override
-        public boolean invoke(LyteObject self, LyteStack stack) {
+        public boolean invoke(LyteValue self, LyteStack stack) {
             stack.push(new LyteBoolean(false));
             return true;
         }
@@ -32,7 +32,7 @@ public class LyteSTL {
 
     public static LyteNativeBlock coreNot = new LyteNativeBlock("Core", "Not") {
         @Override
-        public boolean invoke(LyteObject self, LyteStack stack) {
+        public boolean invoke(LyteValue self, LyteStack stack) {
             stack.push(new LyteBoolean(!stack.pop().apply(self).toBoolean()));
             return true;
         }
@@ -40,7 +40,7 @@ public class LyteSTL {
 
     public static LyteNativeBlock coreIsUndefined = new LyteNativeBlock("Core", "IsUndefined", "Undefined?") {
         @Override
-        public boolean invoke(LyteObject self, LyteStack stack) {
+        public boolean invoke(LyteValue self, LyteStack stack) {
             stack.push(new LyteBoolean(stack.pop() == LyteUndefined.UNDEFINED));
             return true;
         }
@@ -49,7 +49,7 @@ public class LyteSTL {
     public static LyteNativeBlock coreAdd = new LyteNativeBlock("Core", "Add", "+") {
 
         @Override
-        public boolean invoke(LyteObject self, LyteStack stack) {
+        public boolean invoke(LyteValue self, LyteStack stack) {
             double val1 = stack.pop().apply(self).toNumber();
             double val2 = stack.pop().apply(self).toNumber();
             stack.push(new LyteNumber(val1 + val2));
@@ -59,7 +59,7 @@ public class LyteSTL {
 
     public static LyteNativeBlock coreApply = new LyteNativeBlock("Core", "Apply") {
         @Override
-        public boolean invoke(LyteObject self, LyteStack stack) {
+        public boolean invoke(LyteValue self, LyteStack stack) {
             LyteValue value = stack.pop();
 
             if (value.typeOf().equals("block")) {
@@ -74,7 +74,7 @@ public class LyteSTL {
 
     public static LyteNativeBlock coreConcatenate = new LyteNativeBlock("Core", "Concatenate", "++") {
         @Override
-        public boolean invoke(LyteObject self, LyteStack stack) {
+        public boolean invoke(LyteValue self, LyteStack stack) {
             LyteValue value2 = stack.pop().apply(self);
             LyteValue value1 = stack.pop().apply(self);
 
@@ -89,7 +89,7 @@ public class LyteSTL {
 
     public static LyteNativeBlock ioEcho = new LyteNativeBlock("IO", "Echo") {
         @Override
-        public boolean invoke(LyteObject self, LyteStack stack) {
+        public boolean invoke(LyteValue self, LyteStack stack) {
             System.out.println(stack.pop().apply(self));
             return true;
         }
@@ -98,7 +98,7 @@ public class LyteSTL {
     public static LyteNativeBlock coreIf = new LyteNativeBlock("Core", "If") {
 
         @Override
-        public boolean invoke(LyteObject self, LyteStack stack) {
+        public boolean invoke(LyteValue self, LyteStack stack) {
             LyteValue condition = stack.pop();
             LyteBlock trueBlock = (LyteBlock) stack.pop();
             LyteBlock falseBlock = (LyteBlock) stack.pop();
@@ -115,7 +115,7 @@ public class LyteSTL {
 
     public static LyteNativeBlock utilInstantiate = new LyteNativeBlock("Util", "Instantiate") {
         @Override
-        public boolean invoke(LyteObject self, LyteStack stack) {
+        public boolean invoke(LyteValue self, LyteStack stack) {
             // TODO this assumes the two things are on the same stack, we have to move scoping out of blocks!!!
             LyteValue value = stack.pop().apply(self);
             if (!value.typeOf().equals("object")) {
@@ -138,7 +138,7 @@ public class LyteSTL {
 
     public static LyteNativeBlock coreMixWith = new LyteNativeBlock("Core", "MixWith") {
         @Override
-        public boolean invoke(LyteObject self, LyteStack stack) {
+        public boolean invoke(LyteValue self, LyteStack stack) {
             LyteValue value2 = stack.pop();
             LyteValue value1 = stack.pop();
 
@@ -154,7 +154,7 @@ public class LyteSTL {
 
     public static LyteNativeBlock errorTry = new LyteNativeBlock("Error", "Try") {
         @Override
-        public boolean invoke(LyteObject self, LyteStack stack) {
+        public boolean invoke(LyteValue self, LyteStack stack) {
             LyteValue value1 = stack.pop();
             LyteValue value2 = stack.pop();
 
@@ -174,7 +174,7 @@ public class LyteSTL {
 
     public static LyteNativeBlock errorRaise = new LyteNativeBlock("Error", "Raise") {
         @Override
-        public boolean invoke(LyteObject self, LyteStack stack) {
+        public boolean invoke(LyteValue self, LyteStack stack) {
             // Throw the result to the wolves
             throw new LyteError(stack.pop().apply(self));
         }

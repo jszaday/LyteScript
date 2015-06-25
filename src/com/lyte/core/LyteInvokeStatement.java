@@ -8,22 +8,24 @@ import java.util.List;
 /**
  * Created by a0225785 on 6/17/2015.
  */
-public class LyteInvokeStatement implements LyteStatement {
+public class LyteInvokeStatement extends LyteStatement {
 
   private String mPrimaryIdentifier;
   private List<LyteSpecifier> mSpecifiers;
 
-  public LyteInvokeStatement(String primaryIdentifier) {
-    this(primaryIdentifier, new ArrayList<LyteSpecifier>());
+  public LyteInvokeStatement(String lineNumber, String primaryIdentifier) {
+    this(lineNumber, primaryIdentifier, new ArrayList<LyteSpecifier>());
   }
 
-  public LyteInvokeStatement(String primaryIdentifier, List<LyteSpecifier> specifiers) {
+  public LyteInvokeStatement(String lineNumber, String primaryIdentifier, List<LyteSpecifier> specifiers) {
+    super(lineNumber);
     mPrimaryIdentifier = primaryIdentifier;
     mSpecifiers = specifiers;
   }
 
   @Override
   public void applyTo(LyteScope scope, LyteStack stack) {
+    System.out.println(this + " || Stack: " + stack);
     if (isSimpleInvokation()) {
       LyteValue value = scope.getVariable(mPrimaryIdentifier);
       if (value.typeOf().equals("block")) {
@@ -63,14 +65,14 @@ public class LyteInvokeStatement implements LyteStatement {
         obj = obj.apply(null);
       }
       // And adjust the last object
-      if (obj.typeOf().equals("object")) {
+      if (!obj.typeOf().equals("block")) {
         lastObj = obj;
       } else {
         lastObj = scope.getSelf();
       }
       for (int i = 0; i <= (mSpecifiers.size() - offset); i++) {
         LyteSpecifier specifier = mSpecifiers.get(i);
-        boolean lastSpecifier = ((i + 1) < mSpecifiers.size());
+        boolean lastSpecifier = ((i + 1) >= mSpecifiers.size()) || (((i + 1) < mSpecifiers.size() && mSpecifiers.get(i + 1).arguments != null));
         if (specifier.identifier != null) {
           obj = obj.getProperty(specifier.identifier);
         } else if (specifier.invokable != null) {
@@ -85,7 +87,7 @@ public class LyteInvokeStatement implements LyteStatement {
             arguments.add(argument.clone(scope));
           }
           // Then invoke the block itself w/ those arguments
-          ((LyteBlock) obj).invoke((LyteObject) lastObj, stack, arguments);
+          ((LyteBlock) obj).invoke(lastObj, stack, arguments);
           // And pop the result into the object
           if (!stack.isEmpty()) {
             obj = stack.pop();
@@ -94,18 +96,14 @@ public class LyteInvokeStatement implements LyteStatement {
           }
         }
         // Finally, apply the object if necessary (only when the next specifier is not an argument)
-        if ((lastSpecifier && mSpecifiers.get(i + 1).arguments == null) || (((i + 1) >= mSpecifiers.size()) && (mSpecifiers.get(i).arguments == null))) {
-          obj = obj.apply(lastObj);
-        }
-        // And adjust the last object
-        if (lastSpecifier && obj.typeOf().equals("object")) {
-          lastObj = obj;
-        } else {
-          lastObj = null;
+        if (!lastSpecifier) {
+          lastObj = obj = obj.apply(lastObj);
         }
       }
     } catch (LyteError e) {
       throw e;
+    } catch (Exception e) {
+      throw new LyteError(e.getMessage());
     }
     return obj;
   }

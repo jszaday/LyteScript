@@ -6,11 +6,12 @@ import com.lyte.objs.LyteValue;
 /**
  * Created by jszaday on 6/18/15.
  */
-public class LyteBindStatement implements LyteStatement {
+public class LyteBindStatement extends LyteStatement {
 
   private LyteInvokeStatement mTarget;
 
-  public LyteBindStatement(LyteInvokeStatement target) {
+  public LyteBindStatement(String lineNumber, LyteInvokeStatement target) {
+    super(lineNumber);
     if (target.isFunctionInvokation()) {
       throw new RuntimeException("Cannot bind (directly) to the result of a function call!");
     } else {

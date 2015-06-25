@@ -5,9 +5,8 @@ import com.lyte.gen.LyteLexer;
 import com.lyte.gen.LyteParser;
 import com.lyte.objs.*;
 import com.lyte.stdlib.LyteSTL;
-import org.antlr.v4.runtime.ANTLRInputStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
+import com.sun.xml.internal.xsom.impl.parser.ParserContext;
+import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -32,6 +31,8 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
   private InputStream mInputStream;
   private LyteScope mGlobalScope;
   private LyteStack mStack;
+  // Parsing stuff
+  private CommonTokenStream mTokenStream;
 
   public LyteEnvironment(String fileName) throws IOException {
     this(new FileInputStream(fileName), false);
@@ -53,8 +54,8 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
     mCurrentBlock = mGlobalBlock = LyteRawBlock.newGlobal();
     // Setup our parser w/ the correct input
     LyteLexer lexer = new LyteLexer(charStream);
-    CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-    LyteParser parser = new LyteParser(tokenStream);
+    mTokenStream = new CommonTokenStream(lexer);
+    LyteParser parser = new LyteParser(mTokenStream);
     // Then grab the parse tree and begin to visit it
     ParseTree parseTree = parser.program();
     this.visit(parseTree);
@@ -108,7 +109,7 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
       return visitInvokeStatement(ctx.invokable());
     } else {
       // Otherwise, visit the kids and generate a statement from the result
-      return new LytePushStatement((LyteValue) visitChildren(ctx));
+      return new LytePushStatement(getLineNumber(ctx), (LyteValue) visitChildren(ctx));
     }
   }
 
@@ -203,7 +204,7 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
     String primaryIdentifier = ctx.Identifier().getText();
     if (ctx.getChildCount() == 1) {
       // Simply return a simple invokable
-      return new LyteInvokeStatement(primaryIdentifier);
+      return new LyteInvokeStatement(getLineNumber(ctx), primaryIdentifier);
     } else {
       // Otherwise, construct the list of designators
       List<LyteInvokeStatement.LyteSpecifier> designators = new ArrayList<LyteInvokeStatement.LyteSpecifier>();
@@ -215,12 +216,12 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
         }
       }
 
-      return new LyteInvokeStatement(primaryIdentifier, designators);
+      return new LyteInvokeStatement(getLineNumber(ctx), primaryIdentifier, designators);
     }
   }
 
   public Object visitBindStatement(LyteParser.InvokableContext ctx) {
-    return new LyteBindStatement((LyteInvokeStatement) visitInvokeStatement(ctx));
+    return new LyteBindStatement(getLineNumber(ctx), (LyteInvokeStatement) visitInvokeStatement(ctx));
   }
 
   @Override
@@ -286,5 +287,10 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
   @Override
   public Object visitRightBindingExpression(LyteParser.RightBindingExpressionContext ctx) {
     return visitBindStatement(ctx.invokable());
+  }
+
+  private String getLineNumber(ParserRuleContext ctx) {
+    Token token = mTokenStream.get(ctx.getSourceInterval().a);
+    return token.getLine() + ":" + token.getCharPositionInLine();
   }
 }

@@ -41,25 +41,27 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
     }
   }
 
-  public boolean invoke(LyteObject self, LyteStack stack, LyteValue... args) {
+  public boolean invoke(LyteValue self, LyteStack stack, LyteValue... args) {
     return invoke(self, stack, Arrays.asList(args));
   }
 
-  public boolean invoke(LyteObject self, LyteStack stack, List<LyteValue> args) {
+  public boolean invoke(LyteValue self, LyteStack stack, List<LyteValue> args) {
     for (int i = (args.size() - 1); i >= 0; i--) {
       stack.push(args.get(i));
     }
     return invoke(self, stack);
   }
 
-  public boolean invoke(LyteObject self, LyteStack stack) {
+  public boolean invoke(LyteValue self, LyteStack stack) {
+    LyteStatement statement = null;
     // Set the "self" object
     mScope.setSelf(self);
     // Pop any named arguments
     popArgs(stack);
     try {
       // Then apply each of our statements to our scope
-      for (LyteStatement statement : get()) {
+      for (int i = 0; i < get().size(); i++) {
+        statement = get().get(i);
         statement.applyTo(mScope, stack);
       }
     } catch (LyteError e) {
@@ -67,6 +69,7 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
         stack.push(e);
         stack.popHandler().invoke(self, stack);
       } else {
+        System.out.println(statement.getLineNumber());
         throw e;
       }
 
@@ -104,7 +107,7 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
   @Override
   public LyteValue apply(LyteValue self) {
     LyteStack stack = new LyteStack();
-    invoke((LyteObject) self, stack);
+    invoke(self, stack);
     if (stack.size() > 1) {
       throw new LyteError("Error Applying Block, " + this + ", expected 1 return value instead found " + stack.size() + "!");
     } else if (!stack.isEmpty()) {

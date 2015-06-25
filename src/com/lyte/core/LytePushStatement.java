@@ -2,11 +2,12 @@ package com.lyte.core;
 
 import com.lyte.objs.LyteValue;
 
-public class LytePushStatement implements LyteStatement {
+public class LytePushStatement extends LyteStatement {
 
   private LyteValue mValue;
 
-  public LytePushStatement(LyteValue value) {
+  public LytePushStatement(String lineNumber, LyteValue value) {
+    super(lineNumber);
     mValue = value;
   }
 
