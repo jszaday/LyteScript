@@ -66,11 +66,12 @@ public class LyteInvokeStatement extends LyteStatement {
 
       if (mPrimaryIdentifier.startsWith("#")) {
         lastObj = stack.peek();
-      } else if (mPrimaryIdentifier.startsWith("@")) {
+      } else if (mPrimaryIdentifier.startsWith("@") || obj.typeOf().equals("block")) {
         lastObj = self;
       } else {
         lastObj = obj;
       }
+
       while (specifierIterator.hasNext()) {
         LyteSpecifier specifier = specifierIterator.next();
 

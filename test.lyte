@@ -11,7 +11,7 @@ Person <- %{
 
 Dancer <- %{
   dance: {
-    Echo("I'm " `++` @name `++` " and I'm dancing, I'm really dancing!")
+    EchoLn("I'm " `++` @name `++` " and I'm dancing, I'm really dancing!")
   }
 }
 
@@ -20,19 +20,19 @@ Instantiate(Person, "Justin", "Iron Man Helmet") -> justin
 justin `MixWith` Dancer
 
 justin.dance()
-justin Echo
+justin EchoLn
 
 If(justin.canLove, {
-  Echo(justin.name `++` " is capable of love.")
+  EchoLn(justin.name `++` " is capable of love.")
 }, {
-  Echo(justin.name `++` " can never love.")
+  EchoLn(justin.name `++` " can never love.")
 })
 
 Cat <- @(name, meow) {
  %{
     name: name,
     meow: {
-      Echo("The cat " `++` @name `++` " " `++` meow `++` "ed!")
+      EchoLn("The cat " `++` @name `++` " " `++` meow `++` "ed!")
     }
   }
 }
@@ -52,11 +52,11 @@ Instantiate(Squirrel, "Gerald", 6) -> gerald
 
 gerald `+` 6 -> shouldBeTwelve
 
-Echo(shouldBeTwelve)
+EchoLn(shouldBeTwelve)
 
 Try(Gregor, @(error) {
-  Echo("Gregor ees sad Gregor does not exist.")
-  Echo(error)
+  EchoLn("Gregor ees sad Gregor does not exist.")
+  EchoLn(error)
 })
 
 ThingBuilder <- @(isHappy, numThings) {
@@ -77,8 +77,8 @@ ThingBuilder <- @(isHappy, numThings) {
 }
 
 ThingBuilder(False, 5) -> myThing
-Echo(myThing)
+EchoLn(myThing)
 
-%{1, 2, 3} -> myList
+%[1, 2, 3] -> myList
 5 -> myList[6]
-Echo(myList `++` " is " `++` myList.length `++` " elements long")
+EchoLn(myList `++` " is " `++` myList.length `++` " elements long")
