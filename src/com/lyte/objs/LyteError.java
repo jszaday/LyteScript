@@ -2,17 +2,21 @@ package com.lyte.objs;
 
 import com.lyte.core.LyteScope;
 
+import java.util.ArrayList;
+
 /**
  * Created by a0225785 on 6/23/2015.
  */
 public class LyteError extends RuntimeException implements LyteValue<RuntimeException> {
+
+  private ArrayList<String> mLineNumbers = new ArrayList<String>();
 
   public LyteError(String value) {
     super(value);
   }
 
   public LyteError(LyteValue value) {
-    super(value.toString());
+    super(value.typeOf().equals("error") ? ((LyteError) value).getMessage() : value.toString());
   }
 
   @Override
@@ -69,6 +73,10 @@ public class LyteError extends RuntimeException implements LyteValue<RuntimeExce
 
   @Override
   public String toString() {
-    return getMessage();
+    return (!mLineNumbers.isEmpty() ? "Line " + mLineNumbers.get(0) + ": " : "") + getMessage();
+  }
+
+  public void addLineNumber(String lineNumber) {
+    mLineNumbers.add(lineNumber);
   }
 }

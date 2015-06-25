@@ -42,41 +42,32 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
     }
   }
 
-  public boolean invoke(LyteValue self, LyteStack stack, LyteValue... args) {
-    return invoke(self, stack, Arrays.asList(args));
+  public void invoke(LyteValue self, LyteStack stack, LyteValue... args) {
+    invoke(self, stack, Arrays.asList(args));
   }
 
-  public boolean invoke(LyteValue self, LyteStack stack, List<LyteValue> args) {
+  public void invoke(LyteValue self, LyteStack stack, List<LyteValue> args) {
     for (int i = (args.size() - 1); i >= 0; i--) {
       stack.push(args.get(i));
     }
-    return invoke(self, stack);
+    invoke(self, stack);
   }
 
-  public boolean invoke(LyteValue self, LyteStack stack) {
+  public void invoke(LyteValue self, LyteStack stack) {
     LyteStatement statement = null;
     // Pop any named arguments
     popArgs(self, stack);
-    try {
-      // Then apply each of our statements to our scope
-      Iterator<LyteStatement> statementIterator = get().iterator();
-      while (statementIterator.hasNext()) {
-        statement = statementIterator.next();
+    // Then apply each of our statements to our scope
+    Iterator<LyteStatement> statementIterator = get().iterator();
+    while (statementIterator.hasNext()) {
+      statement = statementIterator.next();
+      try {
         statement.applyTo(self, mScope, stack);
-      }
-    } catch (LyteError e) {
-      if (stack.hasHandlers()) {
-        stack.push(e);
-        stack.popHandler().invoke(self, stack);
-      } else {
-        System.out.println(statement.getLineNumber());
+      } catch (LyteError e) {
+        e.addLineNumber(statement.getLineNumber());
         throw e;
       }
-
-      return false;
     }
-    // Return true
-    return true;
   }
 
   @Override

@@ -9,45 +9,57 @@ import java.util.ArrayDeque;
  */
 public class LyteStack extends ArrayDeque<LyteValue> {
 
-    private ArrayDeque<LyteBlock> mHandlers;
+  private ArrayDeque<LyteBlock> mHandlers;
 
-    public LyteStack() {
-        mHandlers = new ArrayDeque<LyteBlock>();
-    }
+  public LyteStack() {
+    mHandlers = new ArrayDeque<LyteBlock>();
+  }
 
-    public boolean hasHandlers() {
-        return !mHandlers.isEmpty();
-    }
+  public boolean hasHandlers() {
+    return !mHandlers.isEmpty();
+  }
 
-    public void pushHandler(LyteBlock block) {
-        mHandlers.push(block);
-    }
+  public void pushHandler(LyteBlock block) {
+    mHandlers.push(block);
+  }
 
-    public LyteBlock popHandler() {
-        if (mHandlers.isEmpty()) {
-            throw new LyteError("No handler available for exception.");
-        } else {
-            return mHandlers.pop();
-        }
+  public LyteBlock popHandler() {
+    if (mHandlers.isEmpty()) {
+      throw new LyteError("No handler available for exception.");
+    } else {
+      return mHandlers.pop();
     }
+  }
 
-    public LyteValue pop() {
-        if (!this.isEmpty()) {
-            return super.pop();
-        } else {
-            throw new LyteError("No value available, stack is empty.");
-        }
+  public LyteBlock peekHandler() {
+    if (mHandlers.isEmpty()) {
+      throw new LyteError("No handler available for exception.");
+    } else {
+      return mHandlers.peek();
     }
+  }
 
-    public void push(String string) {
-        push(new LyteString(string));
+  public LyteValue pop() {
+    if (!this.isEmpty()) {
+      return super.pop();
+    } else {
+      throw new LyteError("No value available, stack is empty.");
     }
+  }
 
-    public void push(Double number) {
-        push(new LyteNumber(number));
-    }
+  public void push(String string) {
+    push(new LyteString(string));
+  }
 
-    public void push(Boolean bool) {
-        push(new LyteBoolean(bool));
-    }
+  public void push(Double number) {
+    push(new LyteNumber(number));
+  }
+
+  public void push(Boolean bool) {
+    push(new LyteBoolean(bool));
+  }
+
+  public void push(Integer integer) {
+    push(new LyteNumber(integer));
+  }
 }

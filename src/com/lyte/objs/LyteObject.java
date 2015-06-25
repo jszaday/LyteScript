@@ -35,7 +35,11 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
 
   @Override
   public LyteValue getProperty(String property) {
-    return mProperties.get(property);
+    if (hasProperty(property)) {
+      return mProperties.get(property);
+    } else {
+      throw new LyteError("Cannot Resolve Property " + property + " of Object " + toString());
+    }
   }
 
   @Override

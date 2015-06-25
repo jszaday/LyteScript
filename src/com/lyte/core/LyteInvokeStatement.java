@@ -101,10 +101,9 @@ public class LyteInvokeStatement extends LyteStatement {
       }
     } catch (LyteError e) {
       throw e;
+    } catch (Exception e) {
+      throw new LyteError(e.getMessage());
     }
-//    } catch (Exception e) {
-//      throw new LyteError(e.getMessage());
-//    }
     return obj;
   }
 

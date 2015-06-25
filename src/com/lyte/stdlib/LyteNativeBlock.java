@@ -32,7 +32,7 @@ public abstract class LyteNativeBlock extends LyteBlock {
   }
 
   @Override
-  public abstract boolean invoke(LyteValue self, LyteStack stack);
+  public abstract void invoke(LyteValue self, LyteStack stack);
 
   @Override
   public LyteValue clone(LyteScope scope) {

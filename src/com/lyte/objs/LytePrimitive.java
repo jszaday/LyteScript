@@ -30,7 +30,7 @@ public abstract class LytePrimitive<T> implements LyteValue<T> {
 
     @Override
     public void setProperty(String property, LyteValue newValue) {
-        throw new LyteError("Cannot set property " + property + " from a(n) " + typeOf() + "!");
+        throw new LyteError("Cannot set property " + property + " of a(n) " + typeOf() + "!");
     }
 
     @Override
