@@ -46,7 +46,7 @@ public class LyteSTL {
         }
     };
 
-    public static LyteNativeBlock coreAdd = new LyteNativeBlock("Core", "Add", "+") {
+    public static LyteNativeBlock mathAdd = new LyteNativeBlock("Math", "Add", "+") {
 
         @Override
         public boolean invoke(LyteValue self, LyteStack stack) {
@@ -180,6 +180,17 @@ public class LyteSTL {
         }
     };
 
+    public static LyteNativeBlock coreSwap = new LyteNativeBlock("Core", "Swap") {
+        @Override
+        public boolean invoke(LyteValue self, LyteStack stack) {
+            LyteValue value1 = stack.pop();
+            LyteValue value2 = stack.pop();
+            stack.push(value1);
+            stack.push(value2);
+            return true;
+        }
+    };
+
     public static void injectNatives(LyteScope scope) {
         Field[] fields = LyteSTL.class.getDeclaredFields();
         LytePackage lytePackage = new LytePackage();
@@ -209,10 +220,10 @@ public class LyteSTL {
             // Then if the block has an alias
             if (nativeBlock.alias != null) {
                 // Add it's alias to the scope
-                scope.putVariable(nativeBlock.alias, nativeBlock, true);
+                scope.putVariable(null, null, nativeBlock.alias, nativeBlock, true);
             }
         }
 
-        scope.putVariable(TOP_LEVEL_NAMESPACE, lytePackage, true);
+        scope.putVariable(null, null, TOP_LEVEL_NAMESPACE, lytePackage, true);
     }
 }

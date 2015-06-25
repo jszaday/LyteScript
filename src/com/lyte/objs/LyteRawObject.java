@@ -34,7 +34,7 @@ public class LyteRawObject extends LyteRawValue<HashMap<String, LyteValue>>  {
     LyteStack stack = new LyteStack();
     LyteObject newObject = new LyteObject(this);
     for (String key : mProperties.keySet()) {
-      mProperties.get(key).applyTo(scope, stack);
+      mProperties.get(key).applyTo(newObject, scope, stack);
       if (stack.size() > 1) {
         throw new RuntimeException("Expected only one argument on the stack, instead found " + stack.size());
       }

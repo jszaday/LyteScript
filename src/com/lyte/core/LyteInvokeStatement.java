@@ -1,8 +1,10 @@
 package com.lyte.core;
 
 import com.lyte.objs.*;
+import org.apache.commons.collections4.iterators.PeekingIterator;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -24,17 +26,16 @@ public class LyteInvokeStatement extends LyteStatement {
   }
 
   @Override
-  public void applyTo(LyteScope scope, LyteStack stack) {
-    System.out.println(this + " || Stack: " + stack);
+  public void applyTo(LyteValue self, LyteScope scope, LyteStack stack) {
     if (isSimpleInvokation()) {
-      LyteValue value = scope.getVariable(mPrimaryIdentifier);
+      LyteValue value = scope.getVariable(self, stack, mPrimaryIdentifier);
       if (value.typeOf().equals("block")) {
-        ((LyteBlock) value).invoke(null, stack);
+        ((LyteBlock) value).invoke(self, stack);
       } else {
         stack.push(value);
       }
     } else {
-      LyteValue retVal = resolve(scope, stack, true);
+      LyteValue retVal = resolve(self, scope, stack, true);
       if (retVal != null) {
         stack.push(retVal);
       }
@@ -53,37 +54,35 @@ public class LyteInvokeStatement extends LyteStatement {
     return mSpecifiers.get(mSpecifiers.size() - 1);
   }
 
-  public LyteValue resolve(LyteScope scope, LyteStack stack, boolean fullyResolve) {
-    LyteValue obj, lastObj;
-    // Adjust the offset we are to fully resolve ourself
-    int offset = fullyResolve ? 1 : 2;
+  public LyteValue resolve(LyteValue self, LyteScope scope, LyteStack stack, boolean fullyResolve) {
+    PeekingIterator<LyteSpecifier> specifierIterator = new PeekingIterator<LyteSpecifier>(mSpecifiers.subList(0, mSpecifiers.size() - (fullyResolve ? 0 : 1)).iterator());
+    LyteValue obj, lastObj = self;
     try {
-      // Adjust the last object
-      obj = scope.getVariable(mPrimaryIdentifier);
-      // Applying it if necessary
-      if ((!mSpecifiers.isEmpty() && (mSpecifiers.get(0).arguments == null)) || mSpecifiers.isEmpty()) {
-        obj = obj.apply(null);
+      obj = scope.getVariable(lastObj, stack, mPrimaryIdentifier);
+
+      if (shouldApply(specifierIterator)) {
+        obj = obj.apply(lastObj);
       }
-      // And adjust the last object
-      if (!obj.typeOf().equals("block")) {
-        lastObj = obj;
+
+      if (mPrimaryIdentifier.startsWith("#")) {
+        lastObj = stack.peek();
+      } else if (mPrimaryIdentifier.startsWith("@")) {
+        lastObj = self;
       } else {
-        lastObj = scope.getSelf();
+        lastObj = obj;
       }
-      for (int i = 0; i <= (mSpecifiers.size() - offset); i++) {
-        LyteSpecifier specifier = mSpecifiers.get(i);
-        boolean lastSpecifier = ((i + 1) >= mSpecifiers.size()) || (((i + 1) < mSpecifiers.size() && mSpecifiers.get(i + 1).arguments != null));
+      while (specifierIterator.hasNext()) {
+        LyteSpecifier specifier = specifierIterator.next();
+
         if (specifier.identifier != null) {
           obj = obj.getProperty(specifier.identifier);
         } else if (specifier.invokable != null) {
-          // TODO Ensure only one result is pushed onto the stack
-          specifier.invokable.applyTo(scope, stack);
-          obj = obj.getProperty(stack.pop().toString());
+          obj = obj.getProperty(specifier.invokable.apply(obj, scope).toString());
         } else {
           List<LyteValue> arguments = new ArrayList<LyteValue>();
-          // TODO Check if the ordering is correct & ensure that the block only has one result
           // Add a clone of each of the arguments to the function
           for (LyteRawBlock argument : specifier.arguments) {
+            // TODO Check if the ordering is correct & ensure that the block only has one result
             arguments.add(argument.clone(scope));
           }
           // Then invoke the block itself w/ those arguments
@@ -95,17 +94,22 @@ public class LyteInvokeStatement extends LyteStatement {
             obj = null;
           }
         }
-        // Finally, apply the object if necessary (only when the next specifier is not an argument)
-        if (!lastSpecifier) {
+
+        if (shouldApply(specifierIterator) && obj != null) {
           lastObj = obj = obj.apply(lastObj);
         }
       }
     } catch (LyteError e) {
       throw e;
-    } catch (Exception e) {
-      throw new LyteError(e.getMessage());
     }
+//    } catch (Exception e) {
+//      throw new LyteError(e.getMessage());
+//    }
     return obj;
+  }
+
+  private static boolean shouldApply(PeekingIterator<LyteSpecifier> specifierIterator) {
+    return !specifierIterator.hasNext() || (specifierIterator.hasNext() && (specifierIterator.peek().arguments == null));
   }
 
   public boolean isFunctionInvokation() {

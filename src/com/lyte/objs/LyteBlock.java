@@ -6,6 +6,7 @@ import com.lyte.core.LyteStatement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -30,14 +31,14 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
     mArgs = args;
   }
 
-  private void popArgs(LyteStack stack) {
+  private void popArgs(LyteValue self, LyteStack stack) {
     if (mArgs == null) {
       return;
     }
     // For each of our args
     for (String arg : mArgs) {
       // Pop off a value and bind it to the arg's name
-      mScope.putVariable(arg, stack.pop());
+      mScope.putVariable(self, stack, arg, stack.pop());
     }
   }
 
@@ -54,15 +55,14 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
 
   public boolean invoke(LyteValue self, LyteStack stack) {
     LyteStatement statement = null;
-    // Set the "self" object
-    mScope.setSelf(self);
     // Pop any named arguments
-    popArgs(stack);
+    popArgs(self, stack);
     try {
       // Then apply each of our statements to our scope
-      for (int i = 0; i < get().size(); i++) {
-        statement = get().get(i);
-        statement.applyTo(mScope, stack);
+      Iterator<LyteStatement> statementIterator = get().iterator();
+      while (statementIterator.hasNext()) {
+        statement = statementIterator.next();
+        statement.applyTo(self, mScope, stack);
       }
     } catch (LyteError e) {
       if (stack.hasHandlers()) {

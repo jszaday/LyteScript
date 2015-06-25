@@ -81,7 +81,7 @@ stringLiteral
   ;
 
 arrayLiteral
-  : Percent LeftBrace valueList Comma? RightBrace
+  : Percent LeftBracket valueList? Comma? RightBracket
   ;
 
 objectLiteral

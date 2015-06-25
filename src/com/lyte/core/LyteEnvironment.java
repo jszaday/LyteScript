@@ -5,7 +5,6 @@ import com.lyte.gen.LyteLexer;
 import com.lyte.gen.LyteParser;
 import com.lyte.objs.*;
 import com.lyte.stdlib.LyteSTL;
-import com.sun.xml.internal.xsom.impl.parser.ParserContext;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -141,8 +140,10 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
   public Object visitArrayLiteral(LyteParser.ArrayLiteralContext ctx) {
     LyteRawArray array = new LyteRawArray();
     LyteParser.ValueListContext valueList = ctx.valueList();
-    for (LyteParser.PushableContext pushable : valueList.pushable()) {
-      array.add((LyteStatement) visitPushableStatement(pushable));
+    if (valueList != null) {
+      for (LyteParser.PushableContext pushable : valueList.pushable()) {
+        array.add((LyteStatement) visitPushableStatement(pushable));
+      }
     }
     return array;
   }

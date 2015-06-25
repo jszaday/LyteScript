@@ -11,7 +11,6 @@ public class LyteScope {
   private HashMap<String, LyteValue> mVariables;
   private HashSet<String> mFinalVariables;
   private LyteScope mParent;
-  private LyteValue mSelf;
 
   private LyteScope(LyteScope parent, boolean useParentStack) {
     mParent = parent;
@@ -23,10 +22,8 @@ public class LyteScope {
     this(parent, true);
   }
 
-  public LyteValue getVariable(String name) {
-    if (name.startsWith("@")) {
-      return mSelf.getProperty(name.substring(1));
-    } else if (mVariables.containsKey(name)) {
+  private LyteValue getVariable(String name) {
+    if (mVariables.containsKey(name)) {
       return mVariables.get(name);
     } else if (mParent != null) {
       return mParent.getVariable(name);
@@ -35,10 +32,18 @@ public class LyteScope {
     }
   }
 
-  public boolean hasVariable(String name) {
-    if (name.startsWith("@")) {
-      return mSelf.hasProperty(name.substring(1));
-    } else if (mVariables.containsKey(name)) {
+  public LyteValue getVariable(LyteValue self, LyteStack stack, String name) {
+    if (name.startsWith("@") && self != null) {
+      return self.getProperty(name.substring(1, name.length()));
+    } else if (name.startsWith("#") && stack != null) {
+      return stack.peek().getProperty(name.substring(1, name.length()));
+    } else {
+      return getVariable(name);
+    }
+  }
+
+  private boolean hasVariable(String name) {
+    if (mVariables.containsKey(name)) {
       return true;
     } else if (mParent != null) {
       return mParent.hasVariable(name);
@@ -47,11 +52,19 @@ public class LyteScope {
     }
   }
 
-  public void putVariable(String name, LyteValue value, boolean finalVariable) {
-    if (name.startsWith("@")) {
-      mSelf.setProperty(name.substring(1), value);
-    } else if (mParent != null && mParent.hasVariable(name)) {
-      mParent.putVariable(name, value);
+  public boolean hasVariable(LyteValue self, LyteStack stack, String name) {
+    if (name.startsWith("@") && self != null) {
+      return self.hasProperty(name.substring(1, name.length()));
+    } else if (name.startsWith("#") && stack != null) {
+      return stack.peek().hasProperty(name.substring(1, name.length()));
+    } else {
+      return hasVariable(name);
+    }
+  }
+
+  private void putVariable(String name, LyteValue value, boolean finalVariable) {
+    if (mParent != null && mParent.hasVariable(name)) {
+      mParent.putVariable(name, value, finalVariable);
     } else {
       if (mFinalVariables.contains(name)) {
         throw new LyteError("Cannot override the value of " + name);
@@ -65,8 +78,18 @@ public class LyteScope {
     }
   }
 
-  public void putVariable(String name, LyteValue value) {
-    putVariable(name, value, false);
+  public void putVariable(LyteValue self, LyteStack stack, String name, LyteValue value, boolean finalVariable) {
+    if (name.startsWith("@") && self != null) {
+      self.setProperty(name.substring(1, name.length()), value);
+    } else if (name.startsWith("#") && stack != null) {
+      stack.peek().setProperty(name.substring(1, name.length()), value);
+    } else {
+      putVariable(name, value, finalVariable);
+    }
+  }
+
+  public void putVariable(LyteValue self, LyteStack stack, String name, LyteValue value) {
+    putVariable(self, stack, name, value, false);
   }
 
   public void finalizeVariable(String name) {
@@ -101,15 +124,5 @@ public class LyteScope {
 
   public void printStackTrace() {
     System.out.print(getStackTrace());
-  }
-
-  public void setSelf(LyteValue self) {
-    if (self != null || mSelf == null) {
-      mSelf = self;
-    }
-  }
-
-  public LyteValue getSelf() {
-    return mSelf;
   }
 }

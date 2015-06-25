@@ -39,10 +39,14 @@ public class LyteString extends LytePrimitive<String> {
         @Override
         public boolean invoke(LyteValue self, LyteStack stack) {
             if (self instanceof LyteString) {
-                int value1 = (int) stack.pop().toNumber();
-                int value2 = (int) stack.pop().toNumber();
-                ((LyteString) self).set(self.toString().substring(value1, value2 + 1));
-                return true;
+                int value1 = (int) stack.pop().apply(self).toNumber();
+                int value2 = (int) stack.pop().apply(self).toNumber();
+                try {
+                    stack.push(new LyteString(self.toString().substring(value1, value2)));
+                    return true;
+                } catch (StringIndexOutOfBoundsException e) {
+                    throw new LyteError("Cannot take substring from " + value1 + " to " + value2 + " of \"" + self.toString() + ",\" indices out of bounds!");
+                }
             } else {
                 throw new LyteError("Cannot take the substring of " + self);
             }
