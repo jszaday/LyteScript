@@ -125,4 +125,11 @@ public class LyteScope {
   public void printStackTrace() {
     System.out.print(getStackTrace());
   }
+
+  public void dump() {
+    if (mParent != null) {
+      mParent.dump();
+      System.out.println(toString() + " : " + mVariables);
+    }
+  }
 }

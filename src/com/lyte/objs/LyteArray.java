@@ -2,6 +2,7 @@ package com.lyte.objs;
 
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
+import com.lyte.stdlib.LyteNativeBlock;
 
 import java.util.ArrayList;
 
@@ -50,6 +51,8 @@ public class LyteArray implements LyteValue<ArrayList<LyteValue>> {
       }
     } else if (property.equals("length")) {
       return new LyteNumber(mList.size());
+    } else if (property.equals("push")) {
+      return listPush;
     } else {
       throw new LyteError("Cannot Resolve Property " + property + " from the array " + toString());
     }
@@ -67,7 +70,7 @@ public class LyteArray implements LyteValue<ArrayList<LyteValue>> {
 
   @Override
   public boolean hasProperty(String property) {
-    return property.equals("length") || (tryParse(property) != null);
+    return property.equals("length") || property.equals("push") || (tryParse(property) != null);
   }
 
   @Override
@@ -99,4 +102,14 @@ public class LyteArray implements LyteValue<ArrayList<LyteValue>> {
   public String typeOf() {
     return "list";
   }
+
+  private static LyteNativeBlock listPush = new LyteNativeBlock("List", "Push") {
+    @Override
+    public void invoke(LyteValue self, LyteStack stack) {
+      if (!self.typeOf().equals("list")) {
+        throw new LyteError("Cannot apply push to an " + self.typeOf());
+      }
+      ((LyteArray) self).mList.add(stack.pop().apply(null, stack));
+    }
+  };
 }

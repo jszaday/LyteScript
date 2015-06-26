@@ -62,6 +62,36 @@ public class LyteSTL {
         }
     };
 
+    public static LyteNativeBlock mathLessEquals = new LyteNativeBlock("Math", "LessEquals", "<=") {
+
+        @Override
+        public void invoke(LyteValue self, LyteStack stack) {
+            double val1 = stack.pop().apply(self, stack).toNumber();
+            double val2 = stack.pop().apply(self, stack).toNumber();
+            stack.push(val2 <= val1);
+        }
+    };
+
+    public static LyteNativeBlock mathSubtract = new LyteNativeBlock("Math", "Subtract", "-") {
+
+        @Override
+        public void invoke(LyteValue self, LyteStack stack) {
+            double val1 = stack.pop().apply(self, stack).toNumber();
+            double val2 = stack.pop().apply(self, stack).toNumber();
+            stack.push(val2 - val1);
+        }
+    };
+
+    public static LyteNativeBlock mathMultiply = new LyteNativeBlock("Math", "Multiply", "*") {
+
+        @Override
+        public void invoke(LyteValue self, LyteStack stack) {
+            double val1 = stack.pop().apply(self, stack).toNumber();
+            double val2 = stack.pop().apply(self, stack).toNumber();
+            stack.push(val1 * val2);
+        }
+    };
+
     public static LyteNativeBlock coreApply = new LyteNativeBlock("Core", "Apply") {
         @Override
         public void invoke(LyteValue self, LyteStack stack) {
@@ -111,13 +141,14 @@ public class LyteSTL {
         @Override
         public void invoke(LyteValue self, LyteStack stack) {
             LyteValue condition = stack.pop();
-            LyteBlock trueBlock = (LyteBlock) stack.pop();
-            LyteBlock falseBlock = (LyteBlock) stack.pop();
+            LyteValue trueValue = stack.pop();
+            LyteValue falseValue = stack.pop();
+            LyteValue selectedValue = condition.apply(self, stack).toBoolean() ? trueValue : falseValue;
 
-            if (condition.apply(self, stack).toBoolean()) {
-                trueBlock.invoke(self, stack);
+            if (selectedValue.typeOf().equals("block")) {
+                ((LyteBlock) selectedValue).invoke(self, stack);
             } else {
-                falseBlock.invoke(self, stack);
+                stack.push(selectedValue.apply(self, stack));
             }
         }
     };

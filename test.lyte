@@ -1,84 +1,53 @@
-Person <- %{
-  __constructor: @(name, favoriteHat) {
-    name -> @name
-    favoriteHat -> @favoriteHat
-  },
-  __toString: {
-    "I'm " `++` @name `++` " and my favorite kind of hat is a(n) " `++` @favoriteHat `++` "."
-  },
-  canLove: False
+/* Icky Math */
+Factorial <- @(n) {
+  If (n `<=` 1, {
+    1
+  }, {
+    n `*` Factorial(n `-` 1)
+  })
 }
 
-Dancer <- %{
-  dance: {
-    EchoLn("I'm " `++` @name `++` " and I'm dancing, I'm really dancing!")
+6 Factorial EchoLn
+
+/* Puppy Dogs*/
+Dog <- %{
+  __constructor: @(name) {
+    name -> @name
+    %[] -> @tricks
+  },
+  addTrick: @(trick) {
+    @tricks.push(trick)
+  },
+  doTricks: {
+    // Perform Each Trick
+    For(@tricks, @(trick) {
+      EchoLn(@name `++` " performed the trick \"" `++` trick `++` "!\"")
+    })
   }
 }
 
-Instantiate(Person, "Justin", "Iron Man Helmet") -> justin
-
-justin `MixWith` Dancer
-
-justin.dance()
-justin EchoLn
-
-If(justin.canLove, {
-  EchoLn(justin.name `++` " is capable of love.")
-}, {
-  EchoLn(justin.name `++` " can never love.")
-})
-
-Cat <- @(name, meow) {
- %{
-    name: name,
-    meow: {
-      EchoLn("The cat " `++` @name `++` " " `++` meow `++` "ed!")
-    }
+Barker <- %{
+  bark: @(n) {
+    If (n `<=` 1, {
+      EchoLn("BARK!")
+    }, {
+      Echo("BARK! ")
+      @bark(n `-` 1)
+    })
   }
 }
 
-Cat("Neko", "Nyan") -> myKitty
-myKitty.meow()
+Instantiate(Dog, "Fido") -> fido
+fido `MixWith` Barker
+fido.addTrick("roll over")
+fido.addTrick("play dead")
+fido.doTricks()
+fido.bark(10)
 
-Squirrel <- %{
-  __constructor: @(name, numNuts) {
-    name -> @name
-    numNuts -> @numNuts
-  },
-  __toNumber: { @numNuts }
-}
-
-Instantiate(Squirrel, "Gerald", 6) -> gerald
-
-gerald `+` 6 -> shouldBeTwelve
-
-EchoLn(shouldBeTwelve)
-
+/* Exceptions */
 Try(Gregor, @(error) {
   EchoLn("Gregor ees sad Gregor does not exist.")
   EchoLn(error)
 })
 
-ThingBuilder <- @(isHappy, numThings) {
-  // Initialize an empty object
-  %{} -> self
-  // Setup its properties
-  isHappy -> self.isHappy
-  numThings -> self.numThings
-  self.__toString <- {
-    If (@isHappy, {
-      "Is a happy thing with " `++` @numThings `++` " other things."
-    }, {
-      "Is an unhappy thing with only " `++` @numThings `++` " other things."
-    })
-  }
-  // And finally return the newly created object
-  self
-}
-
-ThingBuilder(False, 5) -> myThing
-EchoLn(myThing)
-
-%[1, 2, 3] -> myList
-5 -> myList[6]
-EchoLn(myList `++` " is " `++` myList.length `++` " elements long")
+Try(Raise("Some men just want to see the world burn!"), EchoLn)

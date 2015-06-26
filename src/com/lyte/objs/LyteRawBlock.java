@@ -69,13 +69,12 @@ public class LyteRawBlock extends LyteRawValue<List<LyteStatement>> {
     }
   }
 
-  @Override
   public LyteValue<List<LyteStatement>> clone(LyteScope scope) {
-    return clone(scope, true);
+    return new LyteBlock(scope, mStatements, mArgs, true);
   }
 
-  public LyteValue<List<LyteStatement>> clone(LyteScope scope, boolean shouldEnter) {
-    return new LyteBlock(scope, mStatements, mArgs, shouldEnter);
+  public LyteValue<List<LyteStatement>> clone(LyteScope scope, boolean canEnter) {
+    return new LyteBlock(scope, mStatements, mArgs, canEnter);
   }
 
   @Override

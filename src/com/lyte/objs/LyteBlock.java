@@ -15,20 +15,19 @@ import java.util.List;
 public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
 
   private List<String> mArgs;
+  protected LyteScope mParentScope;
   protected LyteScope mScope;
+  private boolean mCanEnter;
 
   public LyteBlock(LyteScope parentScope, List<LyteStatement> statements) {
     this(parentScope, statements, null, true);
   }
 
-  public LyteBlock(LyteScope parentScope, List<LyteStatement> statements, List<String> args, boolean shouldEnter) {
+  public LyteBlock(LyteScope parentScope, List<LyteStatement> statements, List<String> args, boolean canEnter) {
     super(statements);
-    if ((parentScope != null) && shouldEnter) {
-      mScope = parentScope.enter();
-    } else {
-      mScope = parentScope;
-    }
+    mParentScope = parentScope;
     mArgs = args;
+    mCanEnter = canEnter;
   }
 
   private void popArgs(LyteValue self, LyteStack stack) {
@@ -55,6 +54,12 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
 
   public void invoke(LyteValue self, LyteStack stack) {
     LyteStatement statement = null;
+    // Enter a new scope
+    if (mCanEnter) {
+      mScope = mParentScope.enter();
+    } else {
+      mScope = mParentScope;
+    }
     // Pop any named arguments
     popArgs(self, stack);
     // Then apply each of our statements to our scope
@@ -92,7 +97,11 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
 
   @Override
   public LyteValue<List<LyteStatement>> clone(LyteScope scope) {
-    return new LyteBlock(mScope.clone(), get(), mArgs, false);
+    return new LyteBlock(mParentScope, get(), mArgs, true);
+  }
+
+  public LyteValue<List<LyteStatement>> clone(LyteScope scope, boolean canEnter) {
+    return new LyteBlock(mParentScope, get(), mArgs, canEnter);
   }
 
   @Override
@@ -104,7 +113,7 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
     } else if (!stack.isEmpty()) {
       return stack.pop();
     } else {
-      return LyteUndefined.UNDEFINED;
+      return null;
     }
   }
 }
