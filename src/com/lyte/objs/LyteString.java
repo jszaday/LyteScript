@@ -52,8 +52,8 @@ public class LyteString extends LytePrimitive<String> {
     @Override
     public void invoke(LyteValue self, LyteStack stack) {
       if (self instanceof LyteString) {
-        int value1 = (int) stack.pop().apply(self).toNumber();
-        int value2 = (int) stack.pop().apply(self).toNumber();
+        int value1 = (int) stack.pop().apply(self, stack).toNumber();
+        int value2 = (int) stack.pop().apply(self, stack).toNumber();
         try {
           stack.push(new LyteString(self.toString().substring(value1, value2)));
         } catch (StringIndexOutOfBoundsException e) {

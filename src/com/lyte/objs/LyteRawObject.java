@@ -46,11 +46,6 @@ public class LyteRawObject extends LyteRawValue<HashMap<String, LyteValue>>  {
   }
 
   @Override
-  public LyteValue apply(LyteValue self) {
-    return null;
-  }
-
-  @Override
   public String typeOf() {
     return "rawObject";
   }

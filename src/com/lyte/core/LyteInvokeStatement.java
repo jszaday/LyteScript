@@ -61,7 +61,7 @@ public class LyteInvokeStatement extends LyteStatement {
       obj = scope.getVariable(lastObj, stack, mPrimaryIdentifier);
 
       if (shouldApply(specifierIterator)) {
-        obj = obj.apply(lastObj);
+        obj = obj.apply(lastObj, stack);
       }
 
       if (mPrimaryIdentifier.startsWith("#")) {
@@ -97,7 +97,7 @@ public class LyteInvokeStatement extends LyteStatement {
         }
 
         if (shouldApply(specifierIterator) && obj != null) {
-          lastObj = obj = obj.apply(lastObj);
+          lastObj = obj = obj.apply(lastObj, stack);
         }
       }
     } catch (LyteError e) {

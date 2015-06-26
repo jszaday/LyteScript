@@ -96,11 +96,11 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
   }
 
   @Override
-  public LyteValue apply(LyteValue self) {
-    LyteStack stack = new LyteStack();
+  public LyteValue apply(LyteValue self, LyteStack stack) {
+    int origStackSize = stack.size();
     invoke(self, stack);
-    if (stack.size() > 1) {
-      throw new LyteError("Error Applying Block, " + this + ", expected 1 return value instead found " + stack.size() + "!");
+    if ((stack.size() - origStackSize) > 1) {
+      throw new LyteError("Error Applying Block, " + this + ", expected 1 return value instead found " + (stack.size() - origStackSize) + "!");
     } else if (!stack.isEmpty()) {
       return stack.pop();
     } else {

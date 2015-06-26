@@ -1,6 +1,7 @@
 package com.lyte.objs;
 
 import com.lyte.core.LyteScope;
+import com.lyte.core.LyteStack;
 
 /**
  * Created by a0225785 on 6/24/2015.
@@ -48,7 +49,7 @@ public abstract class LyteRawValue<T> implements LyteValue<T> {
   }
 
   @Override
-  public LyteValue apply(LyteValue self) {
+  public LyteValue apply(LyteValue self, LyteStack stack) {
     throw new LyteError("Cannot apply object of type " + typeOf() + "!");
   }
 }

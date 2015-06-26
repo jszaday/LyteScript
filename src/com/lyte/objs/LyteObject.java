@@ -62,7 +62,7 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
   @Override
   public boolean toBoolean() {
     if (hasProperty("__toBoolean")) {
-      return getProperty("__toBoolean").apply(this).toBoolean();
+      return getProperty("__toBoolean").apply(this, new LyteStack()).toBoolean();
     } else {
       return !mProperties.isEmpty();
     }
@@ -71,7 +71,7 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
   @Override
   public double toNumber() {
     if (hasProperty("__toNumber")) {
-      return getProperty("__toNumber").apply(this).toNumber();
+      return getProperty("__toNumber").apply(this, new LyteStack()).toNumber();
     } else {
       return mProperties.size();
     }
@@ -80,7 +80,7 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
   @Override
   public String toString() {
     if (hasProperty("__toString")) {
-      return getProperty("__toString").apply(this).toString();
+      return getProperty("__toString").apply(this, new LyteStack()).toString();
     } else {
       return mProperties.toString();
     }
@@ -101,7 +101,7 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
   }
 
   @Override
-  public LyteValue apply(LyteValue self) {
+  public LyteValue apply(LyteValue self, LyteStack stack) {
     return this;
   }
 }

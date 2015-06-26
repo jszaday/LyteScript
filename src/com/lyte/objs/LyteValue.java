@@ -1,6 +1,7 @@
 package com.lyte.objs;
 
 import com.lyte.core.LyteScope;
+import com.lyte.core.LyteStack;
 
 public interface LyteValue<T> {
 
@@ -19,5 +20,5 @@ public interface LyteValue<T> {
 
   LyteValue<T> clone(LyteScope scope);
 
-  LyteValue apply(LyteValue self);
+  LyteValue apply(LyteValue self, LyteStack stack);
 }

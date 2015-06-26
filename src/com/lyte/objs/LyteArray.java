@@ -1,6 +1,7 @@
 package com.lyte.objs;
 
 import com.lyte.core.LyteScope;
+import com.lyte.core.LyteStack;
 
 import java.util.ArrayList;
 
@@ -85,7 +86,7 @@ public class LyteArray implements LyteValue<ArrayList<LyteValue>> {
   }
 
   @Override
-  public LyteValue apply(LyteValue self) {
+  public LyteValue apply(LyteValue self, LyteStack stack) {
     return this;
   }
 
