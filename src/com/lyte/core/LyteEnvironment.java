@@ -4,7 +4,8 @@ import com.lyte.gen.LyteBaseVisitor;
 import com.lyte.gen.LyteLexer;
 import com.lyte.gen.LyteParser;
 import com.lyte.objs.*;
-import com.lyte.stdlib.LyteSTL;
+import com.lyte.stdlib.LyteStandardFunctions;
+import com.lyte.utils.LyteNativeInjector;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -45,7 +46,7 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
     mGlobalScope = LyteScope.newGlobal();
     mStack = new LyteStack();
     // And inject the native functions
-    LyteSTL.injectNatives(mGlobalScope);
+    LyteNativeInjector.injectNatives(LyteStandardFunctions.class, mGlobalScope, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
   }
 
   private void runOnce(CharStream charStream, LyteValue... args) throws IOException {

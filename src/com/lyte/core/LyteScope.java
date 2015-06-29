@@ -6,8 +6,9 @@ import java.util.HashSet;
 import com.lyte.objs.LyteError;
 import com.lyte.objs.LyteObject;
 import com.lyte.objs.LyteValue;
+import com.lyte.utils.LyteInjectable;
 
-public class LyteScope {
+public class LyteScope implements LyteInjectable {
   private HashMap<String, LyteValue> mVariables;
   private HashSet<String> mFinalVariables;
   private LyteScope mParent;
@@ -131,5 +132,10 @@ public class LyteScope {
       mParent.dump();
       System.out.println(toString() + " : " + mVariables);
     }
+  }
+
+  @Override
+  public void inject(String name, LyteValue value) {
+    putVariable(name, value, true);
   }
 }

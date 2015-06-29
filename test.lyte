@@ -51,3 +51,6 @@ Try(Gregor, @(error) {
 })
 
 Try(Raise("Some men just want to see the world burn!"), EchoLn)
+
+"Potato" -> myString
+myString.substring(0, 4) Echo
