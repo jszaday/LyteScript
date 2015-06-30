@@ -142,11 +142,11 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
   public Object visitRange(LyteParser.RangeContext ctx) {
     LyteRawBlock block = mCurrentBlock.enter();
 
-    for (int i = (ctx.numericLiteral().size() - 1); i > 0; i--) {
+    for (int i = (ctx.numericLiteral().size() - 1); i >= 0; i--) {
       block.addStatement(new LytePushStatement(getLineNumber(ctx), (LyteValue) visitNumericLiteral(ctx.numericLiteral(i))));
     }
 
-    block.addStatement(new LyteInvokeStatement(getLineNumber(ctx), "Range"));
+    block.addStatement(new LyteInvokeStatement(getLineNumber(ctx), "Range" + ctx.numericLiteral().size()));
 
     return block;
   }

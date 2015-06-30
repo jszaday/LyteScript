@@ -3,40 +3,63 @@ package com.lyte.core;
 import com.lyte.objs.*;
 
 import java.util.ArrayDeque;
+import java.util.LinkedList;
 
 /**
  * Created by jszaday on 6/19/15.
  */
 public class LyteStack extends ArrayDeque<LyteValue> {
 
-  private ArrayDeque<LyteBlock> mHandlers;
+  private LinkedList<LyteScope> mScopes;
+  private LinkedList<LyteValue> mContexts;
 
   public LyteStack() {
-    mHandlers = new ArrayDeque<LyteBlock>();
+    mScopes = new LinkedList<>();
+    mContexts = new LinkedList<>();
   }
 
-  public boolean hasHandlers() {
-    return !mHandlers.isEmpty();
+  public LyteStack(LyteScope scope, LyteValue self) {
+    this();
+    enterContext(scope, self);
   }
 
-  public void pushHandler(LyteBlock block) {
-    mHandlers.push(block);
+  public LyteValue applyInContext(LyteScope scope, LyteValue self, LyteValue value) {
+    if (value.typeOf().equals("block")) {
+      enterContext(scope, self);
+      value = value.apply(this);
+      leaveContext();
+    }
+    return value;
   }
 
-  public LyteBlock popHandler() {
-    if (mHandlers.isEmpty()) {
-      throw new LyteError("No handler available for exception.");
+  public void enterContext(LyteScope scope, LyteValue self) {
+    mContexts.push(self);
+    mScopes.push(scope);
+  }
+
+  public void leaveContext() {
+    mContexts.pop();
+    mScopes.pop();
+  }
+
+  public LyteValue getVariable(String name) {
+    return mScopes.peek().getVariable(mContexts.peek(), this, name);
+  }
+
+  public void updateVariable(String name) {
+    mScopes.peek().putVariable(this, name, pop());
+  }
+
+  public LyteValue getCurrentSelf() {
+    if (mContexts.isEmpty()) {
+      return LyteUndefined.UNDEFINED;
     } else {
-      return mHandlers.pop();
+      return mContexts.peek();
     }
   }
 
-  public LyteBlock peekHandler() {
-    if (mHandlers.isEmpty()) {
-      throw new LyteError("No handler available for exception.");
-    } else {
-      return mHandlers.peek();
-    }
+  public LyteScope getCurrentScope() {
+    return mScopes.peek();
   }
 
   public LyteValue pop() {

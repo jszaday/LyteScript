@@ -62,7 +62,7 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
   @Override
   public boolean toBoolean() {
     if (hasProperty("__toBoolean")) {
-      return getProperty("__toBoolean").apply(this, new LyteStack()).toBoolean();
+      return getProperty("__toBoolean").apply(new LyteStack(null, this)).toBoolean();
     } else {
       return !mProperties.isEmpty();
     }
@@ -71,7 +71,7 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
   @Override
   public double toNumber() {
     if (hasProperty("__toNumber")) {
-      return getProperty("__toNumber").apply(this, new LyteStack()).toNumber();
+      return getProperty("__toNumber").apply(new LyteStack(null, this)).toNumber();
     } else {
       return mProperties.size();
     }
@@ -80,7 +80,7 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
   @Override
   public String toString() {
     if (hasProperty("__toString")) {
-      return getProperty("__toString").apply(this, new LyteStack()).toString();
+      return getProperty("__toString").apply(new LyteStack(null, this)).toString();
     } else {
       return mProperties.toString();
     }
@@ -101,7 +101,29 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
   }
 
   @Override
-  public LyteValue apply(LyteValue self, LyteStack stack) {
+  public LyteValue apply(LyteStack stack) {
     return this;
+  }
+
+
+  @Override
+  public boolean equals(LyteValue other) {
+    if (other.typeOf().equals(typeOf())) {
+      return equalsStrict(other);
+    } else if (other.isSimpleComparison()) {
+      return other.equals(this);
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public boolean equalsStrict(LyteValue other) {
+    return other.typeOf().equals(typeOf()) && other.get().equals(get());
+  }
+
+  @Override
+  public boolean isSimpleComparison() {
+    return false;
   }
 }

@@ -18,4 +18,14 @@ public class LyteBoolean extends LytePrimitive<Boolean> {
     public double toNumber() {
         return get() ? 1 : 0;
     }
+
+    @Override
+    public boolean equals(LyteValue other) {
+        return other.toBoolean() == get();
+    }
+
+    @Override
+    public boolean isSimpleComparison() {
+        return true;
+    }
 }

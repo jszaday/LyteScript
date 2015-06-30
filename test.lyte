@@ -55,12 +55,30 @@ Try(Gregor, @(error) {
 Try(Raise("Some men just want to see the world burn!"), EchoLn)
 
 "A string separated by spaces" -> myString
-myString.toUpperCase.split(" ") -> myWords
+myString.toUpperCase().split(" ") -> myWords
 
 Until(myWords.empty?, {
   myWords.pop EchoLn
 })
 
-For(1.2:0.1:3.5, {
-  Echo
+For(0:4:16, @(i) {
+  If(i `==` 16, {
+    EchoLn(i)
+  }, {
+    Echo(i `++` " ")
+  }) 
 })
+
+Test <- %{
+  name: "Bob",
+  changeName: @(newName) {
+    EchoLn(newName)
+    Lyte.Core.If (@name `==` newName, {
+      EchoLn("Nothing to change.")
+    }, {
+      newName -> @name
+    })
+  }
+}
+
+Test.changeName(@name)

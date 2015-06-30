@@ -26,16 +26,16 @@ public class LyteInvokeStatement extends LyteStatement {
   }
 
   @Override
-  public void applyTo(LyteValue self, LyteScope scope, LyteStack stack) {
+  public void applyTo(LyteStack stack) {
     if (isSimpleInvokation()) {
-      LyteValue value = scope.getVariable(self, stack, mPrimaryIdentifier);
+      LyteValue value = stack.getVariable(mPrimaryIdentifier);
       if (value.typeOf().equals("block")) {
-        ((LyteBlock) value).invoke(self, stack);
+        ((LyteBlock) value).invoke(stack.getCurrentSelf(), stack);
       } else {
         stack.push(value);
       }
     } else {
-      LyteValue retVal = resolve(self, scope, stack, true);
+      LyteValue retVal = resolve(stack, true);
       if (retVal != null) {
         stack.push(retVal);
       }
@@ -54,21 +54,22 @@ public class LyteInvokeStatement extends LyteStatement {
     return mSpecifiers.get(mSpecifiers.size() - 1);
   }
 
-  public LyteValue resolve(LyteValue self, LyteScope scope, LyteStack stack, boolean fullyResolve) {
+  public LyteValue resolve(LyteStack stack, boolean fullyResolve) {
     PeekingIterator<LyteSpecifier> specifierIterator = new PeekingIterator<LyteSpecifier>(mSpecifiers.subList(0, mSpecifiers.size() - (fullyResolve ? 0 : 1)).iterator());
-    LyteValue obj, lastObj = self;
+    LyteValue obj, lastObj = stack.getCurrentSelf();
+    LyteScope scope = stack.getCurrentScope();
     try {
-      obj = scope.getVariable(lastObj, stack, mPrimaryIdentifier);
+      obj = stack.getVariable(mPrimaryIdentifier);
 
       if (shouldApply(specifierIterator)) {
-        obj = obj.apply(lastObj, stack);
+        obj = stack.applyInContext(scope, lastObj, obj);
       }
 
       if (!shouldApply(specifierIterator)) {
         if (mPrimaryIdentifier.startsWith("#")) {
           lastObj = stack.peek();
         } else if (mPrimaryIdentifier.startsWith("@") || obj.typeOf().equals("block")) {
-          lastObj = self;
+          lastObj = stack.getCurrentSelf();
         }
       } else {
         lastObj = obj;
@@ -80,7 +81,7 @@ public class LyteInvokeStatement extends LyteStatement {
         if (specifier.identifier != null) {
           obj = obj.getProperty(specifier.identifier);
         } else if (specifier.invokable != null) {
-          obj = obj.getProperty(specifier.invokable.apply(obj, scope).toString());
+          obj = obj.getProperty(specifier.invokable.apply(stack).toString());
         } else {
           List<LyteValue> arguments = new ArrayList<LyteValue>();
           // Add a clone of each of the arguments to the function
@@ -99,7 +100,7 @@ public class LyteInvokeStatement extends LyteStatement {
         }
 
         if (shouldApply(specifierIterator) && obj != null) {
-          lastObj = obj = obj.apply(lastObj, stack);
+          lastObj = obj = stack.applyInContext(scope, lastObj, obj);
         }
       }
     } catch (LyteError e) {

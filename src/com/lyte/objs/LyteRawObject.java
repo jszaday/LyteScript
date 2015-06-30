@@ -31,10 +31,10 @@ public class LyteRawObject extends LyteRawValue<HashMap<String, LyteValue>>  {
       mCachedScope = scope;
     }
     // TODO Use a more "global" stack...
-    LyteStack stack = new LyteStack();
     LyteObject newObject = new LyteObject(this);
+    LyteStack stack = new LyteStack(scope, newObject);
     for (String key : mProperties.keySet()) {
-      mProperties.get(key).applyTo(newObject, scope, stack);
+      mProperties.get(key).applyTo(stack);
       if (stack.size() > 1) {
         throw new RuntimeException("Expected only one argument on the stack, instead found " + stack.size());
       }

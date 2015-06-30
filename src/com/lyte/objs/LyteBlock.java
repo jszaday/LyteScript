@@ -30,14 +30,14 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
     mCanEnter = canEnter;
   }
 
-  private void popArgs(LyteValue self, LyteStack stack) {
+  private void popArgs(LyteStack stack) {
     if (mArgs == null) {
       return;
     }
     // For each of our args
     for (String arg : mArgs) {
       // Pop off a value and bind it to the arg's name
-      mScope.putVariable(self, stack, arg, stack.pop());
+      mScope.putVariable(arg, stack.pop(), false);
     }
   }
 
@@ -60,19 +60,23 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
     } else {
       mScope = mParentScope;
     }
+    // Enter the current Context
+    stack.enterContext(mScope, self);
     // Pop any named arguments
-    popArgs(self, stack);
+    popArgs(stack);
     // Then apply each of our statements to our scope
     Iterator<LyteStatement> statementIterator = get().iterator();
     while (statementIterator.hasNext()) {
       statement = statementIterator.next();
       try {
-        statement.applyTo(self, mScope, stack);
+        statement.applyTo(stack);
       } catch (LyteError e) {
         e.addLineNumber(statement.getLineNumber());
         throw e;
       }
     }
+    // Leave the current Context
+    stack.leaveContext();
   }
 
   @Override
@@ -105,9 +109,9 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
   }
 
   @Override
-  public LyteValue apply(LyteValue self, LyteStack stack) {
+  public LyteValue apply(LyteStack stack) {
     int origStackSize = stack.size();
-    invoke(self, stack);
+    invoke(stack.getCurrentSelf(), stack);
     if ((stack.size() - origStackSize) > 1) {
       throw new LyteError("Error Applying Block, " + this + ", expected 1 return value instead found " + (stack.size() - origStackSize) + "!");
     } else if (!stack.isEmpty()) {

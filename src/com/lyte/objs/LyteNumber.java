@@ -39,6 +39,20 @@ public class LyteNumber extends LytePrimitive<Double> {
   }
 
   @Override
+  public boolean equals(LyteValue other) {
+    try {
+      return this.get() == other.toNumber();
+    } catch (LyteError e) {
+      return false;
+    }
+  }
+
+  @Override
+  public boolean isSimpleComparison() {
+    return true;
+  }
+
+  @Override
   public String toString() {
     if (get() % 1.0 != 0) {
       return String.format("%s", get());

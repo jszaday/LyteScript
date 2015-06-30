@@ -68,7 +68,7 @@ public class LyteError extends RuntimeException implements LyteValue<RuntimeExce
   }
 
   @Override
-  public LyteValue apply(LyteValue self, LyteStack stack) {
+  public LyteValue apply(LyteStack stack) {
     return this;
   }
 
@@ -79,5 +79,26 @@ public class LyteError extends RuntimeException implements LyteValue<RuntimeExce
 
   public void addLineNumber(String lineNumber) {
     mLineNumbers.add(lineNumber);
+  }
+
+  @Override
+  public boolean equals(LyteValue other) {
+    if (other.typeOf().equals(typeOf())) {
+      return equalsStrict(other);
+    } else if (other.isSimpleComparison()) {
+      return other.equals(this);
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public boolean equalsStrict(LyteValue other) {
+    return this == other;
+  }
+
+  @Override
+  public boolean isSimpleComparison() {
+    return false;
   }
 }

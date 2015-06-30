@@ -8,67 +8,88 @@ import com.lyte.core.LyteStack;
  */
 public enum LyteUndefined implements LyteValue {
 
-    NULL("null"), UNDEFINED("undefined");
+  NULL("null"), UNDEFINED("undefined");
 
-    private String mType;
+  private String mType;
 
-    LyteUndefined(String value) {
-        mType = value;
+  LyteUndefined(String value) {
+    mType = value;
+  }
+
+  @Override
+  public String typeOf() {
+    return mType;
+  }
+
+  @Override
+  public String toString() {
+    return mType;
+  }
+
+  @Override
+  public boolean toBoolean() {
+    return false;
+  }
+
+  @Override
+  public double toNumber() {
+    return 0;
+  }
+
+
+  @Override
+  public Object get() {
+    return this;
+  }
+
+  @Override
+  public void set(Object newValue) {
+    throw new LyteError("Cannot set the value of a(n) " + typeOf() + " value!");
+  }
+
+  @Override
+  public LyteValue getProperty(String property) {
+    throw new LyteError("Cannot get property " + property + " from a(n) " + typeOf() + "!");
+  }
+
+  @Override
+  public void setProperty(String property, LyteValue newValue) {
+    throw new LyteError("Cannot set property " + property + " from a(n) " + typeOf() + "!");
+  }
+
+  @Override
+  public boolean hasProperty(String property) {
+    return false;
+  }
+
+  @Override
+  public LyteValue clone(LyteScope scope) {
+    return this;
+  }
+
+  @Override
+  public LyteValue apply(LyteStack stack) {
+    return this;
+  }
+
+  @Override
+  public boolean equals(LyteValue other) {
+    if (other.typeOf().equals(typeOf())) {
+      return equalsStrict(other);
+    } else if (other.isSimpleComparison()) {
+      return other.equals(this);
+    } else {
+      return false;
     }
+  }
 
-    @Override
-    public String typeOf() {
-        return mType;
-    }
+  @Override
+  public boolean equalsStrict(LyteValue other) {
+    return other == this;
+  }
 
-    @Override
-    public String toString() {
-        return mType;
-    }
-
-    @Override
-    public boolean toBoolean() {
-        return false;
-    }
-
-    @Override
-    public double toNumber() {
-        return 0;
-    }
-
-
-    @Override
-    public Object get() {
-        return this;
-    }
-
-    @Override
-    public void set(Object newValue) {
-        throw new LyteError("Cannot set the value of a(n) " + typeOf() + " value!");
-    }
-
-    @Override
-    public LyteValue getProperty(String property) {
-        throw new LyteError("Cannot get property " + property + " from a(n) " + typeOf() + "!");
-    }
-
-    @Override
-    public void setProperty(String property, LyteValue newValue) {
-        throw new LyteError("Cannot set property " + property + " from a(n) " + typeOf() + "!");
-    }
-
-    @Override
-    public boolean hasProperty(String property) {
-        return false;
-    }
-
-    @Override
-    public LyteValue clone(LyteScope scope) {
-        return this;
-    }
-
-    @Override
-    public LyteValue apply(LyteValue self, LyteStack stack) {
-        return this;
-    }
+  @Override
+  public boolean isSimpleComparison() {
+    return true;
+  }
 }

@@ -12,6 +12,10 @@ public class LyteList implements LyteValue<LinkedList<LyteValue>> {
 
   private LinkedList<LyteValue> mList;
 
+  public LyteList() {
+    mList = new LinkedList<LyteValue>();
+  }
+
   public LyteList(LinkedList<LyteValue> list) {
     mList = list;
   }
@@ -102,8 +106,33 @@ public class LyteList implements LyteValue<LinkedList<LyteValue>> {
   }
 
   @Override
-  public LyteValue apply(LyteValue self, LyteStack stack) {
+  public LyteValue apply(LyteStack stack) {
     return this;
+  }
+
+  @Override
+  public boolean equals(LyteValue other) {
+    if (other.typeOf().equals(typeOf())) {
+      return equalsStrict(other);
+    } else if (other.isSimpleComparison()) {
+      return other.equals(this);
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public boolean equalsStrict(LyteValue other) {
+    if (other.typeOf().equals(typeOf())) {
+      return other.get().equals(get());
+    } else {
+      return false;
+    }
+  }
+
+  @Override
+  public boolean isSimpleComparison() {
+    return false;
   }
 
   @Override

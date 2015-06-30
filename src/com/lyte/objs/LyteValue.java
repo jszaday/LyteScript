@@ -20,5 +20,9 @@ public interface LyteValue<T> {
 
   LyteValue<T> clone(LyteScope scope);
 
-  LyteValue apply(LyteValue self, LyteStack stack);
+  LyteValue apply(LyteStack stack);
+
+  boolean equals(LyteValue other);
+  boolean equalsStrict(LyteValue other);
+  boolean isSimpleComparison();
 }

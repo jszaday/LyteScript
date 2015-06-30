@@ -37,13 +37,9 @@ public class LyteRawArray extends LyteRawValue<ArrayList<LyteValue>> {
     LinkedList<LyteValue> values = new LinkedList<LyteValue>();
 
     // TODO Use a more "global" stack...
-    LyteStack stack = new LyteStack();
+    LyteStack stack = new LyteStack(scope, null);
     for (LyteStatement statement : mStatements) {
-      statement.applyTo(null, scope, stack);
-      if (stack.size() > 1) {
-        throw new RuntimeException("Expected only one argument on the stack, instead found " + stack.size());
-      }
-      values.add(stack.pop());
+      values.add(statement.apply(stack));
     }
 
     return new LyteList(values);

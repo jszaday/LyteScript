@@ -16,7 +16,7 @@ public class LyteListFunctions extends LyteSimpleInjectable {
       if (!self.typeOf().equals("list")) {
         throw new LyteError("Cannot apply push to an " + self.typeOf());
       }
-      ((LyteList) self).get().add(stack.pop().apply(null, stack));
+      ((LyteList) self).get().add(stack.pop().apply(stack));
     }
   };
   public static LyteNativeBlock listPop = new LyteNativeBlock("List", "pop") {

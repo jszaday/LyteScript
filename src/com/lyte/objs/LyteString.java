@@ -48,4 +48,20 @@ public class LyteString extends LytePrimitive<String> {
       throw new LyteError("Cannot invoke the property " + property + " of a string.");
     }
   }
+
+  @Override
+  public boolean equals(LyteValue other) {
+    if (other.typeOf().equals(typeOf())) {
+      return equalsStrict(other);
+    } else if (other.isSimpleComparison()) {
+      return other.equals(this);
+    } else {
+      return other.toString().equals(this);
+    }
+  }
+  
+  @Override
+  public boolean isSimpleComparison() {
+    return true;
+  }
 }

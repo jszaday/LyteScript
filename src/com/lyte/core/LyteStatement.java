@@ -11,15 +11,18 @@ public abstract class LyteStatement {
     mLineNumber = lineNumber;
   }
 
-  public abstract void applyTo(LyteValue self, LyteScope scope, LyteStack stack);
+  public abstract void applyTo(LyteStack stack);
 
-  public LyteValue apply(LyteValue self, LyteScope scope) {
-    LyteStack stack = new LyteStack();
-    this.applyTo(self, scope, stack);
-    if (stack.size() != 1) {
-      throw new LyteError("Expected 1 Return Value from " + toString() + " instead found " + stack.size());
+  public LyteValue apply(LyteStack stack) {
+    int origStackSize = stack.size();
+    this.applyTo(stack);
+    if ((stack.size() - origStackSize) > 1) {
+      throw new LyteError("Error Applying Statement, " + this + ", expected 1 return value instead found " + (stack.size() - origStackSize) + "!");
+    } else if (!stack.isEmpty()) {
+      return stack.pop();
+    } else {
+      return null;
     }
-    return stack.pop();
   }
 
   public String getLineNumber() {

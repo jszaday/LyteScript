@@ -16,8 +16,8 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
 
     @Override
     public void invoke(LyteString self, LyteStack stack) {
-      int value1 = (int) stack.pop().apply(self, stack).toNumber();
-      int value2 = (int) stack.pop().apply(self, stack).toNumber();
+      int value1 = (int) stack.pop().apply(stack).toNumber();
+      int value2 = (int) stack.pop().apply(stack).toNumber();
       try {
         stack.push(new LyteString(self.get().substring(value1, value2)));
       } catch (StringIndexOutOfBoundsException e) {
@@ -29,7 +29,7 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
 
     @Override
     public void invoke(LyteString self, LyteStack stack) {
-      String value1 = stack.pop().apply(self, stack).toString();
+      String value1 = stack.pop().apply(stack).toString();
       stack.push(self.get().contains(value1));
     }
   };
@@ -37,7 +37,7 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
 
     @Override
     public void invoke(LyteString self, LyteStack stack) {
-      String value1 = stack.pop().apply(self, stack).toString();
+      String value1 = stack.pop().apply(stack).toString();
       stack.push(self.get().indexOf(value1));
     }
   };
@@ -45,8 +45,8 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
 
     @Override
     public void invoke(LyteString self, LyteStack stack) {
-      String value1 = stack.pop().apply(self, stack).toString();
-      int value2 = (int) stack.pop().apply(self, stack).toNumber();
+      String value1 = stack.pop().apply(stack).toString();
+      int value2 = (int) stack.pop().apply(stack).toNumber();
       stack.push(self.get().indexOf(value1, value2));
     }
   };
@@ -55,7 +55,7 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
     @Override
     public void invoke(LyteString self, LyteStack stack) {
       if (self instanceof LyteString) {
-        String value1 = stack.pop().apply(self, stack).toString();
+        String value1 = stack.pop().apply(stack).toString();
         stack.push(self.get().startsWith(value1));
       } else {
         throw new LyteError("Cannot take the substring of " + self);
@@ -67,7 +67,7 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
     @Override
     public void invoke(LyteString self, LyteStack stack) {
       if (self instanceof LyteString) {
-        String value1 = stack.pop().apply(self, stack).toString();
+        String value1 = stack.pop().apply(stack).toString();
         stack.push(self.get().endsWith(value1));
       } else {
         throw new LyteError("Cannot take the substring of " + self);
@@ -85,8 +85,8 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
 
     @Override
     public void invoke(LyteString self, LyteStack stack) {
-      String value1 = stack.pop().apply(self, stack).toString();
-      String value2 = stack.pop().apply(self, stack).toString();
+      String value1 = stack.pop().apply(stack).toString();
+      String value2 = stack.pop().apply(stack).toString();
       stack.push(self.get().replaceFirst(value1, value2));
     }
   };
@@ -94,8 +94,8 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
 
     @Override
     public void invoke(LyteString self, LyteStack stack) {
-      String value1 = stack.pop().apply(self, stack).toString();
-      String value2 = stack.pop().apply(self, stack).toString();
+      String value1 = stack.pop().apply(stack).toString();
+      String value2 = stack.pop().apply(stack).toString();
       stack.push(self.get().replaceAll(value1, value2));
     }
   };
@@ -114,20 +114,20 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
   public static LyteNativeBlock stringMatches = new LyteStringBlock("matches") {
     @Override
     public void invoke(LyteString self, LyteStack stack) {
-      stack.push(self.get().matches(stack.pop().apply(self, stack).toString()));
+      stack.push(self.get().matches(stack.pop().apply(stack).toString()));
     }
   };
   public static LyteNativeBlock stringSplit = new LyteStringBlock("split") {
     @Override
     public void invoke(LyteString self, LyteStack stack) {
-      String[] results = self.get().split(stack.pop().apply(self, stack).toString());
+      String[] results = self.get().split(stack.pop().apply(stack).toString());
       stack.push(new LyteList(results));
     }
   };
   public static LyteNativeBlock stringConcat = new LyteStringBlock("concat") {
     @Override
     public void invoke(LyteString self, LyteStack stack) {
-      stack.push(self.get() + stack.pop().apply(self, stack));
+      stack.push(self.get() + stack.pop().apply(stack));
     }
   };
   public static LyteNativeBlock stringToUpperCase = new LyteStringBlock("toUpperCase") {

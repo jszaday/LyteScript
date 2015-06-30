@@ -49,7 +49,22 @@ public abstract class LyteRawValue<T> implements LyteValue<T> {
   }
 
   @Override
-  public LyteValue apply(LyteValue self, LyteStack stack) {
+  public LyteValue apply(LyteStack stack) {
     throw new LyteError("Cannot apply object of type " + typeOf() + "!");
+  }
+
+  @Override
+  public boolean equals(LyteValue other) {
+    return false;
+  }
+
+  @Override
+  public boolean equalsStrict(LyteValue other) {
+    return false;
+  }
+
+  @Override
+  public boolean isSimpleComparison() {
+    return false;
   }
 }

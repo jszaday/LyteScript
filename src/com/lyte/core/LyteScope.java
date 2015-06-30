@@ -63,7 +63,7 @@ public class LyteScope implements LyteInjectable {
     }
   }
 
-  private void putVariable(String name, LyteValue value, boolean finalVariable) {
+  public void putVariable(String name, LyteValue value, boolean finalVariable) {
     if (mParent != null && mParent.hasVariable(name)) {
       mParent.putVariable(name, value, finalVariable);
     } else {
@@ -79,7 +79,8 @@ public class LyteScope implements LyteInjectable {
     }
   }
 
-  public void putVariable(LyteValue self, LyteStack stack, String name, LyteValue value, boolean finalVariable) {
+  public void putVariable(LyteStack stack, String name, LyteValue value, boolean finalVariable) {
+    LyteValue self = stack.getCurrentSelf();
     if (name.startsWith("@") && self != null) {
       self.setProperty(name.substring(1, name.length()), value);
     } else if (name.startsWith("#") && stack != null) {
@@ -89,8 +90,8 @@ public class LyteScope implements LyteInjectable {
     }
   }
 
-  public void putVariable(LyteValue self, LyteStack stack, String name, LyteValue value) {
-    putVariable(self, stack, name, value, false);
+  public void putVariable(LyteStack stack, String name, LyteValue value) {
+    putVariable(stack, name, value, false);
   }
 
   public void finalizeVariable(String name) {

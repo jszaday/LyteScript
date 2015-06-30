@@ -16,9 +16,9 @@ public class LytePushStatement extends LyteStatement {
   }
 
   @Override
-  public void applyTo(LyteValue self, LyteScope scope, LyteStack stack) {
+  public void applyTo(LyteStack stack) {
     // Instantiate a new instance of the object
-    LyteValue obj = mValue.clone(scope);
+    LyteValue obj = mValue.clone(stack.getCurrentScope());
     // And push it onto the stack
     stack.push(obj);
   }

@@ -40,7 +40,7 @@ public abstract class LytePrimitive<T> implements LyteValue<T> {
     }
 
     @Override
-    public LyteValue apply(LyteValue self, LyteStack stack) {
+    public LyteValue apply(LyteStack stack) {
         return this;
     }
 
@@ -57,5 +57,26 @@ public abstract class LytePrimitive<T> implements LyteValue<T> {
     @Override
     public LyteValue<T> clone(LyteScope scope) {
         return this;
+    }
+
+    @Override
+    public boolean equals(LyteValue other) {
+        if (other.typeOf().equals(typeOf())) {
+            return equalsStrict(other);
+        } else if (other.isSimpleComparison()) {
+            return other.equals(this);
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean equalsStrict(LyteValue other) {
+        return other.typeOf().equals(typeOf()) && other.get().equals(get());
+    }
+
+    @Override
+    public boolean isSimpleComparison() {
+        return false;
     }
 }
