@@ -25,16 +25,16 @@ public class LyteBindStatement extends LyteStatement {
   }
 
   @Override
-  public void applyTo(LyteStack stack) {
+  public void applyTo(LyteContext context) {
     if (mTarget.isSimpleInvokation()) {
-      stack.updateVariable(mTarget.getPrimaryIdentifier());
+      context.set(mTarget.getPrimaryIdentifier());
     } else {
-      LyteValue val = mTarget.resolve(stack, false);
+      LyteValue val = context.resolve(mTarget, false);
       LyteInvokeStatement.LyteSpecifier specifier = mTarget.getLastSpecifier();
       if (specifier.identifier != null) {
-        val.setProperty(specifier.identifier, stack.pop());
+        val.setProperty(specifier.identifier, context.stack.pop());
       } else {
-        val.setProperty(specifier.invokable.apply(stack).toString(), stack.pop());
+        val.setProperty(specifier.invokable.apply(context).toString(), context.stack.pop());
       }
     }
   }

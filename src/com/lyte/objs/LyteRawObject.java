@@ -1,5 +1,6 @@
 package com.lyte.objs;
 
+import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 import com.lyte.core.LyteStatement;
@@ -21,25 +22,19 @@ public class LyteRawObject extends LyteRawValue<HashMap<String, LyteValue>>  {
   }
 
   @Override
-  public LyteValue<HashMap<String, LyteValue>> clone(LyteScope scope) {
+  public LyteValue<HashMap<String, LyteValue>> clone(LyteContext context) {
     HashMap<String, LyteValue> properties = new HashMap<String, LyteValue>();
-    if (scope == null) {
+    if (context.scope == null) {
       // Uncache the scope
-      scope = mCachedScope;
+      context.scope = mCachedScope;
     } else {
       // Cache the scope
-      mCachedScope = scope;
+      mCachedScope = context.scope;
     }
     // TODO Use a more "global" stack...
     LyteObject newObject = new LyteObject(this);
-    LyteStack stack = new LyteStack(scope, newObject);
     for (String key : mProperties.keySet()) {
-      mProperties.get(key).applyTo(stack);
-      if (stack.size() > 1) {
-        throw new RuntimeException("Expected only one argument on the stack, instead found " + stack.size());
-      }
-      LyteValue value = stack.pop();
-      properties.put(key, value);
+      properties.put(key, mProperties.get(key).apply(context));
     }
     newObject.set(properties);
     return newObject;

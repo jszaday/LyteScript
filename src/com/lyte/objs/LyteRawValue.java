@@ -1,5 +1,6 @@
 package com.lyte.objs;
 
+import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 
@@ -49,7 +50,7 @@ public abstract class LyteRawValue<T> implements LyteValue<T> {
   }
 
   @Override
-  public LyteValue apply(LyteStack stack) {
+  public LyteValue apply(LyteContext context) {
     throw new LyteError("Cannot apply object of type " + typeOf() + "!");
   }
 

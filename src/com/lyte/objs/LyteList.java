@@ -1,5 +1,6 @@
 package com.lyte.objs;
 
+import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 import com.lyte.stdlib.LyteListFunctions;
@@ -101,12 +102,12 @@ public class LyteList implements LyteValue<LinkedList<LyteValue>> {
   }
 
   @Override
-  public LyteValue clone(LyteScope scope) {
+  public LyteValue clone(LyteContext context) {
     return new LyteList((LinkedList<LyteValue>) mList.clone());
   }
 
   @Override
-  public LyteValue apply(LyteStack stack) {
+  public LyteValue apply(LyteContext context) {
     return this;
   }
 

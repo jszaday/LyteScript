@@ -1,5 +1,6 @@
 package com.lyte.objs;
 
+import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 import com.lyte.core.LyteStatement;
@@ -33,13 +34,11 @@ public class LyteRawArray extends LyteRawValue<ArrayList<LyteValue>> {
   }
 
   @Override
-  public LyteValue clone(LyteScope scope) {
+  public LyteValue clone(LyteContext context) {
     LinkedList<LyteValue> values = new LinkedList<LyteValue>();
 
-    // TODO Use a more "global" stack...
-    LyteStack stack = new LyteStack(scope, null);
     for (LyteStatement statement : mStatements) {
-      values.add(statement.apply(stack));
+      values.add(statement.apply(context));
     }
 
     return new LyteList(values);

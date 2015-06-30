@@ -1,5 +1,6 @@
 package com.lyte.objs;
 
+import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 
@@ -63,12 +64,12 @@ public class LyteError extends RuntimeException implements LyteValue<RuntimeExce
   }
 
   @Override
-  public LyteValue<RuntimeException> clone(LyteScope scope) {
+  public LyteValue<RuntimeException> clone(LyteContext context) {
     return this;
   }
 
   @Override
-  public LyteValue apply(LyteStack stack) {
+  public LyteValue apply(LyteContext context) {
     return this;
   }
 

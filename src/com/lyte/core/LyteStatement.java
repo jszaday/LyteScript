@@ -11,11 +11,12 @@ public abstract class LyteStatement {
     mLineNumber = lineNumber;
   }
 
-  public abstract void applyTo(LyteStack stack);
+  public abstract void applyTo(LyteContext context);
 
-  public LyteValue apply(LyteStack stack) {
+  public LyteValue apply(LyteContext context) {
+    LyteStack stack = context.stack;
     int origStackSize = stack.size();
-    this.applyTo(stack);
+    this.applyTo(context);
     if ((stack.size() - origStackSize) > 1) {
       throw new LyteError("Error Applying Statement, " + this + ", expected 1 return value instead found " + (stack.size() - origStackSize) + "!");
     } else if (!stack.isEmpty()) {

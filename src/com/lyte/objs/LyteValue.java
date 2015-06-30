@@ -1,5 +1,6 @@
 package com.lyte.objs;
 
+import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 
@@ -18,9 +19,9 @@ public interface LyteValue<T> {
 
   String typeOf();
 
-  LyteValue<T> clone(LyteScope scope);
+  LyteValue<T> clone(LyteContext context);
 
-  LyteValue apply(LyteStack stack);
+  LyteValue apply(LyteContext context);
 
   boolean equals(LyteValue other);
   boolean equalsStrict(LyteValue other);

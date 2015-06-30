@@ -1,5 +1,6 @@
 package com.lyte.objs;
 
+import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 
 import java.util.HashMap;
@@ -25,7 +26,7 @@ public class LytePackage extends LyteObject {
     }
 
     @Override
-    public LyteValue<HashMap<String, LyteValue>> clone(LyteScope scope) {
+    public LyteValue<HashMap<String, LyteValue>> clone(LyteContext context) {
         return this;
     }
 

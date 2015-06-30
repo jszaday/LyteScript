@@ -1,5 +1,6 @@
 package com.lyte.objs;
 
+import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 import com.lyte.core.LyteStatement;
@@ -16,7 +17,6 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
 
   private List<String> mArgs;
   protected LyteScope mParentScope;
-  protected LyteScope mScope;
   private boolean mCanEnter;
 
   public LyteBlock(LyteScope parentScope, List<LyteStatement> statements) {
@@ -30,53 +30,50 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
     mCanEnter = canEnter;
   }
 
-  private void popArgs(LyteStack stack) {
+  private void popArgs(LyteContext context) {
     if (mArgs == null) {
       return;
     }
     // For each of our args
     for (String arg : mArgs) {
       // Pop off a value and bind it to the arg's name
-      mScope.putVariable(arg, stack.pop(), false);
+      context.set(arg);
     }
   }
 
-  public void invoke(LyteValue self, LyteStack stack, LyteValue... args) {
-    invoke(self, stack, Arrays.asList(args));
+  public void invoke(LyteContext context, LyteValue... args) {
+    invoke(context, Arrays.asList(args));
   }
 
-  public void invoke(LyteValue self, LyteStack stack, List<LyteValue> args) {
+  public void invoke(LyteContext context, List<LyteValue> args) {
     for (int i = (args.size() - 1); i >= 0; i--) {
-      stack.push(args.get(i));
+      context.stack.push(args.get(i));
     }
-    invoke(self, stack);
+    invoke(context);
   }
 
-  public void invoke(LyteValue self, LyteStack stack) {
+  public void invoke(LyteContext context) {
+    LyteScope originalScope = context.scope;
     LyteStatement statement = null;
+    context.scope = mParentScope;
     // Enter a new scope
     if (mCanEnter) {
-      mScope = mParentScope.enter();
-    } else {
-      mScope = mParentScope;
+      context.scope = context.scope.enter();
     }
-    // Enter the current Context
-    stack.enterContext(mScope, self);
     // Pop any named arguments
-    popArgs(stack);
+    popArgs(context);
     // Then apply each of our statements to our scope
     Iterator<LyteStatement> statementIterator = get().iterator();
     while (statementIterator.hasNext()) {
       statement = statementIterator.next();
       try {
-        statement.applyTo(stack);
+        statement.applyTo(context);
       } catch (LyteError e) {
         e.addLineNumber(statement.getLineNumber());
         throw e;
       }
     }
-    // Leave the current Context
-    stack.leaveContext();
+    context.scope = originalScope;
   }
 
   @Override
@@ -100,18 +97,19 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
   }
 
   @Override
-  public LyteValue<List<LyteStatement>> clone(LyteScope scope) {
+  public LyteValue<List<LyteStatement>> clone(LyteContext context) {
     return new LyteBlock(mParentScope, get(), mArgs, true);
   }
 
-  public LyteValue<List<LyteStatement>> clone(LyteScope scope, boolean canEnter) {
+  public LyteValue<List<LyteStatement>> clone(LyteContext context, boolean canEnter) {
     return new LyteBlock(mParentScope, get(), mArgs, canEnter);
   }
 
   @Override
-  public LyteValue apply(LyteStack stack) {
+  public LyteValue apply(LyteContext context) {
+    LyteStack stack = context.stack;
     int origStackSize = stack.size();
-    invoke(stack.getCurrentSelf(), stack);
+    invoke(context);
     if ((stack.size() - origStackSize) > 1) {
       throw new LyteError("Error Applying Block, " + this + ", expected 1 return value instead found " + (stack.size() - origStackSize) + "!");
     } else if (!stack.isEmpty()) {

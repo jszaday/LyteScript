@@ -60,9 +60,10 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
     // Then grab the parse tree and begin to visit it
     ParseTree parseTree = parser.program();
     this.visit(parseTree);
+    LyteContext globalContext = new LyteContext(null, mGlobalScope, mStack);
     // Then run the main block
-    LyteBlock main = (LyteBlock) mGlobalBlock.clone(mGlobalScope, false);
-    main.invoke(null, mStack, args);
+    LyteBlock main = (LyteBlock) mGlobalBlock.clone(globalContext, false);
+    main.invoke(globalContext, args);
   }
 
   public void run(LyteValue... args) throws IOException {

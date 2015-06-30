@@ -1,5 +1,6 @@
 package com.lyte.objs;
 
+import com.lyte.core.LyteContext;
 import com.lyte.core.LytePushStatement;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStatement;
@@ -69,12 +70,12 @@ public class LyteRawBlock extends LyteRawValue<List<LyteStatement>> {
     }
   }
 
-  public LyteValue<List<LyteStatement>> clone(LyteScope scope) {
-    return new LyteBlock(scope, mStatements, mArgs, true);
+  public LyteValue<List<LyteStatement>> clone(LyteContext context) {
+    return new LyteBlock(context.scope, mStatements, mArgs, true);
   }
 
-  public LyteValue<List<LyteStatement>> clone(LyteScope scope, boolean canEnter) {
-    return new LyteBlock(scope, mStatements, mArgs, canEnter);
+  public LyteValue<List<LyteStatement>> clone(LyteContext context, boolean canEnter) {
+    return new LyteBlock(context.scope, mStatements, mArgs, canEnter);
   }
 
   @Override

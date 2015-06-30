@@ -1,5 +1,6 @@
 package com.lyte.objs;
 
+import com.lyte.core.LyteContext;
 import com.lyte.core.LyteInvokeStatement;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
@@ -62,7 +63,7 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
   @Override
   public boolean toBoolean() {
     if (hasProperty("__toBoolean")) {
-      return getProperty("__toBoolean").apply(new LyteStack(null, this)).toBoolean();
+      return getProperty("__toBoolean").apply(new LyteContext(this, null, new LyteStack())).toBoolean();
     } else {
       return !mProperties.isEmpty();
     }
@@ -71,7 +72,7 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
   @Override
   public double toNumber() {
     if (hasProperty("__toNumber")) {
-      return getProperty("__toNumber").apply(new LyteStack(null, this)).toNumber();
+      return getProperty("__toNumber").apply(new LyteContext(this, null, new LyteStack())).toNumber();
     } else {
       return mProperties.size();
     }
@@ -80,7 +81,7 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
   @Override
   public String toString() {
     if (hasProperty("__toString")) {
-      return getProperty("__toString").apply(new LyteStack(null, this)).toString();
+      return getProperty("__toString").apply(new LyteContext(this, null, new LyteStack())).toString();
     } else {
       return mProperties.toString();
     }
@@ -92,16 +93,16 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
   }
 
   @Override
-  public LyteValue<HashMap<String, LyteValue>> clone(LyteScope scope) {
+  public LyteValue<HashMap<String, LyteValue>> clone(LyteContext context) {
     if (mBase != null) {
-      return ((LyteObject) mBase.clone(scope)).mixWith(this);
+      return ((LyteObject) mBase.clone(context)).mixWith(this);
     } else {
       throw new LyteError("Cannot clone an object without a base!");
     }
   }
 
   @Override
-  public LyteValue apply(LyteStack stack) {
+  public LyteValue apply(LyteContext context) {
     return this;
   }
 

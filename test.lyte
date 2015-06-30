@@ -69,7 +69,7 @@ For(0:4:16, @(i) {
   }) 
 })
 
-Test <- %{
+/* Test <- %{
   name: "Bob",
   changeName: @(newName) {
     EchoLn(newName)
@@ -81,4 +81,4 @@ Test <- %{
   }
 }
 
-Test.changeName(@name)
+Test.changeName("Bob") */

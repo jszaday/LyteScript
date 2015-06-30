@@ -1,5 +1,6 @@
 package com.lyte.objs;
 
+import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 
@@ -40,7 +41,7 @@ public abstract class LytePrimitive<T> implements LyteValue<T> {
     }
 
     @Override
-    public LyteValue apply(LyteStack stack) {
+    public LyteValue apply(LyteContext context) {
         return this;
     }
 
@@ -55,7 +56,7 @@ public abstract class LytePrimitive<T> implements LyteValue<T> {
     }
 
     @Override
-    public LyteValue<T> clone(LyteScope scope) {
+    public LyteValue<T> clone(LyteContext context) {
         return this;
     }
 

@@ -23,7 +23,7 @@ public class LyteScope implements LyteInjectable {
     this(parent, true);
   }
 
-  private LyteValue getVariable(String name) {
+  public LyteValue getVariable(String name) {
     if (mVariables.containsKey(name)) {
       return mVariables.get(name);
     } else if (mParent != null) {
@@ -33,33 +33,13 @@ public class LyteScope implements LyteInjectable {
     }
   }
 
-  public LyteValue getVariable(LyteValue self, LyteStack stack, String name) {
-    if (name.startsWith("@") && self != null) {
-      return self.getProperty(name.substring(1, name.length()));
-    } else if (name.startsWith("#") && stack != null) {
-      return stack.peek().getProperty(name.substring(1, name.length()));
-    } else {
-      return getVariable(name);
-    }
-  }
-
-  private boolean hasVariable(String name) {
+  public boolean hasVariable(String name) {
     if (mVariables.containsKey(name)) {
       return true;
     } else if (mParent != null) {
       return mParent.hasVariable(name);
     } else {
       return false;
-    }
-  }
-
-  public boolean hasVariable(LyteValue self, LyteStack stack, String name) {
-    if (name.startsWith("@") && self != null) {
-      return self.hasProperty(name.substring(1, name.length()));
-    } else if (name.startsWith("#") && stack != null) {
-      return stack.peek().hasProperty(name.substring(1, name.length()));
-    } else {
-      return hasVariable(name);
     }
   }
 
@@ -77,21 +57,6 @@ public class LyteScope implements LyteInjectable {
         }
       }
     }
-  }
-
-  public void putVariable(LyteStack stack, String name, LyteValue value, boolean finalVariable) {
-    LyteValue self = stack.getCurrentSelf();
-    if (name.startsWith("@") && self != null) {
-      self.setProperty(name.substring(1, name.length()), value);
-    } else if (name.startsWith("#") && stack != null) {
-      stack.peek().setProperty(name.substring(1, name.length()), value);
-    } else {
-      putVariable(name, value, finalVariable);
-    }
-  }
-
-  public void putVariable(LyteStack stack, String name, LyteValue value) {
-    putVariable(stack, name, value, false);
   }
 
   public void finalizeVariable(String name) {

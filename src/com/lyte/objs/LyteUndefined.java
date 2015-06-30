@@ -1,5 +1,6 @@
 package com.lyte.objs;
 
+import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 
@@ -63,12 +64,12 @@ public enum LyteUndefined implements LyteValue {
   }
 
   @Override
-  public LyteValue clone(LyteScope scope) {
+  public LyteValue clone(LyteContext scope) {
     return this;
   }
 
   @Override
-  public LyteValue apply(LyteStack stack) {
+  public LyteValue apply(LyteContext stack) {
     return this;
   }
 
