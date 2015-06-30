@@ -1,15 +1,7 @@
 package com.lyte.objs;
 
 
-import com.lyte.core.LyteStack;
-import com.lyte.stdlib.LyteNativeBlock;
 import com.lyte.stdlib.LyteStringFunctions;
-import com.lyte.utils.LyteInjectable;
-import com.lyte.utils.LyteNativeInjector;
-import com.lyte.utils.LyteSimpleInjectable;
-
-import java.lang.reflect.Field;
-import java.util.HashMap;
 
 /**
  * Created by jszaday on 6/22/15.
@@ -43,7 +35,7 @@ public class LyteString extends LytePrimitive<String> {
   @Override
   public LyteValue getProperty(String property) {
     Integer index;
-    if ((index = LyteArray.tryParse(property)) != null) {
+    if ((index = LyteList.tryParse(property)) != null) {
       try {
         return new LyteString(get().charAt(index));
       } catch (StringIndexOutOfBoundsException e) {

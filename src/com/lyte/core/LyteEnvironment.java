@@ -15,6 +15,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -135,6 +136,19 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
       }
     }
     return rawObject;
+  }
+
+  @Override
+  public Object visitRange(LyteParser.RangeContext ctx) {
+    LyteRawBlock block = mCurrentBlock.enter();
+
+    for (int i = (ctx.numericLiteral().size() - 1); i > 0; i--) {
+      block.addStatement(new LytePushStatement(getLineNumber(ctx), (LyteValue) visitNumericLiteral(ctx.numericLiteral(i))));
+    }
+
+    block.addStatement(new LyteInvokeStatement(getLineNumber(ctx), "Range"));
+
+    return block;
   }
 
   @Override

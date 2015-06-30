@@ -305,4 +305,24 @@ public class LyteStandardFunctions {
             stack.push(stack.isEmpty());
         }
     };
+
+    public static LyteNativeBlock coreThis = new LyteNativeBlock("Core", "This") {
+        @Override
+        public void invoke(LyteValue self, LyteStack stack) {
+            if (self != null) {
+                stack.push(self);
+            } else {
+                stack.push(LyteUndefined.NULL);
+            }
+        }
+    };
+
+    public static LyteNativeBlock mathPow = new LyteNativeBlock("Math", "Pow", "**") {
+        @Override
+        public void invoke(LyteValue self, LyteStack stack) {
+            double val1 = stack.pop().apply(self, stack).toNumber();
+            double val2 = stack.pop().apply(self, stack).toNumber();
+            stack.push(Math.pow(val2, val1));
+        }
+    };
 }

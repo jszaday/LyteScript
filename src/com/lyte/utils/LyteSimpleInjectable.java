@@ -25,7 +25,11 @@ public abstract class LyteSimpleInjectable implements LyteInjectable {
 
   @Override
   public void inject(String name, LyteValue value) {
-    mFunctions.put(name, value);
+    if (!hasProperty(name)) {
+      mFunctions.put(name, value);
+    } else {
+      throw new RuntimeException("Attempted to duplicate property " + name);
+    }
   }
 
   @Override

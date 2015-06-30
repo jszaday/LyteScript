@@ -5,6 +5,7 @@ import com.lyte.core.LyteStack;
 import com.lyte.core.LyteStatement;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * Created by jszaday on 6/18/15.
@@ -32,8 +33,8 @@ public class LyteRawArray extends LyteRawValue<ArrayList<LyteValue>> {
   }
 
   @Override
-  public LyteValue<ArrayList<LyteValue>> clone(LyteScope scope) {
-    ArrayList<LyteValue> values = new ArrayList<LyteValue>();
+  public LyteValue clone(LyteScope scope) {
+    LinkedList<LyteValue> values = new LinkedList<LyteValue>();
 
     // TODO Use a more "global" stack...
     LyteStack stack = new LyteStack();
@@ -45,6 +46,6 @@ public class LyteRawArray extends LyteRawValue<ArrayList<LyteValue>> {
       values.add(stack.pop());
     }
 
-    return new LyteArray(values);
+    return new LyteList(values);
   }
 }

@@ -74,6 +74,7 @@ literal
   | numericLiteral
   | objectLiteral
   | arrayLiteral
+	| range
   ;
 
 stringLiteral
@@ -103,6 +104,10 @@ lambdaExpression
   : Atpersand LeftParen lambdaArgsList? RightParen block
   ;
 
+range
+	: numericLiteral Colon (numericLiteral Colon)? numericLiteral
+	;
+
 // Misc. Symbols
 LeftBind:    '<-';
 RightBind:    '->';
@@ -127,6 +132,7 @@ Identifier
   : IdentifierStart IdentifierPart*
 	| Sign (IdentifierStart | Sign)*
   | Atpersand IdentifierPart+
+	| Percent IdentifierPart+
   ;
 
 fragment Sign
