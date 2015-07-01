@@ -66,13 +66,12 @@ For(0:4:16, @(i) {
     EchoLn(i)
   }, {
     Echo(i `++` " ")
-  }) 
+  })
 })
 
-/* Test <- %{
+Test <- %{
   name: "Bob",
   changeName: @(newName) {
-    EchoLn(newName)
     Lyte.Core.If (@name `==` newName, {
       EchoLn("Nothing to change.")
     }, {
@@ -81,4 +80,4 @@ For(0:4:16, @(i) {
   }
 }
 
-Test.changeName("Bob") */
+Test.changeName("Bill") Test.name EchoLn

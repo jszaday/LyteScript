@@ -42,7 +42,7 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock coreNot = new LyteNativeBlock("Core", "Not") {
     @Override
     public void invoke(LyteContext context) {
-      context.stack.push(!context.stack.pop().apply(context).toBoolean());
+      context.stack.push(!context.apply().toBoolean());
     }
   };
 
@@ -57,8 +57,8 @@ public class LyteStandardFunctions {
 
     @Override
     public void invoke(LyteContext context) {
-      double val1 = context.stack.pop().apply(context).toNumber();
-      double val2 = context.stack.pop().apply(context).toNumber();
+      double val1 = context.apply().toNumber();
+      double val2 = context.apply().toNumber();
       context.stack.push(val1 + val2);
     }
   };
@@ -67,8 +67,8 @@ public class LyteStandardFunctions {
 
     @Override
     public void invoke(LyteContext context) {
-      double val1 = context.stack.pop().apply(context).toNumber();
-      double val2 = context.stack.pop().apply(context).toNumber();
+      double val1 = context.apply().toNumber();
+      double val2 = context.apply().toNumber();
       context.stack.push(val2 <= val1);
     }
   };
@@ -77,8 +77,8 @@ public class LyteStandardFunctions {
 
     @Override
     public void invoke(LyteContext context) {
-      double val1 = context.stack.pop().apply(context).toNumber();
-      double val2 = context.stack.pop().apply(context).toNumber();
+      double val1 = context.apply().toNumber();
+      double val2 = context.apply().toNumber();
       context.stack.push(val2 - val1);
     }
   };
@@ -87,8 +87,8 @@ public class LyteStandardFunctions {
 
     @Override
     public void invoke(LyteContext context) {
-      double val1 = context.stack.pop().apply(context).toNumber();
-      double val2 = context.stack.pop().apply(context).toNumber();
+      double val1 = context.apply().toNumber();
+      double val2 = context.apply().toNumber();
       context.stack.push(val2 / val1);
     }
   };
@@ -97,8 +97,8 @@ public class LyteStandardFunctions {
 
     @Override
     public void invoke(LyteContext context) {
-      int val1 = (int) context.stack.pop().apply(context).toNumber();
-      int val2 = (int) context.stack.pop().apply(context).toNumber();
+      int val1 = (int) context.apply().toNumber();
+      int val2 = (int) context.apply().toNumber();
       context.stack.push(val2 / val1);
     }
   };
@@ -107,8 +107,8 @@ public class LyteStandardFunctions {
 
     @Override
     public void invoke(LyteContext context) {
-      double val1 = context.stack.pop().apply(context).toNumber();
-      double val2 = context.stack.pop().apply(context).toNumber();
+      double val1 = context.apply().toNumber();
+      double val2 = context.apply().toNumber();
       context.stack.push(val1 * val2);
     }
   };
@@ -129,12 +129,15 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock coreConcatenate = new LyteNativeBlock("Core", "Concatenate", "++") {
     @Override
     public void invoke(LyteContext context) {
-      LyteValue value2 = context.stack.pop().apply(context);
-      LyteValue value1 = context.stack.pop().apply(context);
+      LyteValue value2 = context.apply();
+      LyteValue value1 = context.apply();
 
-      // TODO Implement other cases
       if (value1.typeOf().equals("string") || value2.typeOf().equals("string")) {
         context.stack.push(value1.toString() + value2.toString());
+      } else if (value1.typeOf().equals("list") && value2.typeOf().equals("list")) {
+        context.stack.push(new LyteList((LyteList) value1, (LyteList) value2));
+      } else {
+        throw new LyteError("Cannot concatenate a(n) " + value1.typeOf() + " and a(n) " + value2.typeOf());
       }
     }
   };
@@ -143,7 +146,7 @@ public class LyteStandardFunctions {
     @Override
     public void invoke(LyteContext context) {
       if (!context.stack.isEmpty()) {
-        System.out.println(context.stack.pop().apply(context));
+        System.out.println(context.apply());
       } else {
         System.out.println();
       }
@@ -153,7 +156,7 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock ioEcho = new LyteNativeBlock("IO", "Echo") {
     @Override
     public void invoke(LyteContext context) {
-      System.out.print(context.stack.pop().apply(context));
+      System.out.print(context.apply());
     }
   };
 
@@ -178,7 +181,7 @@ public class LyteStandardFunctions {
     @Override
     public void invoke(LyteContext context) {
       // TODO this assumes the two things are on the same context.stack, we have to move scoping out of blocks!!!
-      LyteValue value = context.stack.pop().apply(context);
+      LyteValue value = context.apply();
       if (!value.typeOf().equals("object")) {
         throw new LyteError("Cannot Instantiate a(n) " + value.typeOf() + ".");
       }
@@ -233,7 +236,7 @@ public class LyteStandardFunctions {
     @Override
     public void invoke(LyteContext context) {
       // Throw the result to the wolves
-      throw new LyteError(context.stack.pop().apply(context));
+      throw new LyteError(context.apply());
     }
   };
 
@@ -247,10 +250,24 @@ public class LyteStandardFunctions {
     }
   };
 
+  public static LyteNativeBlock corePop = new LyteNativeBlock("Core", "Pop") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.stack.pop();
+    }
+  };
+
+  public static LyteNativeBlock coreDup = new LyteNativeBlock("Core", "Duplicate", "Dup") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.stack.push(context.stack.peek());
+    }
+  };
+
   public static LyteNativeBlock coreFor = new LyteNativeBlock("Core", "For") {
     @Override
     public void invoke(LyteContext context) {
-      LyteValue value1 = context.stack.pop().apply(context);
+      LyteValue value1 = context.apply();
       LyteValue value2;
 
       if (value1.typeOf().equals("list")) {
@@ -268,7 +285,7 @@ public class LyteStandardFunctions {
         }
       } else {
         int number1 = (int) value1.toNumber();
-        int number2 = (int) context.stack.pop().apply(context).toNumber();
+        int number2 = (int) context.apply().toNumber();
         value2 = context.stack.pop();
         if (!value2.typeOf().equals("block")) {
           throw new LyteError("For expected a block, not a(n) " + value2.typeOf());
@@ -341,8 +358,8 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock mathPow = new LyteNativeBlock("Math", "Pow", "**") {
     @Override
     public void invoke(LyteContext context) {
-      double val1 = context.stack.pop().apply(context).toNumber();
-      double val2 = context.stack.pop().apply(context).toNumber();
+      double val1 = context.apply().toNumber();
+      double val2 = context.apply().toNumber();
       context.stack.push(Math.pow(val2, val1));
     }
   };
@@ -350,8 +367,8 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock mathRange2 = new LyteNativeBlock("Math", "Range2") {
     @Override
     public void invoke(LyteContext context) {
-      double val1 = context.stack.pop().apply(context).toNumber();
-      double val2 = context.stack.pop().apply(context).toNumber();
+      double val1 = context.apply().toNumber();
+      double val2 = context.apply().toNumber();
       LyteList range = new LyteList();
 
       if (val1 <= val2) {
@@ -371,9 +388,9 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock mathRange3 = new LyteNativeBlock("Math", "Range3") {
     @Override
     public void invoke(LyteContext context) {
-      double val1 = context.stack.pop().apply(context).toNumber();
-      double val3 = context.stack.pop().apply(context).toNumber();
-      double val2 = context.stack.pop().apply(context).toNumber();
+      double val1 = context.apply().toNumber();
+      double val3 = context.apply().toNumber();
+      double val2 = context.apply().toNumber();
       LyteList range = new LyteList();
 
       if (val1 != val2 && val3 == 0) {
@@ -405,8 +422,8 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock coreEquals = new LyteNativeBlock("Core", "Equals", "==") {
     @Override
     public void invoke(LyteContext context) {
-      LyteValue value1 = context.stack.pop().apply(context);
-      LyteValue value2 = context.stack.pop().apply(context);
+      LyteValue value1 = context.apply();
+      LyteValue value2 = context.apply();
       context.stack.push(value1.equals(value2));
     }
   };
@@ -414,8 +431,8 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock coreEqualsStrict = new LyteNativeBlock("Core", "EqualsStrict", "===") {
     @Override
     public void invoke(LyteContext context) {
-      LyteValue value1 = context.stack.pop().apply(context);
-      LyteValue value2 = context.stack.pop().apply(context);
+      LyteValue value1 = context.apply();
+      LyteValue value2 = context.apply();
       context.stack.push(value1.equalsStrict(value2));
     }
   };

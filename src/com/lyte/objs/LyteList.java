@@ -21,6 +21,13 @@ public class LyteList implements LyteValue<LinkedList<LyteValue>> {
     mList = list;
   }
 
+  public LyteList(LyteList list1, LyteList list2) {
+    mList = new LinkedList<>();
+    // TODO there's probably a better way to do this!
+    mList.addAll(list1.get());
+    mList.addAll(list2.get());
+  }
+
   public LyteList(Object[] list) {
     mList = new LinkedList<>();
 

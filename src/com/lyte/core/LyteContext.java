@@ -113,14 +113,13 @@ public class LyteContext {
         } else if (specifier.invokable != null) {
           obj = obj.getProperty(specifier.invokable.apply(this).toString());
         } else {
-          List<LyteValue> arguments = new ArrayList<LyteValue>();
           // Add a clone of each of the arguments to the function
-          for (LyteRawBlock argument : specifier.arguments) {
+          for (int i = (specifier.arguments.size() - 1); i >= 0; i--) {
             // TODO Check if the ordering is correct & ensure that the block only has one result
-            arguments.add(argument.clone(this));
+            stack.push(specifier.arguments.get(i).clone(this, true, true));
           }
           // Then invoke the block itself w/ those arguments
-          ((LyteBlock) obj).invoke(new LyteContext(lastObj, null, stack), arguments);
+          ((LyteBlock) obj).invoke(new LyteContext(lastObj, null, stack));
           // And pop the result into the object
           if (!stack.isEmpty()) {
             obj = stack.pop();
@@ -141,6 +140,10 @@ public class LyteContext {
     }
 
     return obj;
+  }
+
+  public LyteContext enter(LyteContext context, boolean shouldEnter, boolean hasSelf) {
+    return new LyteContext(hasSelf ? self : context.self, shouldEnter ? scope.enter() : scope, context.stack);
   }
 
   private static boolean shouldApply(PeekingIterator<LyteSpecifier> specifierIterator) {

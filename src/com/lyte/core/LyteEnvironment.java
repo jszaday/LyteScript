@@ -63,7 +63,10 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
     LyteContext globalContext = new LyteContext(null, mGlobalScope, mStack);
     // Then run the main block
     LyteBlock main = (LyteBlock) mGlobalBlock.clone(globalContext, false);
-    main.invoke(globalContext, args);
+    for (int i = (args.length - 1); i >= 0; i--) {
+      mStack.push(args[i]);
+    }
+    main.invoke(globalContext);
   }
 
   public void run(LyteValue... args) throws IOException {
@@ -73,10 +76,19 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
       Scanner scanner = new Scanner(mInputStream);
       String data;
       do {
-        System.out.print(">> ");
-        data = scanner.nextLine();
-        runOnce(new ANTLRInputStream(new StringReader(data)));
-        System.out.println(mStack);
+        try {
+          System.out.print(">> ");
+          data = scanner.nextLine();
+          runOnce(new ANTLRInputStream(new StringReader(data)));
+          if (!mStack.isEmpty()) {
+            mGlobalScope.putVariable("%ans", mStack.peek(), false);
+          } else {
+            mGlobalScope.putVariable("%ans", LyteUndefined.UNDEFINED, false);
+          }
+          System.out.println(mStack);
+        } catch (LyteError e) {
+          System.err.println("ERROR: " + e.getMessage());
+        }
       } while (mReplMode);
     }
   }

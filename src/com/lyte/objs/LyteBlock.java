@@ -1,12 +1,9 @@
 package com.lyte.objs;
 
 import com.lyte.core.LyteContext;
-import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 import com.lyte.core.LyteStatement;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -16,18 +13,20 @@ import java.util.List;
 public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
 
   private List<String> mArgs;
-  protected LyteScope mParentScope;
-  private boolean mCanEnter;
+  protected LyteContext mContext;
+  private boolean mCanEnterScope;
+  private boolean mHasSelf;
 
-  public LyteBlock(LyteScope parentScope, List<LyteStatement> statements) {
-    this(parentScope, statements, null, true);
+  public LyteBlock(LyteContext context, List<LyteStatement> statements) {
+    this(context, statements, null, true, false);
   }
 
-  public LyteBlock(LyteScope parentScope, List<LyteStatement> statements, List<String> args, boolean canEnter) {
+  public LyteBlock(LyteContext context, List<LyteStatement> statements, List<String> args, boolean canEnter, boolean hasSelf) {
     super(statements);
-    mParentScope = parentScope;
     mArgs = args;
-    mCanEnter = canEnter;
+    mCanEnterScope = canEnter;
+    mContext = context;
+    mHasSelf = hasSelf;
   }
 
   private void popArgs(LyteContext context) {
@@ -41,25 +40,10 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
     }
   }
 
-  public void invoke(LyteContext context, LyteValue... args) {
-    invoke(context, Arrays.asList(args));
-  }
-
-  public void invoke(LyteContext context, List<LyteValue> args) {
-    for (int i = (args.size() - 1); i >= 0; i--) {
-      context.stack.push(args.get(i));
-    }
-    invoke(context);
-  }
-
   public void invoke(LyteContext context) {
-    LyteScope originalScope = context.scope;
     LyteStatement statement = null;
-    context.scope = mParentScope;
     // Enter a new scope
-    if (mCanEnter) {
-      context.scope = context.scope.enter();
-    }
+    context = mContext.enter(context, mCanEnterScope, mHasSelf);
     // Pop any named arguments
     popArgs(context);
     // Then apply each of our statements to our scope
@@ -73,7 +57,6 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
         throw e;
       }
     }
-    context.scope = originalScope;
   }
 
   @Override
@@ -98,11 +81,11 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
 
   @Override
   public LyteValue<List<LyteStatement>> clone(LyteContext context) {
-    return new LyteBlock(mParentScope, get(), mArgs, true);
+    return new LyteBlock(context, get(), mArgs, true, false);
   }
 
-  public LyteValue<List<LyteStatement>> clone(LyteContext context, boolean canEnter) {
-    return new LyteBlock(mParentScope, get(), mArgs, canEnter);
+  public LyteValue<List<LyteStatement>> clone(LyteContext context, boolean canEnter, boolean hasSelf) {
+    return new LyteBlock(context, get(), mArgs, canEnter, hasSelf);
   }
 
   @Override

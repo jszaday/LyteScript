@@ -71,11 +71,15 @@ public class LyteRawBlock extends LyteRawValue<List<LyteStatement>> {
   }
 
   public LyteValue<List<LyteStatement>> clone(LyteContext context) {
-    return new LyteBlock(context.scope, mStatements, mArgs, true);
+    return new LyteBlock(context, mStatements, mArgs, true, false);
   }
 
   public LyteValue<List<LyteStatement>> clone(LyteContext context, boolean canEnter) {
-    return new LyteBlock(context.scope, mStatements, mArgs, canEnter);
+    return new LyteBlock(context, mStatements, mArgs, canEnter, false);
+  }
+
+  public LyteValue<List<LyteStatement>> clone(LyteContext context, boolean canEnter, boolean hasSelf) {
+    return new LyteBlock(context, mStatements, mArgs, canEnter, hasSelf);
   }
 
   @Override

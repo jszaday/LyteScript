@@ -3,8 +3,9 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Lyte_jar</output-path>
     <root id="archive" name="Lyte.jar">
       <element id="module-output" name="Lyte" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../commons-lang3-3.4.jar" path-in-jar="/" />
-      <element id="extracted-dir" path="$PROJECT_DIR$/../antlr-4.5-complete.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../Javalib/antlr-4.5-complete.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../Javalib/commons-lang3-3.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/../Javalib/commons-collections4-4.0.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
