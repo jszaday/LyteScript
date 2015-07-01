@@ -4,6 +4,7 @@ import com.lyte.gen.LyteBaseVisitor;
 import com.lyte.gen.LyteLexer;
 import com.lyte.gen.LyteParser;
 import com.lyte.objs.*;
+import com.lyte.stdlib.LyteMathFunctions;
 import com.lyte.stdlib.LyteStandardFunctions;
 import com.lyte.utils.LyteNativeInjector;
 import org.antlr.v4.runtime.*;
@@ -48,6 +49,8 @@ public class LyteEnvironment extends LyteBaseVisitor<Object> {
     mStack = new LyteStack();
     // And inject the native functions
     LyteNativeInjector.injectNatives(LyteStandardFunctions.class, mGlobalScope, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
+    LyteNativeInjector.injectNatives(LyteMathFunctions.class, mGlobalScope, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
+    mGlobalScope.putVariable("Math", mGlobalScope.getVariable(LyteStandardFunctions.TOP_LEVEL_NAMESPACE).getProperty("Math"), true);
   }
 
   private void runOnce(CharStream charStream, LyteValue... args) throws IOException {

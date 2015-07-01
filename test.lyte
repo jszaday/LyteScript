@@ -71,7 +71,8 @@ For(0:4:16, @(i) {
 
 Test <- %{
   name: "Bob",
-  changeName: @(newName) {
+  changeName: {
+    Apply -> newName
     Lyte.Core.If (@name `==` newName, {
       EchoLn("Nothing to change.")
     }, {
@@ -80,4 +81,12 @@ Test <- %{
   }
 }
 
-Test.changeName("Bill") Test.name EchoLn
+Test.changeName("Jeff") Test.name StdOut EchoLn
+
+OpenFile("test.lyte", "r") -> file
+file.readLn -> line
+Until(line Undefined?, {
+  EchoLn(line)
+  file.readLn -> line
+})
+file.close

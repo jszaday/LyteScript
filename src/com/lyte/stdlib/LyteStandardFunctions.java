@@ -6,6 +6,9 @@ import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 import com.lyte.objs.*;
 
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -16,17 +19,31 @@ public class LyteStandardFunctions {
 
   public static String TOP_LEVEL_NAMESPACE = "Lyte";
 
+  private static final LyteStream stdIn = new LyteStream(System.in);
+  private static final LyteStream stdOut = new LyteStream(System.out);
+
   public static LyteNativeBlock coreTrue = new LyteNativeBlock("Core", "True") {
     @Override
     public void invoke(LyteContext context) {
-      context.stack.push(true);
+      context.push(true);
+    }
+  };
+
+  public static LyteNativeBlock coreExit = new LyteNativeBlock("Core", "Exit") {
+    @Override
+    public void invoke(LyteContext context) {
+      if (context.isEmpty()) {
+        System.exit(0);
+      } else {
+        System.exit((int) context.apply().toNumber());
+      }
     }
   };
 
   public static LyteNativeBlock coreFalse = new LyteNativeBlock("Core", "False") {
     @Override
     public void invoke(LyteContext context) {
-      context.stack.push(false);
+      context.push(false);
 
     }
   };
@@ -34,94 +51,40 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock coreUndefined = new LyteNativeBlock("Core", "Undefined") {
     @Override
     public void invoke(LyteContext context) {
-      context.stack.push(LyteUndefined.UNDEFINED);
+      context.push(LyteUndefined.UNDEFINED);
+    }
+  };
 
+  public static LyteNativeBlock coreNull= new LyteNativeBlock("Core", "Null") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(LyteUndefined.NULL);
     }
   };
 
   public static LyteNativeBlock coreNot = new LyteNativeBlock("Core", "Not") {
     @Override
     public void invoke(LyteContext context) {
-      context.stack.push(!context.apply().toBoolean());
+      context.push(!context.apply().toBoolean());
     }
   };
 
   public static LyteNativeBlock coreIsUndefined = new LyteNativeBlock("Core", "IsUndefined", "Undefined?") {
     @Override
     public void invoke(LyteContext context) {
-      context.stack.push(context.stack.pop() == LyteUndefined.UNDEFINED);
-    }
-  };
-
-  public static LyteNativeBlock mathAdd = new LyteNativeBlock("Math", "Add", "+") {
-
-    @Override
-    public void invoke(LyteContext context) {
-      double val1 = context.apply().toNumber();
-      double val2 = context.apply().toNumber();
-      context.stack.push(val1 + val2);
-    }
-  };
-
-  public static LyteNativeBlock mathLessEquals = new LyteNativeBlock("Math", "LessEquals", "<=") {
-
-    @Override
-    public void invoke(LyteContext context) {
-      double val1 = context.apply().toNumber();
-      double val2 = context.apply().toNumber();
-      context.stack.push(val2 <= val1);
-    }
-  };
-
-  public static LyteNativeBlock mathSubtract = new LyteNativeBlock("Math", "Subtract", "-") {
-
-    @Override
-    public void invoke(LyteContext context) {
-      double val1 = context.apply().toNumber();
-      double val2 = context.apply().toNumber();
-      context.stack.push(val2 - val1);
-    }
-  };
-
-  public static LyteNativeBlock mathDivide = new LyteNativeBlock("Math", "Divide", "/") {
-
-    @Override
-    public void invoke(LyteContext context) {
-      double val1 = context.apply().toNumber();
-      double val2 = context.apply().toNumber();
-      context.stack.push(val2 / val1);
-    }
-  };
-
-  public static LyteNativeBlock mathIDivide = new LyteNativeBlock("Math", "IDivide", "IDiv") {
-
-    @Override
-    public void invoke(LyteContext context) {
-      int val1 = (int) context.apply().toNumber();
-      int val2 = (int) context.apply().toNumber();
-      context.stack.push(val2 / val1);
-    }
-  };
-
-  public static LyteNativeBlock mathMultiply = new LyteNativeBlock("Math", "Multiply", "*") {
-
-    @Override
-    public void invoke(LyteContext context) {
-      double val1 = context.apply().toNumber();
-      double val2 = context.apply().toNumber();
-      context.stack.push(val1 * val2);
+      context.push(context.pop() == LyteUndefined.UNDEFINED);
     }
   };
 
   public static LyteNativeBlock coreApply = new LyteNativeBlock("Core", "Apply") {
     @Override
     public void invoke(LyteContext context) {
-      LyteValue value = context.stack.pop();
+      LyteValue value = context.pop();
 
       if (value.typeOf().equals("block")) {
         ((LyteBlock) value).invoke(context);
       } else {
-        context.stack.push(value);
+        context.push(value);
       }
     }
   };
@@ -133,20 +96,45 @@ public class LyteStandardFunctions {
       LyteValue value1 = context.apply();
 
       if (value1.typeOf().equals("string") || value2.typeOf().equals("string")) {
-        context.stack.push(value1.toString() + value2.toString());
+        context.push(value1.toString() + value2.toString());
       } else if (value1.typeOf().equals("list") && value2.typeOf().equals("list")) {
-        context.stack.push(new LyteList((LyteList) value1, (LyteList) value2));
+        context.push(new LyteList((LyteList) value1, (LyteList) value2));
       } else {
         throw new LyteError("Cannot concatenate a(n) " + value1.typeOf() + " and a(n) " + value2.typeOf());
       }
     }
   };
 
+  public static LyteNativeBlock ioStdIn = new LyteNativeBlock("IO", "StdIn") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(stdIn);
+    }
+  };
+
+  public static LyteNativeBlock ioStdOut = new LyteNativeBlock("IO", "StdOut") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(stdOut);
+    }
+  };
+
   public static LyteNativeBlock ioEchoLn = new LyteNativeBlock("IO", "EchoLn") {
     @Override
     public void invoke(LyteContext context) {
-      if (!context.stack.isEmpty()) {
-        System.out.println(context.apply());
+      if (!context.isEmpty()) {
+        LyteValue value1 = context.apply();
+        if (value1.typeOf().equals("stream")) {
+          LyteStream stream = (LyteStream) value1;
+          if (context.isEmpty()) {
+            stream.writeLine("");
+          } else {
+            stream.writeLine(context.apply().toString());
+          }
+          stream.flush();
+        } else {
+          System.out.println(value1);
+        }
       } else {
         System.out.println();
       }
@@ -156,7 +144,27 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock ioEcho = new LyteNativeBlock("IO", "Echo") {
     @Override
     public void invoke(LyteContext context) {
-      System.out.print(context.apply());
+      LyteValue value1 = context.apply();
+      if (value1.typeOf().equals("stream")) {
+        ((LyteStream) value1).write(context.apply().toString());
+        ((LyteStream) value1).flush();
+      } else {
+        System.out.print(value1);
+      }
+    }
+  };
+
+  public static LyteNativeBlock ioReadLn = new LyteNativeBlock("IO", "ReadLn") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(stdIn.readLine());
+    }
+  };
+
+  public static LyteNativeBlock ioRead = new LyteNativeBlock("IO", "Read") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(stdIn.read());
     }
   };
 
@@ -164,15 +172,15 @@ public class LyteStandardFunctions {
 
     @Override
     public void invoke(LyteContext context) {
-      LyteValue condition = context.stack.pop();
-      LyteValue trueValue = context.stack.pop();
-      LyteValue falseValue = context.stack.pop();
+      LyteValue condition = context.pop();
+      LyteValue trueValue = context.pop();
+      LyteValue falseValue = context.pop();
       LyteValue selectedValue = condition.apply(context).toBoolean() ? trueValue : falseValue;
 
       if (selectedValue.typeOf().equals("block")) {
         ((LyteBlock) selectedValue).invoke(context);
       } else {
-        context.stack.push(selectedValue.apply(context));
+        context.push(selectedValue.apply(context));
       }
     }
   };
@@ -195,15 +203,15 @@ public class LyteStandardFunctions {
         throw new LyteError("Expected __constructor to be a block for object " + obj);
       }
       obj.unsetProperty("__constructor");
-      context.stack.push(obj);
+      context.push(obj);
     }
   };
 
   public static LyteNativeBlock coreMixWith = new LyteNativeBlock("Core", "MixWith") {
     @Override
     public void invoke(LyteContext context) {
-      LyteValue value2 = context.stack.pop();
-      LyteValue value1 = context.stack.pop();
+      LyteValue value2 = context.pop();
+      LyteValue value1 = context.pop();
 
       if (!(value1.typeOf().equals("object") && value2.typeOf().equals("object"))) {
         throw new LyteError("Cannot mix " + value1 + " with " + value2);
@@ -216,8 +224,8 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock errorTry = new LyteNativeBlock("Error", "Try") {
     @Override
     public void invoke(LyteContext context) {
-      LyteValue value1 = context.stack.pop();
-      LyteValue value2 = context.stack.pop();
+      LyteValue value1 = context.pop();
+      LyteValue value2 = context.pop();
 
       if (!value1.typeOf().equals("block") || !value2.typeOf().equals("block")) {
         throw new LyteError("Try requires both parameters to be blocks!");
@@ -226,7 +234,7 @@ public class LyteStandardFunctions {
       try {
         ((LyteBlock) value1).invoke(context);
       } catch (LyteError e) {
-        context.stack.push(e);
+        context.push(e);
         ((LyteBlock) value2).invoke(context);
       }
     }
@@ -243,24 +251,24 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock coreSwap = new LyteNativeBlock("Core", "Swap") {
     @Override
     public void invoke(LyteContext context) {
-      LyteValue value1 = context.stack.pop();
-      LyteValue value2 = context.stack.pop();
-      context.stack.push(value1);
-      context.stack.push(value2);
+      LyteValue value1 = context.pop();
+      LyteValue value2 = context.pop();
+      context.push(value1);
+      context.push(value2);
     }
   };
 
   public static LyteNativeBlock corePop = new LyteNativeBlock("Core", "Pop") {
     @Override
     public void invoke(LyteContext context) {
-      context.stack.pop();
+      context.pop();
     }
   };
 
   public static LyteNativeBlock coreDup = new LyteNativeBlock("Core", "Duplicate", "Dup") {
     @Override
     public void invoke(LyteContext context) {
-      context.stack.push(context.stack.peek());
+      context.push(context.peek());
     }
   };
 
@@ -271,7 +279,7 @@ public class LyteStandardFunctions {
       LyteValue value2;
 
       if (value1.typeOf().equals("list")) {
-        value2 = context.stack.pop();
+        value2 = context.pop();
 
         if (!value2.typeOf().equals("block")) {
           throw new LyteError("For expected a block, not a(n) " + value2.typeOf());
@@ -279,28 +287,28 @@ public class LyteStandardFunctions {
 
         for (LyteValue value : ((List<LyteValue>) value1.get())) {
           // Push the value onto the context.stack
-          context.stack.push(value);
+          context.push(value);
           // Then invoke the function
           ((LyteBlock) value2).invoke(context);
         }
       } else {
         int number1 = (int) value1.toNumber();
         int number2 = (int) context.apply().toNumber();
-        value2 = context.stack.pop();
+        value2 = context.pop();
         if (!value2.typeOf().equals("block")) {
           throw new LyteError("For expected a block, not a(n) " + value2.typeOf());
         }
         if (number1 < number2) {
           for (int i = number1; i < number2; i++) {
             // Push the number onto the context.stack
-            context.stack.push(i);
+            context.push(i);
             // Then invoke the function
             ((LyteBlock) value2).invoke(context);
           }
         } else {
           for (int i = (number1 - 1); i >= number2; i--) {
             // Push the number onto the context.stack
-            context.stack.push(i);
+            context.push(i);
             // Then invoke the function
             ((LyteBlock) value2).invoke(context);
           }
@@ -312,8 +320,8 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock coreWhile = new LyteNativeBlock("Core", "While") {
     @Override
     public void invoke(LyteContext context) {
-      LyteValue value1 = context.stack.pop();
-      LyteValue value2 = context.stack.pop();
+      LyteValue value1 = context.pop();
+      LyteValue value2 = context.pop();
       if (!value2.typeOf().equals("block")) {
         throw new LyteError("While expected a block, not a(n) " + value2.typeOf());
       }
@@ -326,8 +334,8 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock coreUntil = new LyteNativeBlock("Core", "Until") {
     @Override
     public void invoke(LyteContext context) {
-      LyteValue value1 = context.stack.pop();
-      LyteValue value2 = context.stack.pop();
+      LyteValue value1 = context.pop();
+      LyteValue value2 = context.pop();
       if (!value2.typeOf().equals("block")) {
         throw new LyteError("Until expected a block, not a(n) " + value2.typeOf());
       }
@@ -340,7 +348,7 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock coreIsStackEmpty = new LyteNativeBlock("Core", "IsStackEmpty", "StackEmpty?") {
     @Override
     public void invoke(LyteContext context) {
-      context.stack.push(context.stack.isEmpty());
+      context.push(context.isEmpty());
     }
   };
 
@@ -348,74 +356,10 @@ public class LyteStandardFunctions {
     @Override
     public void invoke(LyteContext context) {
       if (context.self != null) {
-        context.stack.push(context.self);
+        context.push(context.self);
       } else {
-        context.stack.push(LyteUndefined.NULL);
+        context.push(LyteUndefined.NULL);
       }
-    }
-  };
-
-  public static LyteNativeBlock mathPow = new LyteNativeBlock("Math", "Pow", "**") {
-    @Override
-    public void invoke(LyteContext context) {
-      double val1 = context.apply().toNumber();
-      double val2 = context.apply().toNumber();
-      context.stack.push(Math.pow(val2, val1));
-    }
-  };
-
-  public static LyteNativeBlock mathRange2 = new LyteNativeBlock("Math", "Range2") {
-    @Override
-    public void invoke(LyteContext context) {
-      double val1 = context.apply().toNumber();
-      double val2 = context.apply().toNumber();
-      LyteList range = new LyteList();
-
-      if (val1 <= val2) {
-        for (double i = val1; i <= val2; i += 1) {
-          range.add(new LyteNumber(i));
-        }
-      } else {
-        for (double i = val1; i >= val2; i -= 1) {
-          range.add(new LyteNumber(i));
-        }
-      }
-
-      context.stack.push(range);
-    }
-  };
-
-  public static LyteNativeBlock mathRange3 = new LyteNativeBlock("Math", "Range3") {
-    @Override
-    public void invoke(LyteContext context) {
-      double val1 = context.apply().toNumber();
-      double val3 = context.apply().toNumber();
-      double val2 = context.apply().toNumber();
-      LyteList range = new LyteList();
-
-      if (val1 != val2 && val3 == 0) {
-        throw new LyteError("Impossible to reach " + val2 + " from " + val1 + " by incrementing by zero");
-      }
-
-      if (val1 <= val2) {
-        if (val3 < 0) {
-          throw new LyteError("Impossible to reach " + val2 + " from " + val1 + " by incrementing by " + val3);
-        }
-
-        for (double i = val1; i <= val2; i += val3) {
-          range.add(new LyteNumber(i));
-        }
-      } else {
-        if (val3 > 0) {
-          throw new LyteError("Impossible to reach " + val2 + " from " + val1 + " by incrementing by " + val3);
-        }
-
-        for (double i = val1; i >= val2; i += val3) {
-          range.add(new LyteNumber(i));
-        }
-      }
-
-      context.stack.push(range);
     }
   };
 
@@ -424,7 +368,7 @@ public class LyteStandardFunctions {
     public void invoke(LyteContext context) {
       LyteValue value1 = context.apply();
       LyteValue value2 = context.apply();
-      context.stack.push(value1.equals(value2));
+      context.push(value1.equals(value2));
     }
   };
 
@@ -433,7 +377,40 @@ public class LyteStandardFunctions {
     public void invoke(LyteContext context) {
       LyteValue value1 = context.apply();
       LyteValue value2 = context.apply();
-      context.stack.push(value1.equalsStrict(value2));
+      context.push(value1.equalsStrict(value2));
+    }
+  };
+
+  public static LyteNativeBlock ioOpenFile = new LyteNativeBlock("IO", "OpenFile") {
+    @Override
+    public void invoke(LyteContext context) {
+      String filename = context.apply().toString();
+      String mode = context.apply().toString();
+
+      try {
+        switch (mode) {
+          case "r":
+            context.push(new LyteStream(new FileReader(filename)));
+            break;
+          case "w":
+            context.push(new LyteStream(new FileWriter(filename)));
+            break;
+          case "a":
+            context.push(new LyteStream(new FileWriter(filename, true)));
+            break;
+          default:
+            throw new LyteError("Cannot open file in mode " + mode);
+        }
+      } catch (IOException e) {
+        throw new LyteError(e.getMessage());
+      }
+    }
+  };
+
+  public static LyteNativeBlock coreTypeOf = new LyteNativeBlock("Core", "TypeOf", "TypeOf?") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(context.pop().typeOf());
     }
   };
 }

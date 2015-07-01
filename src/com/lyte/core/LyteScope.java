@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import com.lyte.objs.LyteError;
 import com.lyte.objs.LyteObject;
+import com.lyte.objs.LytePackage;
 import com.lyte.objs.LyteValue;
 import com.lyte.utils.LyteInjectable;
 
@@ -43,19 +44,23 @@ public class LyteScope implements LyteInjectable {
     }
   }
 
+  public void putLocalVariable(String name, LyteValue value, boolean finalVariable) {
+    if (mFinalVariables.contains(name)) {
+      throw new LyteError("Cannot override the value of " + name);
+    } else {
+      mVariables.put(name, value);
+
+      if (finalVariable) {
+        mFinalVariables.add(name);
+      }
+    }
+  }
+
   public void putVariable(String name, LyteValue value, boolean finalVariable) {
     if (mParent != null && mParent.hasVariable(name)) {
       mParent.putVariable(name, value, finalVariable);
     } else {
-      if (mFinalVariables.contains(name)) {
-        throw new LyteError("Cannot override the value of " + name);
-      } else {
-        mVariables.put(name, value);
-
-        if (finalVariable) {
-          mFinalVariables.add(name);
-        }
-      }
+      putLocalVariable(name, value, finalVariable);
     }
   }
 
@@ -102,6 +107,10 @@ public class LyteScope implements LyteInjectable {
 
   @Override
   public void inject(String name, LyteValue value) {
-    putVariable(name, value, true);
+    if (!hasVariable(name)) {
+      putVariable(name, value, true);
+    } else {
+      ((LytePackage) getVariable(name)).addAll((LytePackage) value);
+    }
   }
 }

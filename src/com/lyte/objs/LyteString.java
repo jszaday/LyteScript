@@ -18,6 +18,14 @@ public class LyteString extends LytePrimitive<String> {
     super(Character.toString(value));
   }
 
+  public char charAt(int index) {
+    return get().charAt(index);
+  }
+
+  public int length() {
+    return get().length();
+  }
+
   @Override
   public boolean toBoolean() {
     return get().length() > 0;

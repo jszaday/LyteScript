@@ -10,6 +10,7 @@ import java.util.LinkedList;
  */
 public class LyteStack extends ArrayDeque<LyteValue> {
 
+  @Override
   public LyteValue pop() {
     if (!this.isEmpty()) {
       return super.pop();
@@ -18,19 +19,12 @@ public class LyteStack extends ArrayDeque<LyteValue> {
     }
   }
 
-  public void push(String string) {
-    push(new LyteString(string));
-  }
-
-  public void push(Double number) {
-    push(new LyteNumber(number));
-  }
-
-  public void push(Boolean bool) {
-    push(new LyteBoolean(bool));
-  }
-
-  public void push(Integer integer) {
-    push(new LyteNumber(integer));
+  @Override
+  public LyteValue peek() {
+    if (!this.isEmpty()) {
+      return super.peek();
+    } else {
+      throw new LyteError("No value available, stack is empty.");
+    }
   }
 }

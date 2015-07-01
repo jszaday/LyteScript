@@ -1,9 +1,6 @@
 package com.lyte.core;
 
-import com.lyte.objs.LyteBlock;
-import com.lyte.objs.LyteError;
-import com.lyte.objs.LyteRawBlock;
-import com.lyte.objs.LyteValue;
+import com.lyte.objs.*;
 import org.apache.commons.collections4.iterators.PeekingIterator;
 
 import java.util.ArrayList;
@@ -25,8 +22,40 @@ public class LyteContext {
     this.stack = stack;
   }
 
+  public void push(String string) {
+    push(new LyteString(string));
+  }
+
+  public void push(Double number) {
+    push(new LyteNumber(number));
+  }
+
+  public void push(Boolean bool) {
+    push(new LyteBoolean(bool));
+  }
+
+  public void push(Integer integer) {
+    push(new LyteNumber(integer));
+  }
+
+  public void push(LyteValue value) {
+    stack.push(value);
+  }
+
+  public LyteValue pop() {
+    return stack.pop();
+  }
+
+  public LyteValue peek() {
+    return stack.peek();
+  }
+
   public LyteValue apply() {
     return stack.pop().apply(this);
+  }
+
+  public boolean isEmpty() {
+    return stack.isEmpty();
   }
 
   public LyteValue get(String name) {
@@ -81,6 +110,14 @@ public class LyteContext {
 
   public void set(String name) {
     set(name, stack.pop());
+  }
+
+  public void set(String name, boolean localOnly) {
+    if (localOnly) {
+      scope.putLocalVariable(name, stack.pop(), false);
+    } else {
+      set(name, stack.pop());
+    }
   }
 
   public LyteValue resolve(LyteInvokeStatement invokeStatement, boolean fullyResolve) {

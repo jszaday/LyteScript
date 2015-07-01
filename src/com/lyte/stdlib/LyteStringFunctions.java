@@ -20,7 +20,7 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
       int value1 = (int) context.apply().toNumber();
       int value2 = (int) context.apply().toNumber();
       try {
-        context.stack.push(new LyteString(self.get().substring(value1, value2)));
+        context.push(new LyteString(self.get().substring(value1, value2)));
       } catch (StringIndexOutOfBoundsException e) {
         throw new LyteError("Cannot take substring from " + value1 + " to " + value2 + " of \"" + self.get() + ",\" indices out of bounds!");
       }
@@ -31,7 +31,7 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
     @Override
     public void invoke(LyteString self, LyteContext context) {
       String value1 = context.apply().toString();
-      context.stack.push(self.get().contains(value1));
+      context.push(self.get().contains(value1));
     }
   };
   public static LyteNativeBlock stringSearch = new LyteStringBlock("search") {
@@ -39,7 +39,7 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
     @Override
     public void invoke(LyteString self, LyteContext context) {
       String value1 = context.apply().toString();
-      context.stack.push(self.get().indexOf(value1));
+      context.push(self.get().indexOf(value1));
     }
   };
   public static LyteNativeBlock stringSearchPast = new LyteStringBlock("searchPast") {
@@ -48,7 +48,7 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
     public void invoke(LyteString self, LyteContext context) {
       String value1 = context.apply().toString();
       int value2 = (int) context.apply().toNumber();
-      context.stack.push(self.get().indexOf(value1, value2));
+      context.push(self.get().indexOf(value1, value2));
     }
   };
   public static LyteNativeBlock stringStartsWith = new LyteStringBlock("startsWith") {
@@ -57,7 +57,7 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
     public void invoke(LyteString self, LyteContext context) {
       if (self instanceof LyteString) {
         String value1 = context.apply().toString();
-        context.stack.push(self.get().startsWith(value1));
+        context.push(self.get().startsWith(value1));
       } else {
         throw new LyteError("Cannot take the substring of " + self);
       }
@@ -69,7 +69,7 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
     public void invoke(LyteString self, LyteContext context) {
       if (self instanceof LyteString) {
         String value1 = context.apply().toString();
-        context.stack.push(self.get().endsWith(value1));
+        context.push(self.get().endsWith(value1));
       } else {
         throw new LyteError("Cannot take the substring of " + self);
       }
@@ -79,7 +79,7 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
 
     @Override
     public void invoke(LyteString self, LyteContext context) {
-      context.stack.push(self.get().length());
+      context.push(self.get().length());
     }
   };
   public static LyteNativeBlock stringReplace = new LyteStringBlock("replace") {
@@ -88,7 +88,7 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
     public void invoke(LyteString self, LyteContext context) {
       String value1 = context.apply().toString();
       String value2 = context.apply().toString();
-      context.stack.push(self.get().replaceFirst(value1, value2));
+      context.push(self.get().replaceFirst(value1, value2));
     }
   };
   public static LyteNativeBlock stringReplaceAll = new LyteStringBlock("replaceAll") {
@@ -97,50 +97,50 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
     public void invoke(LyteString self, LyteContext context) {
       String value1 = context.apply().toString();
       String value2 = context.apply().toString();
-      context.stack.push(self.get().replaceAll(value1, value2));
+      context.push(self.get().replaceAll(value1, value2));
     }
   };
   public static LyteNativeBlock stringReverse = new LyteStringBlock("reverse") {
     @Override
     public void invoke(LyteString self, LyteContext context) {
-      context.stack.push(new StringBuilder(self.get()).reverse().toString());
+      context.push(new StringBuilder(self.get()).reverse().toString());
     }
   };
   public static LyteNativeBlock stringIsEmpty = new LyteStringBlock("empty?") {
     @Override
     public void invoke(LyteString self, LyteContext context) {
-      context.stack.push(self.get().isEmpty());
+      context.push(self.get().isEmpty());
     }
   };
   public static LyteNativeBlock stringMatches = new LyteStringBlock("matches") {
     @Override
     public void invoke(LyteString self, LyteContext context) {
-      context.stack.push(self.get().matches(context.apply().toString()));
+      context.push(self.get().matches(context.apply().toString()));
     }
   };
   public static LyteNativeBlock stringSplit = new LyteStringBlock("split") {
     @Override
     public void invoke(LyteString self, LyteContext context) {
       String[] results = self.get().split(context.apply().toString());
-      context.stack.push(new LyteList(results));
+      context.push(new LyteList(results));
     }
   };
   public static LyteNativeBlock stringConcat = new LyteStringBlock("concat") {
     @Override
     public void invoke(LyteString self, LyteContext context) {
-      context.stack.push(self.get() + context.apply());
+      context.push(self.get() + context.apply());
     }
   };
   public static LyteNativeBlock stringToUpperCase = new LyteStringBlock("toUpperCase") {
     @Override
     public void invoke(LyteString self, LyteContext context) {
-      context.stack.push(self.get().toUpperCase());
+      context.push(self.get().toUpperCase());
     }
   };
   public static LyteNativeBlock stringToLowerCase = new LyteStringBlock("toLowerCase") {
     @Override
     public void invoke(LyteString self, LyteContext context) {
-      context.stack.push(self.get().toLowerCase());
+      context.push(self.get().toLowerCase());
     }
   };
 

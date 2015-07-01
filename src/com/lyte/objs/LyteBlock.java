@@ -36,7 +36,8 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
     // For each of our args
     for (String arg : mArgs) {
       // Pop off a value and bind it to the arg's name
-      context.set(arg);
+      // Verify this occurs only in our scope
+      context.set(arg, true);
     }
   }
 

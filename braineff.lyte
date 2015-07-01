@@ -1,0 +1,59 @@
+/* LyteScript Sample BrainF**k Interpreter
+ * Author: Justin Szaday
+ */
+
+// Open the file given by the program's arguments
+"r" Swap OpenFile -> file
+
+// Initialize the memory, pointer, text and counter
+%[] -> memory
+  0 -> index
+  0 -> pc
+ "" -> text
+ 
+// Populate the memory (30000 cells) with zeros
+For(0:30000, @(i) { 0 -> memory[i] })
+
+// Read the first line to get started
+file.readLn -> line
+// Until we've read to the end of the file
+Until(line Undefined?, {
+  // Append the line to the text
+  text `++` line -> text
+  // and read the next line
+  file.readLn -> line
+})
+// Close the file when we're done
+file.close
+
+// While the counter is less than the text's length
+While(pc `<` text.length, {
+  If(text[pc] `==` "<", {
+    Math.Max(index `-` 1, 0) -> index
+  }, If(text[pc] `==` ">", {
+    index `+` 1 -> index
+  }, If(text[pc] `==` "+", {
+    memory[index] `+` 1 -> memory[index]
+  }, If(text[pc] `==` "-", {
+    memory[index] `-` 1 -> memory[index]
+  }, If(text[pc] `==` ".", {
+    StdOut.write(memory[index])
+    StdOut.flush()
+  }, If(text[pc] `==` ",", {
+    StdIn.read(memory[index])
+  }, If(text[pc] `==` "[", {
+    If(`Not` memory[index], {
+      Until(text[pc] `==` "]", {
+        pc `+` 1 -> pc
+      })
+    }, {})
+  }, If(text[pc] `==` "]", {
+    If(memory[index], {
+      Until(text[pc] `==` "[", {
+        pc `-` 1 -> pc
+      })
+    }, {})
+  }, {}))))))))
+  
+  pc `+` 1 -> pc
+})

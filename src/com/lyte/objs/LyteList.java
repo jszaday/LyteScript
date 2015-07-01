@@ -45,6 +45,9 @@ public class LyteList implements LyteValue<LinkedList<LyteValue>> {
   }
 
   public void setIndex(int index, LyteValue newValue) {
+    if (index < 0) {
+      throw new LyteError("Cannot have a negative index!");
+    }
     // Expand the list up to the given index
     for (int i = mList.size(); i <= index; i++) {
       mList.add(LyteUndefined.UNDEFINED);

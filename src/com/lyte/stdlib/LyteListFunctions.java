@@ -24,7 +24,7 @@ public class LyteListFunctions extends LyteSimpleInjectable {
       if (!context.self.typeOf().equals("list")) {
         throw new LyteError("Cannot apply push to an " + context.self.typeOf());
       }
-      context.stack.push(((LyteList) context.self).get().pop());
+      context.push(((LyteList) context.self).get().pop());
     }
   };
   public static LyteNativeBlock listLength = new LyteNativeBlock("List", "length") {
@@ -33,7 +33,7 @@ public class LyteListFunctions extends LyteSimpleInjectable {
       if (!context.self.typeOf().equals("list")) {
         throw new LyteError("Cannot apply push to an " + context.self.typeOf());
       }
-      context.stack.push(((LyteList) context.self).get().size());
+      context.push(((LyteList) context.self).get().size());
     }
   };
   public static LyteNativeBlock listIsEmpty = new LyteNativeBlock("List", "empty?") {
@@ -42,7 +42,7 @@ public class LyteListFunctions extends LyteSimpleInjectable {
       if (!context.self.typeOf().equals("list")) {
         throw new LyteError("Cannot apply push to an " + context.self.typeOf());
       }
-      context.stack.push(((LyteList) context.self).get().isEmpty());
+      context.push(((LyteList) context.self).get().isEmpty());
     }
   };
 }
