@@ -1,6 +1,8 @@
 package com.lyte.core;
 
 import com.lyte.objs.*;
+import com.lyte.stdlib.LyteReflectionFunctions;
+import com.lyte.utils.LyteInjectable;
 import org.apache.commons.collections4.iterators.PeekingIterator;
 
 import java.util.ArrayList;
@@ -11,7 +13,7 @@ import static com.lyte.core.LyteInvokeStatement.LyteSpecifier;
 /**
  * Created by a0225785 on 6/30/2015.
  */
-public class LyteContext {
+public class LyteContext implements LyteInjectable {
   public LyteValue self;
   public LyteScope scope;
   public LyteStack stack;
@@ -93,19 +95,7 @@ public class LyteContext {
   }
 
   public void set(String name, LyteValue value) {
-    if (name.startsWith("@")) {
-      if (self == null) {
-        throw new LyteError("Cannot set property " + name);
-      }
-      self.setProperty(name.substring(1, name.length()), value);
-    } else if (name.startsWith("#")) {
-      if (stack == null || stack.isEmpty()) {
-        throw new LyteError("Cannot set property " + name);
-      }
-      stack.peek().setProperty(name.substring(1, name.length()), value);
-    } else {
-      scope.putVariable(name, value, false);
-    }
+    set(name, value, false);
   }
 
   public void set(String name) {
@@ -120,7 +110,27 @@ public class LyteContext {
     }
   }
 
+  public void set(String name, LyteValue value, boolean finalize) {
+    if (name.startsWith("@")) {
+      if (self == null) {
+        throw new LyteError("Cannot set property " + name);
+      }
+      self.setProperty(name.substring(1, name.length()), value);
+    } else if (name.startsWith("#")) {
+      if (stack == null || stack.isEmpty()) {
+        throw new LyteError("Cannot set property " + name);
+      }
+      stack.peek().setProperty(name.substring(1, name.length()), value);
+    } else {
+      scope.putVariable(name, value, finalize);
+    }
+  }
+
   public LyteValue resolve(LyteInvokeStatement invokeStatement, boolean fullyResolve) {
+    return resolve(invokeStatement, fullyResolve, true);
+  }
+
+  public LyteValue resolve(LyteInvokeStatement invokeStatement, boolean fullyResolve, boolean applyLast) {
     String primaryIdentifier = invokeStatement.getPrimaryIdentifier();
     PeekingIterator<LyteSpecifier> specifierIterator = invokeStatement.getSpecifiersIterator(fullyResolve ? 0 : 1);
     LyteValue obj, lastObj = self;
@@ -128,11 +138,11 @@ public class LyteContext {
     try {
       obj = get(primaryIdentifier);
 
-      if (shouldApply(specifierIterator)) {
+      if (shouldApply(specifierIterator, applyLast)) {
         obj = obj.apply(new LyteContext(lastObj, scope, stack));
       }
 
-      if (!shouldApply(specifierIterator)) {
+      if (!shouldApply(specifierIterator, applyLast)) {
         if (primaryIdentifier.startsWith("#")) {
           lastObj = stack.peek();
         } else if (primaryIdentifier.startsWith("@") || obj.typeOf().equals("block")) {
@@ -152,20 +162,17 @@ public class LyteContext {
         } else {
           // Add a clone of each of the arguments to the function
           for (int i = (specifier.arguments.size() - 1); i >= 0; i--) {
-            // TODO Check if the ordering is correct & ensure that the block only has one result
             stack.push(specifier.arguments.get(i).clone(this, true, true));
           }
-          // Then invoke the block itself w/ those arguments
-          ((LyteBlock) obj).invoke(new LyteContext(lastObj, null, stack));
-          // And pop the result into the object
-          if (!stack.isEmpty()) {
-            obj = stack.pop();
+          // Then invoke the block itself
+          if (obj == LyteReflectionFunctions.reflectGet || obj == LyteReflectionFunctions.reflectEval) {
+            obj = obj.apply(this);
           } else {
-            obj = null;
+            obj = obj.apply(new LyteContext(lastObj, scope, stack));
           }
         }
 
-        if (shouldApply(specifierIterator) && obj != null) {
+        if (shouldApply(specifierIterator, applyLast) && obj != null) {
           lastObj = obj = obj.apply(new LyteContext(lastObj, scope, stack));
         }
       }
@@ -183,7 +190,12 @@ public class LyteContext {
     return new LyteContext(hasSelf ? self : context.self, shouldEnter ? scope.enter() : scope, context.stack);
   }
 
-  private static boolean shouldApply(PeekingIterator<LyteSpecifier> specifierIterator) {
-    return !specifierIterator.hasNext() || (specifierIterator.hasNext() && (specifierIterator.peek().arguments == null));
+  private static boolean shouldApply(PeekingIterator<LyteSpecifier> specifierIterator, boolean applyLast) {
+    return (!specifierIterator.hasNext() && applyLast) || (specifierIterator.hasNext() && (specifierIterator.peek().arguments == null));
+  }
+
+  @Override
+  public void inject(String name, LyteValue value) {
+    scope.inject(name, value);
   }
 }

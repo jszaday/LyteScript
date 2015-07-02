@@ -79,7 +79,7 @@ public class LyteMathFunctions {
     }
   };
 
-  public static LyteNativeBlock mathPow = new LyteNativeBlock("Math", "Pow", "**") {
+  public static LyteNativeBlock mathPow = new LyteNativeBlock("Math", "Pow", "^") {
     @Override
     public void invoke(LyteContext context) {
       double val1 = context.apply().toNumber();

@@ -1,0 +1,19 @@
+/* Dog
+ *  A template for dogs that can do tricks
+ * Author: Justin Szaday
+ */
+Dog <- %{
+  __constructor: @(name) {
+    name -> @name
+    %[] -> @tricks
+  },
+  addTrick: @(trick) {
+    @tricks.push(trick)
+  },
+  doTricks: {
+    // Perform Each Trick
+    For(@tricks, @(trick) {
+      EchoLn(@name `++` " performed the trick \"" `++` trick `++` "!\"")
+    })
+  }
+}

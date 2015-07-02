@@ -1,9 +1,6 @@
 package com.lyte.stdlib;
 
-import com.lyte.core.LyteContext;
-import com.lyte.core.LyteInvokeStatement;
-import com.lyte.core.LyteScope;
-import com.lyte.core.LyteStack;
+import com.lyte.core.*;
 import com.lyte.objs.*;
 
 import java.io.FileReader;
@@ -407,10 +404,21 @@ public class LyteStandardFunctions {
     }
   };
 
-  public static LyteNativeBlock coreTypeOf = new LyteNativeBlock("Core", "TypeOf", "TypeOf?") {
+  public static LyteNativeBlock coreTypeOf = new LyteNativeBlock("Core", "TypeOf", "Type?") {
     @Override
     public void invoke(LyteContext context) {
       context.push(context.pop().typeOf());
+    }
+  };
+
+  public static LyteNativeBlock coreImport = new LyteNativeBlock("Core", "Import") {
+    @Override
+    public void invoke(LyteContext context) {
+      try {
+        (new LyteClassLoader()).load(context, context.apply().toString());
+      } catch (IOException e) {
+        throw new LyteError(e.getMessage());
+      }
     }
   };
 }

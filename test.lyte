@@ -1,4 +1,6 @@
-// %import("Lyte.Core.Version")
+/* Import the test classes */
+Import("Animal.*")
+Import("Barker")
 
 /* Icky Math */
 Factorial <- @(n) {
@@ -12,34 +14,7 @@ Factorial <- @(n) {
 6 Factorial EchoLn
 
 /* Puppy Dogs*/
-Dog <- %{
-  __constructor: @(name) {
-    name -> @name
-    %[] -> @tricks
-  },
-  addTrick: @(trick) {
-    @tricks.push(trick)
-  },
-  doTricks: {
-    // Perform Each Trick
-    For(@tricks, @(trick) {
-      EchoLn(@name `++` " performed the trick \"" `++` trick `++` "!\"")
-    })
-  }
-}
-
-Barker <- %{
-  bark: @(n) {
-    If (n `<=` 1, {
-      EchoLn("BARK!")
-    }, {
-      Echo("BARK! ")
-      @bark(n `-` 1)
-    })
-  }
-}
-
-Instantiate(Dog, "Fido") -> fido
+Instantiate(Animal.Dog, "Fido") -> fido
 fido `MixWith` Barker
 fido.addTrick("roll over")
 fido.addTrick("play dead")
@@ -56,10 +31,13 @@ Try(Raise("Some men just want to see the world burn!"), EchoLn)
 
 "A string separated by spaces" -> myString
 myString.toUpperCase().split(" ") -> myWords
+Finalize("myWords")
 
 Until(myWords.empty?, {
   myWords.pop EchoLn
 })
+
+Try(Null -> myWords, EchoLn)
 
 For(0:4:16, @(i) {
   If(i `==` 16, {
@@ -78,15 +56,19 @@ Test <- %{
     }, {
       newName -> @name
     })
+    Lyte.Reflect.Get("@name")
   }
 }
 
-Test.changeName("Jeff") Test.name StdOut EchoLn
+EchoLn(StdOut, Test.changeName("Jeff")) 
 
-OpenFile("test.lyte", "r") -> file
+/* OpenFile("test.lyte", "r") -> file
 file.readLn -> line
 Until(line Undefined?, {
   EchoLn(line)
   file.readLn -> line
 })
-file.close
+file.close */
+
+EchoLn(Eval("2 `+` 2"))
+EchoLn(Lyte Type?)

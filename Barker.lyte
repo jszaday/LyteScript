@@ -1,0 +1,14 @@
+/* Barker
+ *  A mix-in that adds barking capabilities to any object
+ * Author: Justin Szaday
+ */
+Barker <- %{
+  bark: @(n) {
+    If (n `<=` 1, {
+      EchoLn("BARK!")
+    }, {
+      Echo("BARK! ")
+      @bark(n `-` 1)
+    })
+  }
+}

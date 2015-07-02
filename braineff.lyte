@@ -40,7 +40,7 @@ While(pc `<` text.length, {
     StdOut.write(memory[index])
     StdOut.flush()
   }, If(text[pc] `==` ",", {
-    StdIn.read(memory[index])
+    StdIn.read -> memory[index]
   }, If(text[pc] `==` "[", {
     If(`Not` memory[index], {
       Until(text[pc] `==` "]", {

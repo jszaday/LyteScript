@@ -25,6 +25,11 @@ public class LyteRawBlock extends LyteRawValue<List<LyteStatement>> {
     instanceNumber = ++sNumInstances;
   }
 
+  @Override
+  public List<LyteStatement> get() {
+    return mStatements;
+  }
+
   public static LyteRawBlock newGlobal() {
     return new LyteRawBlock(null);
   }
@@ -49,7 +54,7 @@ public class LyteRawBlock extends LyteRawValue<List<LyteStatement>> {
     return mStatements.isEmpty();
   }
 
-  public List<LyteStatement> getStatements() { return mStatements; }
+  public LyteStatement getStatement(int index) { return mStatements.get(index); }
 
   private void setParent(LyteRawBlock parent) {
     mParent = parent;

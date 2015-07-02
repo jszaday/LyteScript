@@ -46,7 +46,7 @@ public class LyteScope implements LyteInjectable {
 
   public void putLocalVariable(String name, LyteValue value, boolean finalVariable) {
     if (mFinalVariables.contains(name)) {
-      throw new LyteError("Cannot override the value of " + name);
+      throw new LyteError("Cannot override the value of final variable " + name);
     } else {
       mVariables.put(name, value);
 
@@ -57,7 +57,7 @@ public class LyteScope implements LyteInjectable {
   }
 
   public void putVariable(String name, LyteValue value, boolean finalVariable) {
-    if (mParent != null && mParent.hasVariable(name)) {
+    if (mParent != null && !hasVariable(name)) {
       mParent.putVariable(name, value, finalVariable);
     } else {
       putLocalVariable(name, value, finalVariable);
@@ -65,7 +65,13 @@ public class LyteScope implements LyteInjectable {
   }
 
   public void finalizeVariable(String name) {
-    mFinalVariables.add(name);
+    if (mParent != null && mParent.hasVariable(name)) {
+      mParent.finalizeVariable(name);
+    } else if (hasVariable(name)) {
+      mFinalVariables.add(name);
+    } else {
+      throw new LyteError("Cannot finalize non-existent variable " + name);
+    }
   }
 
   public LyteScope enter() {
