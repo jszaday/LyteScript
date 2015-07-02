@@ -21,6 +21,11 @@ fido.addTrick("play dead")
 fido.doTricks()
 fido.bark(10)
 
+/* Kittehs */
+Instantiate(Animal.Cat, "Garfield") -> garfield
+garfield.attack(fido)
+garfield.pet(5)
+
 /* Exceptions */
 Try(Gregor, @(error) {
   EchoLn("Gregor ees sad Gregor does not exist.")

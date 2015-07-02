@@ -5,35 +5,38 @@ import com.lyte.objs.LytePackage;
 import com.lyte.objs.LyteValue;
 import org.apache.commons.collections4.iterators.ArrayIterator;
 
-import java.awt.*;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by a0225785 on 7/2/2015.
  */
 public class LyteClassLoader {
-  private ArrayList<String> mClassPath;
+  private static final String LYTE_CLASSPATH = System.getenv().get("LYTE_CLASSPATH");
 
-  public LyteClassLoader() {
-    mClassPath = new ArrayList<>();
-    String lytePath = System.getenv().get("LYTE_CLASSPATH");
+  private static ArrayList<String> classPath;
+  private static HashMap<String, LyteValue> cachedClasses;
 
-    if (lytePath != null) {
-      for (String path : lytePath.split(File.pathSeparator)) {
+  static {
+    classPath = new ArrayList<>();
+    cachedClasses = new HashMap<>();
+
+    if (LYTE_CLASSPATH != null) {
+      for (String path : LYTE_CLASSPATH.split(File.pathSeparator)) {
         if (path.endsWith(File.separator)) {
           path = path.substring(0, path.length() - 1);
         }
-        mClassPath.add(path);
+        classPath.add(path);
       }
     } else {
-      mClassPath.add(".");
+      classPath.add(".");
     }
   }
 
-  public void load(LyteContext context, String target) throws IOException {
+  public static void load(LyteContext context, String target) throws IOException {
     String tmp, packagePath = "";
     String[] paths = target.split("\\.");
     ArrayIterator<String> iterator = new ArrayIterator<String>(paths);
@@ -63,27 +66,28 @@ public class LyteClassLoader {
         File directory;
         boolean loaded = false;
 
-        for (String classPath : mClassPath) {
+        for (String classPath : LyteClassLoader.classPath) {
           directory = new File(classPath + packagePath);
+
           if (directory.exists()) {
             if (!directory.isDirectory()) {
               throw new LyteError("Could not import " + target);
             }
-            for (String file : directory.list(new FilenameFilter() {
-              @Override
-              public boolean accept(File dir, String name) {
-                return name.endsWith(".lyte");
+
+            for (String file : directory.list()) {
+              if (!file.endsWith(".lyte")) {
+                continue;
               }
-            })) {
               String name = file.substring(0, file.length() - 5);
               if (workingPackage != null) {
                 workingPackage.elevatedSet(name, loadFile(new File(directory.getPath() + File.separator + file), name));
               } else {
                 context.set(name, loadFile(new File(file), name), true);
               }
-              loaded = true;
-              break;
             }
+
+            loaded = true;
+            break;
           }
         }
 
@@ -94,7 +98,7 @@ public class LyteClassLoader {
         File file;
         boolean loaded = false;
 
-        for (String directory : mClassPath) {
+        for (String directory : classPath) {
           file = new File(directory + packagePath + File.separator + tmp + ".lyte");
 
           if (file.exists()) {
@@ -114,9 +118,18 @@ public class LyteClassLoader {
     }
   }
 
-  private LyteValue loadFile(File file, String name) throws IOException {
-    LyteEvaluator evaluator = new LyteEvaluator(file);
-    evaluator.run();
-    return evaluator.get(name);
+  public static LyteValue loadFile(File file, String name) throws IOException {
+    if (cachedClasses.containsKey(file.getCanonicalPath())) {
+      return cachedClasses.get(file.getCanonicalPath());
+    } else {
+      LyteEvaluator evaluator = new LyteEvaluator(file);
+      evaluator.run();
+      return cacheClass(file.getCanonicalPath(), evaluator.get(name));
+    }
+  }
+
+  private static LyteValue cacheClass(String path, LyteValue value) {
+    cachedClasses.put(path, value);
+    return value;
   }
 }

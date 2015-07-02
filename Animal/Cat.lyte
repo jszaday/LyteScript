@@ -1,0 +1,15 @@
+Cat <- %{
+  __constructor: @(name) {
+    name -> @name
+  },
+  purr: { EchoLn(@name `++` " purred softly...") },
+  pet: @(n) {
+    For(0, n, @(i) {
+      "**Pet** " Echo
+      If(i `Mod` 2 `==` 0, @purr, {})
+    })
+  },
+  attack: @(target) {
+    EchoLn(@name `++` " attacked " `++` target.name `++` " ferociously!");
+  }
+}

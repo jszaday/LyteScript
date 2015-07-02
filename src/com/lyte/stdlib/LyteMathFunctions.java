@@ -69,6 +69,16 @@ public class LyteMathFunctions {
     }
   };
 
+  public static LyteNativeBlock mathModulus = new LyteNativeBlock("Math", "Modulus", "Mod") {
+
+    @Override
+    public void invoke(LyteContext context) {
+      int val1 = (int) context.apply().toNumber();
+      int val2 = (int) context.apply().toNumber();
+      context.push(val2 % val1);
+    }
+  };
+
   public static LyteNativeBlock mathMultiply = new LyteNativeBlock("Math", "Multiply", "*") {
 
     @Override
