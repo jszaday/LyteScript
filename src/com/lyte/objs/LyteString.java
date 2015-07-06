@@ -52,7 +52,6 @@ public class LyteString extends LytePrimitive<String> {
     } else if (sFunctions.hasProperty(property)) {
       return sFunctions.getProperty(property);
     } else {
-      System.err.println(sFunctions);
       throw new LyteError("Cannot invoke the property " + property + " of a string.");
     }
   }
