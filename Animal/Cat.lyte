@@ -10,6 +10,6 @@ Cat <- %{
     })
   },
   attack: @(target) {
-    EchoLn(@name `++` " attacked " `++` target.name `++` " ferociously!");
+    EchoLn(@name `++` " attacked " `++` target.name `++` " ferociously!")
   }
 }

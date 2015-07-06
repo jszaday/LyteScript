@@ -43,10 +43,18 @@ public class LyteInvokeStatement extends LyteStatement {
   }
 
   public PeekingIterator<LyteSpecifier> getSpecifiersIterator(int offset) {
-    return new PeekingIterator<LyteSpecifier>(mSpecifiers.subList(0, mSpecifiers.size() - offset).iterator());
+    if (!mSpecifiers.isEmpty()) {
+      return new PeekingIterator<LyteSpecifier>(mSpecifiers.subList(0, mSpecifiers.size() - offset).iterator());
+    } else {
+      return new PeekingIterator<LyteSpecifier>(mSpecifiers.iterator());
+    }
   }
 
   public boolean isSimpleInvokation() {
+    return mSpecifiers.isEmpty() && !(mPrimaryIdentifier.startsWith("#") || mPrimaryIdentifier.startsWith("@"));
+  }
+
+  public boolean isSimpleAssignment() {
     return mSpecifiers.isEmpty();
   }
 
@@ -59,7 +67,7 @@ public class LyteInvokeStatement extends LyteStatement {
   }
 
   public boolean isFunctionInvokation() {
-    return !isSimpleInvokation() && (getLastSpecifier().arguments != null);
+    return !isSimpleInvokation() && (!mSpecifiers.isEmpty() && getLastSpecifier().arguments != null);
   }
 
   public String toString(boolean withDescription) {

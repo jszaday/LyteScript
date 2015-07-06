@@ -87,10 +87,10 @@ public class LyteStreamFunctions extends LyteSimpleInjectable {
 
     @Override
     public void invoke(LyteContext context) {
-      if (!context.self.typeOf().equals("stream")) {
-        throw new LyteError("Cannot invoke the function " + alias + " on a(n) " + context.self.typeOf());
-      } else {
+      if (context.self instanceof LyteStream) {
         invoke((LyteStream) context.self, context);
+      } else {
+        throw new LyteError("Cannot invoke " + alias + " on " + context.self);
       }
     }
   }

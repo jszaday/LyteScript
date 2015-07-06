@@ -8,7 +8,7 @@ import java.util.LinkedList;
 /**
  * Created by jszaday on 6/19/15.
  */
-public class LyteStack extends ArrayDeque<LyteValue> {
+public class LyteStack extends LinkedList<LyteValue> {
 
   @Override
   public LyteValue pop() {

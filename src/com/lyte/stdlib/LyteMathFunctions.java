@@ -29,6 +29,26 @@ public class LyteMathFunctions {
     }
   };
 
+  public static LyteNativeBlock mathGreaterEquals = new LyteNativeBlock("Math", "GreaterEquals", ">=") {
+
+    @Override
+    public void invoke(LyteContext context) {
+      double val1 = context.apply().toNumber();
+      double val2 = context.apply().toNumber();
+      context.push(val2 >= val1);
+    }
+  };
+
+  public static LyteNativeBlock mathGreater = new LyteNativeBlock("Math", "Greater", ">") {
+
+    @Override
+    public void invoke(LyteContext context) {
+      double val1 = context.apply().toNumber();
+      double val2 = context.apply().toNumber();
+      context.push(val2 > val1);
+    }
+  };
+
   public static LyteNativeBlock mathAdd = new LyteNativeBlock("Math", "Add", "+") {
 
     @Override
@@ -107,6 +127,15 @@ public class LyteMathFunctions {
     }
   };
 
+  public static LyteNativeBlock mathMin = new LyteNativeBlock("Math", "Min", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      double val1 = context.apply().toNumber();
+      double val2 = context.apply().toNumber();
+      context.push(Math.min(val2, val1));
+    }
+  };
+
   public static LyteNativeBlock mathRange2 = new LyteNativeBlock("Math", "Range2") {
     @Override
     public void invoke(LyteContext context) {
@@ -159,6 +188,50 @@ public class LyteMathFunctions {
       }
 
       context.push(range);
+    }
+  };
+
+  public static LyteNativeBlock mathNaN = new LyteNativeBlock("Math", "NaN") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(Double.NaN);
+    }
+  };
+
+  public static LyteNativeBlock mathIsNaN = new LyteNativeBlock("Math", "IsNaN", "NaN?") {
+    @Override
+    public void invoke(LyteContext context) {
+      Double val1 = context.apply().toNumber();
+      context.push(val1.isNaN());
+    }
+  };
+
+  public static LyteNativeBlock mathPositiveInf = new LyteNativeBlock("Math", "PositiveInfinity", "Inf") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(Double.POSITIVE_INFINITY);
+    }
+  };
+
+  public static LyteNativeBlock mathNegativeInf = new LyteNativeBlock("Math", "NegativeInfinity", "-Inf") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(Double.NEGATIVE_INFINITY);
+    }
+  };
+
+  public static LyteNativeBlock mathIsInfinite = new LyteNativeBlock("Math", "IsInfinite", "Inf?") {
+    @Override
+    public void invoke(LyteContext context) {
+      Double val1 = context.apply().toNumber();
+      context.push(val1.isInfinite());
+    }
+  };
+
+  public static LyteNativeBlock mathSqrt = new LyteNativeBlock("Math", "Sqrt", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(Math.sqrt(context.apply().toNumber()));
     }
   };
 }

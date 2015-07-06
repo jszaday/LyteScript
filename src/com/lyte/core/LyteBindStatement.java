@@ -26,7 +26,7 @@ public class LyteBindStatement extends LyteStatement {
 
   @Override
   public void applyTo(LyteContext context) {
-    if (mTarget.isSimpleInvokation()) {
+    if (mTarget.isSimpleAssignment()) {
       context.set(mTarget.getPrimaryIdentifier());
     } else {
       LyteValue val = context.resolve(mTarget, false);

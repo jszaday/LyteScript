@@ -133,7 +133,7 @@ public class LyteContext implements LyteInjectable {
   public LyteValue resolve(LyteInvokeStatement invokeStatement, boolean fullyResolve, boolean applyLast) {
     String primaryIdentifier = invokeStatement.getPrimaryIdentifier();
     PeekingIterator<LyteSpecifier> specifierIterator = invokeStatement.getSpecifiersIterator(fullyResolve ? 0 : 1);
-    LyteValue obj, lastObj = self;
+    LyteValue obj, lastObj = primaryIdentifier.startsWith("#") ? stack.peek() : self;
 
     try {
       obj = get(primaryIdentifier);
@@ -172,7 +172,7 @@ public class LyteContext implements LyteInjectable {
           }
         }
 
-        if (shouldApply(specifierIterator, applyLast) && obj != null) {
+        if (shouldApply(specifierIterator, applyLast) && specifier.arguments == null && obj != null) {
           lastObj = obj = obj.apply(new LyteContext(lastObj, scope, stack));
         }
       }

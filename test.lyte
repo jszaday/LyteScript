@@ -77,3 +77,5 @@ file.close */
 
 EchoLn(Eval("2 `+` 2"))
 EchoLn(Lyte Type?)
+
+"Hi" #length EchoLn

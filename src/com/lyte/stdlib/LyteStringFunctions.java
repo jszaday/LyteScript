@@ -154,7 +154,7 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
       if (context.self instanceof LyteString) {
         invoke((LyteString) context.self, context);
       } else {
-        throw new LyteError("Cannot take the substring of " + context.self);
+        throw new LyteError("Cannot invoke " + alias + " on " + context.self);
       }
     }
 

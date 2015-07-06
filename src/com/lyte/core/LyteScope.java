@@ -113,10 +113,13 @@ public class LyteScope implements LyteInjectable {
 
   @Override
   public void inject(String name, LyteValue value) {
+    LyteValue target;
     if (!hasVariable(name)) {
       putVariable(name, value, true);
+    } else if ((target = getVariable(name)) instanceof LytePackage && value instanceof LytePackage) {
+      ((LytePackage) target).addAll((LytePackage) value);
     } else {
-      ((LytePackage) getVariable(name)).addAll((LytePackage) value);
+      throw new LyteError(name + " is already defined in scope as " + target);
     }
   }
 }

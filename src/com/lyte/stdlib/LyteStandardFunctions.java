@@ -2,11 +2,15 @@ package com.lyte.stdlib;
 
 import com.lyte.core.*;
 import com.lyte.objs.*;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.omg.SendingContext.RunTime;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -15,25 +19,30 @@ import java.util.List;
 public class LyteStandardFunctions {
 
   public static String TOP_LEVEL_NAMESPACE = "Lyte";
+  public static String VERSION = "0.0.1";
 
   private static final LyteStream stdIn = new LyteStream(System.in);
   private static final LyteStream stdOut = new LyteStream(System.out);
+
+  public static LyteNativeBlock systemExit = new LyteNativeBlock("System", "Exit") {
+    @Override
+    public void invoke(LyteContext context) {
+      if (context.isEmpty()) {
+        System.exit(-1);
+      } else {
+        try {
+          System.exit((int) context.apply().toNumber());
+        } catch (Exception e) {
+          System.exit(-1);
+        }
+      }
+    }
+  };
 
   public static LyteNativeBlock coreTrue = new LyteNativeBlock("Core", "True") {
     @Override
     public void invoke(LyteContext context) {
       context.push(true);
-    }
-  };
-
-  public static LyteNativeBlock coreExit = new LyteNativeBlock("Core", "Exit") {
-    @Override
-    public void invoke(LyteContext context) {
-      if (context.isEmpty()) {
-        System.exit(0);
-      } else {
-        System.exit((int) context.apply().toNumber());
-      }
     }
   };
 
@@ -59,17 +68,17 @@ public class LyteStandardFunctions {
     }
   };
 
-  public static LyteNativeBlock coreNot = new LyteNativeBlock("Core", "Not") {
-    @Override
-    public void invoke(LyteContext context) {
-      context.push(!context.apply().toBoolean());
-    }
-  };
-
   public static LyteNativeBlock coreIsUndefined = new LyteNativeBlock("Core", "IsUndefined", "Undefined?") {
     @Override
     public void invoke(LyteContext context) {
       context.push(context.pop() == LyteUndefined.UNDEFINED);
+    }
+  };
+
+  public static LyteNativeBlock coreIsNull = new LyteNativeBlock("Core", "IsNull", "Null?") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(context.pop() == LyteUndefined.NULL);
     }
   };
 
@@ -378,6 +387,24 @@ public class LyteStandardFunctions {
     }
   };
 
+  public static LyteNativeBlock coreNotEquals = new LyteNativeBlock("Core", "NotEquals", "!=") {
+    @Override
+    public void invoke(LyteContext context) {
+      LyteValue value1 = context.apply();
+      LyteValue value2 = context.apply();
+      context.push(!value1.equals(value2));
+    }
+  };
+
+  public static LyteNativeBlock coreNotEqualsStrict = new LyteNativeBlock("Core", "NotEqualsStrict", "!==") {
+    @Override
+    public void invoke(LyteContext context) {
+      LyteValue value1 = context.apply();
+      LyteValue value2 = context.apply();
+      context.push(!value1.equalsStrict(value2));
+    }
+  };
+
   public static LyteNativeBlock ioOpenFile = new LyteNativeBlock("IO", "OpenFile") {
     @Override
     public void invoke(LyteContext context) {
@@ -419,6 +446,204 @@ public class LyteStandardFunctions {
       } catch (IOException e) {
         throw new LyteError(e.getMessage());
       }
+    }
+  };
+
+  public static LyteNativeBlock coreAnd = new LyteNativeBlock("Core", "And") {
+    @Override
+    public void invoke(LyteContext context) {
+      LyteValue value2 = context.pop();
+      LyteValue value1 = context.apply();
+
+      if (!value1.toBoolean()) {
+        context.push(false);
+      } else {
+        context.push(value2.apply(context).toBoolean());
+      }
+    }
+  };
+
+  public static LyteNativeBlock coreOr = new LyteNativeBlock("Core", "Or") {
+    @Override
+    public void invoke(LyteContext context) {
+      LyteValue value2 = context.pop();
+      LyteValue value1 = context.apply();
+
+      if (value1.toBoolean()) {
+        context.push(true);
+      } else {
+        context.push(value2.apply(context).toBoolean());
+      }
+    }
+  };
+
+  public static LyteNativeBlock coreNot = new LyteNativeBlock("Core", "Not") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(!context.apply().toBoolean());
+    }
+  };
+
+  public static LyteNativeBlock coreBitwiseAnd = new LyteNativeBlock("Core", "BitwiseAnd", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      int val1 = (int) context.apply().toNumber();
+      int val2 = (int) context.apply().toNumber();
+      context.push(val1 & val2);
+    }
+  };
+
+  public static LyteNativeBlock coreBitwiseOr = new LyteNativeBlock("Core", "BitwiseOr", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      int val1 = (int) context.apply().toNumber();
+      int val2 = (int) context.apply().toNumber();
+      context.push(val1 | val2);
+    }
+  };
+
+  public static LyteNativeBlock coreBitwiseXor = new LyteNativeBlock("Core", "BitwiseXor", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      int val1 = (int) context.apply().toNumber();
+      int val2 = (int) context.apply().toNumber();
+      context.push(val1 ^ val2);
+    }
+  };
+
+  public static LyteNativeBlock coreBitwiseNot = new LyteNativeBlock("Core", "BitwiseNot", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      int val1 = (int) context.apply().toNumber();
+      context.push(~val1);
+    }
+  };
+
+  public static LyteNativeBlock coreVersion = new LyteNativeBlock("Core", "Version", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(VERSION);
+    }
+  };
+
+  public static LyteNativeBlock coreDig = new LyteNativeBlock("Core", "Dig") {
+    @Override
+    public void invoke(LyteContext context) {
+      int depth = (int) context.apply().toNumber();
+      LyteStack stack = context.stack;
+      if (stack.size() < depth) {
+        throw new LyteError("Cannot dig up value " + depth + ", not enough values.");
+      } else if (!(depth == 0 || depth == 1)) {
+        stack.push(stack.remove(depth - 1));
+      }
+    }
+  };
+
+  public static LyteNativeBlock coreToNumber = new LyteNativeBlock("Core", "ToNumber") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(context.apply().toNumber());
+    }
+  };
+
+  public static LyteNativeBlock coreToString = new LyteNativeBlock("Core", "ToString") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(context.apply().toString());
+    }
+  };
+
+  public static LyteNativeBlock coreToBoolean = new LyteNativeBlock("Core", "ToBoolean") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(context.apply().toBoolean());
+    }
+  };
+
+  public static LyteNativeBlock utilMakeList = new LyteNativeBlock("Util", "MakeList") {
+    @Override
+    public void invoke(LyteContext context) {
+      LyteList list = new LyteList(context.stack);
+      context.stack.clear();
+      context.stack.push(list);
+    }
+  };
+
+  public static LyteNativeBlock systemCurrentDirectory = new LyteNativeBlock("System", "CurrentDirectory", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(System.getProperty("user.dir"));
+    }
+  };
+
+  public static LyteNativeBlock systemPathSeperator = new LyteNativeBlock("System", "PathSeperator", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(File.pathSeparator);
+    }
+  };
+
+  public static LyteNativeBlock systemSeperator = new LyteNativeBlock("System", "Separator", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(File.separator);
+    }
+  };
+
+  public static LyteNativeBlock systemPlatform = new LyteNativeBlock("System", "Platform", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(System.getProperty("os.name"));
+    }
+  };
+
+  public static LyteNativeBlock systemExecute = new LyteNativeBlock("System", "Execute", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      String command = context.apply().toString();
+      try {
+        Process p = Runtime.getRuntime().exec(command);
+        p.waitFor();
+        context.push(new LyteStream(p.getInputStream()));
+      } catch (Exception e) {
+        throw new LyteError(e.getMessage());
+      }
+    }
+  };
+
+  public static LyteNativeBlock utilCharToInt = new LyteNativeBlock("Util", "CharToInt", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      String c = context.apply().toString();
+      if (c.length() != 1) {
+        throw new LyteError("Expected String to be one character long, instead found \"" + c + "\"");
+      } else {
+        context.push((int) c.charAt(0));
+      }
+    }
+  };
+
+  public static LyteNativeBlock utilIntToChar = new LyteNativeBlock("Util", "IntToChar", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      int c = (int) context.apply().toNumber();
+      context.push(Character.toString((char) c));
+    }
+  };
+
+  public static LyteNativeBlock utilEscapeString = new LyteNativeBlock("Util", "EscapeString", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      String c = context.apply().toString();
+      context.push(StringEscapeUtils.escapeEcmaScript(c));
+    }
+  };
+
+  public static LyteNativeBlock utilUnescapeString = new LyteNativeBlock("Util", "UnescapeString", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      String c = context.apply().toString();
+      context.push(StringEscapeUtils.unescapeEcmaScript(c));
     }
   };
 }

@@ -7,6 +7,7 @@ import com.lyte.stdlib.LyteListFunctions;
 import com.lyte.stdlib.LyteNativeBlock;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class LyteList implements LyteValue<LinkedList<LyteValue>> {
   private static final LyteListFunctions listFunctions = new LyteListFunctions();
@@ -17,8 +18,9 @@ public class LyteList implements LyteValue<LinkedList<LyteValue>> {
     mList = new LinkedList<LyteValue>();
   }
 
-  public LyteList(LinkedList<LyteValue> list) {
-    mList = list;
+  public LyteList(List<LyteValue> list) {
+    mList = new LinkedList<LyteValue>();
+    mList.addAll(list);
   }
 
   public LyteList(LyteList list1, LyteList list2) {
