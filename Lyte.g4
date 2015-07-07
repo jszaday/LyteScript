@@ -5,7 +5,7 @@ program
 	;
 
 designator
-	: LeftBracket pushable RightBracket
+	: LeftBracket simpleStatement+ RightBracket
 	| Period Identifier
 	;
 
@@ -19,17 +19,21 @@ bindingExpression
 	;
 
 statement
-	: pushable
+	: simpleStatement
 	| bindingExpression
+	;
+
+simpleStatement
+	: pushable
 	| infixExpression
 	;
 
 infixExpression
-	: Backtick invokable Backtick statement
+	: Backtick invokable Backtick simpleStatement
 	;
 
 rightBindingExpression
-	: RightBind invokable
+	: RightBind (invokable | LeftBracket invokableList RightBracket)
 	;
 
 leftBindingExpression
@@ -65,8 +69,12 @@ valueList
   ;
 
 parameterList
-  : statement+ (Comma statement+)*
+  : simpleStatement+ (Comma simpleStatement+)*
   ;
+
+invokableList
+	:	invokable (Comma invokable)*
+	;
 
 // Various Literals
 literal

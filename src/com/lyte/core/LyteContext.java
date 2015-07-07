@@ -157,8 +157,8 @@ public class LyteContext implements LyteInjectable {
 
         if (specifier.identifier != null) {
           obj = obj.getProperty(specifier.identifier);
-        } else if (specifier.invokable != null) {
-          obj = obj.getProperty(specifier.invokable.apply(this).toString());
+        } else if (specifier.invokables != null) {
+          obj = obj.getProperty(specifier.invokables.apply(this).toString());
         } else {
           // Add a clone of each of the arguments to the function
           for (int i = (specifier.arguments.size() - 1); i >= 0; i--) {

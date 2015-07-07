@@ -75,6 +75,11 @@ public class LyteRawBlock extends LyteRawValue<List<LyteStatement>> {
     }
   }
 
+  @Override
+  public LyteValue apply(LyteContext context) {
+    return clone(context, false, true).apply(context);
+  }
+
   public LyteValue<List<LyteStatement>> clone(LyteContext context) {
     return new LyteBlock(context, mStatements, mArgs, true, false);
   }

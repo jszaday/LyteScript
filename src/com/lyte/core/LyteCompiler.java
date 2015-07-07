@@ -47,6 +47,14 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
 
   @Override
   public Object visitStatement(LyteParser.StatementContext ctx) {
+    // Add the newly generated statement to the current block
+    mCurrentBlock.addStatement((LyteStatement) visitChildren(ctx));
+    // And return nothing
+    return null;
+  }
+
+  @Override
+  public Object visitSimpleStatement(LyteParser.SimpleStatementContext ctx) {
     LyteStatement statement;
     // If it is a pushable
     if (ctx.pushable() != null) {
@@ -56,9 +64,6 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
       // otherwise, simply get the statement as a result from visiting the kids
       statement = (LyteStatement) visitChildren(ctx);
     }
-    // Add the newly generated statement to the current block
-    mCurrentBlock.addStatement(statement);
-    // And finally, return it too
     return statement;
   }
 
@@ -222,8 +227,8 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
         // Leave back to the parent scope and re-enter a new child
         mCurrentBlock = mCurrentBlock.leave().enter();
       } else {
-        // Otherwise, It'll get added automagically by visiting the kid
-        visit(child);
+        // Otherwise, add it by visiting the kid
+        mCurrentBlock.addStatement((LyteStatement) visit(child));
       }
     }
     // Add the final block was to the parameters
@@ -239,14 +244,21 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
     if (ctx.Identifier() != null) {
       return new LyteInvokeStatement.LyteSpecifier(ctx.Identifier().toString());
     } else {
-      return new LyteInvokeStatement.LyteSpecifier((LyteStatement) visitPushableStatement(ctx.pushable()));
+      // Enter a new block
+      LyteRawBlock block = mCurrentBlock.enter();
+      // Adding each of the "simple" statements to the list
+      for (LyteParser.SimpleStatementContext simpleStatementContext : ctx.simpleStatement()) {
+        block.addStatement((LyteStatement) visitSimpleStatement(simpleStatementContext));
+      }
+      // Then return a new specifier with the block as its contents
+      return new LyteInvokeStatement.LyteSpecifier(block);
     }
   }
 
   @Override
   public Object visitInfixExpression(LyteParser.InfixExpressionContext ctx) {
-    // First, visit the infix expression's statement
-    visitStatement(ctx.statement());
+    // First, visit the infix expression's statement, adding it to the current block
+    mCurrentBlock.addStatement((LyteStatement) visitSimpleStatement(ctx.simpleStatement()));
     // Then, visit the invokable
     return visitInvokeStatement(ctx.invokable());
   }
@@ -261,7 +273,15 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
 
   @Override
   public Object visitRightBindingExpression(LyteParser.RightBindingExpressionContext ctx) {
-    return visitBindStatement(ctx.invokable());
+    if (ctx.invokable() != null) {
+      return visitBindStatement(ctx.invokable());
+    } else {
+      ArrayList<LyteInvokeStatement> statements = new ArrayList<>();
+      for (LyteParser.InvokableContext invokableContext : ctx.invokableList().invokable()) {
+        statements.add((LyteInvokeStatement) visitInvokeStatement(invokableContext));
+      }
+      return new LyteBindStatement(getLineNumber(ctx), statements);
+    }
   }
 
   private String getLineNumber(ParserRuleContext ctx) {

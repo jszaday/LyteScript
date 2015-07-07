@@ -85,12 +85,12 @@ public class LyteInvokeStatement extends LyteStatement {
 
   public static class LyteSpecifier {
     public final String identifier;
-    public final LyteStatement invokable;
+    public final LyteRawBlock invokables;
     public final List<LyteRawBlock> arguments;
 
-    private LyteSpecifier(String identifier, LyteStatement invokable, List<LyteRawBlock> arguments) {
+    private LyteSpecifier(String identifier, LyteRawBlock invokables, List<LyteRawBlock> arguments) {
       this.identifier = identifier;
-      this.invokable = invokable;
+      this.invokables = invokables;
       this.arguments = arguments;
     }
 
@@ -98,8 +98,8 @@ public class LyteInvokeStatement extends LyteStatement {
       this(identifier, null, null);
     }
 
-    public LyteSpecifier(LyteStatement invokable) {
-      this(null, invokable, null);
+    public LyteSpecifier(LyteRawBlock invokables) {
+      this(null, invokables, null);
     }
 
     public LyteSpecifier(List<LyteRawBlock> arguments) {
@@ -110,8 +110,8 @@ public class LyteInvokeStatement extends LyteStatement {
     public String toString() {
       if (identifier != null) {
         return "." + identifier;
-      } else if (invokable != null) {
-        return "[" + invokable + "]";
+      } else if (invokables != null) {
+        return invokables.get().toString();
       } else {
         return "(" + arguments + ")";
       }

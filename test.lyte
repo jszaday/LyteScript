@@ -42,7 +42,7 @@ Until(myWords.empty?, {
   myWords.pop EchoLn
 })
 
-Try(Null -> myWords, EchoLn)
+Try({Null -> myWords}, EchoLn)
 
 For(0:4:16, @(i) {
   If(i `==` 16, {
@@ -65,7 +65,7 @@ Test <- %{
   }
 }
 
-EchoLn(StdOut, Test.changeName("Jeff")) 
+EchoLn(StdOut, Test.changeName("Jeff"))
 
 /* OpenFile("test.lyte", "r") -> file
 file.readLn -> line
@@ -78,4 +78,16 @@ file.close */
 EchoLn(Eval("2 `+` 2"))
 EchoLn(Lyte Type?)
 
-"Hi" #length EchoLn
+AnotherTest <- %{
+  myString: "Hello",
+  __toString: {
+    @myString[@j @i * 1 +]
+  }
+}
+
+getNumbers <- {
+  2 1
+}
+
+getNumbers() -> [AnotherTest.i, AnotherTest.j]
+EchoLn(AnotherTest)
