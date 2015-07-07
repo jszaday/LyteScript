@@ -2,9 +2,11 @@ package com.lyte.stdlib;
 
 import com.lyte.core.*;
 import com.lyte.objs.*;
+import com.lyte.utils.LyteBeeper;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.omg.SendingContext.RunTime;
 
+import javax.sound.sampled.LineUnavailableException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -607,6 +609,19 @@ public class LyteStandardFunctions {
         context.push(new LyteStream(p.getInputStream()));
       } catch (Exception e) {
         throw new LyteError(e.getMessage());
+      }
+    }
+  };
+
+  public static LyteNativeBlock systemBeep = new LyteNativeBlock("System", "Beep", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      final int f = (int) context.apply().toNumber();
+      final int ms = (int) context.apply().toNumber();
+      try {
+        LyteBeeper.beep(f, ms);
+      } catch (LineUnavailableException e) {
+        throw new LyteError("No audio line available.");
       }
     }
   };

@@ -91,3 +91,7 @@ getNumbers <- {
 
 getNumbers() -> [AnotherTest.i, AnotherTest.j]
 EchoLn(AnotherTest)
+
+/* %[262, 294, 330, 349, 392, 440, 494, 523] -> frequencies
+%[5, 5, 6, 7, 7, 6, 5, 4, 3, 3, 4, 5, 5, 4, 4] -> notes
+For(notes, @(note) { Lyte.System.Beep(frequencies[note], 500) }) */

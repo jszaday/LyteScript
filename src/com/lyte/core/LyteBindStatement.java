@@ -5,6 +5,7 @@ import com.lyte.objs.LyteObject;
 import com.lyte.objs.LyteValue;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -25,12 +26,7 @@ public class LyteBindStatement extends LyteStatement {
   }
 
   public LyteBindStatement(String lineNumber, LyteInvokeStatement target) {
-    super(lineNumber);
-    if (target.isFunctionInvokation()) {
-      throw new LyteError("Cannot assign directly to the result of a function.");
-    }
-    mTargets = new ArrayList<>();
-    mTargets.add(target);
+    this(lineNumber, Arrays.asList(target));
   }
 
   @Override

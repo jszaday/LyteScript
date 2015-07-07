@@ -153,6 +153,7 @@ fragment IdentifierStart
 
 fragment IdentifierPart
   : IdentifierStart
+	| Sign
   | [0-9]
   ;
 
