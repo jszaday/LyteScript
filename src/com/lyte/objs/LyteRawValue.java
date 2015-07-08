@@ -4,6 +4,8 @@ import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 
+import java.util.Set;
+
 /**
  * Created by a0225785 on 6/24/2015.
  */
@@ -67,5 +69,15 @@ public abstract class LyteRawValue<T> implements LyteValue<T> {
   @Override
   public boolean isSimpleComparison() {
     return false;
+  }
+
+  @Override
+  public boolean is(String type) {
+    return type.equals(typeOf());
+  }
+
+  @Override
+  public Set<String> getProperties() {
+    throw new LyteError("Cannot get the properties of " + typeOf() + "!");
   }
 }

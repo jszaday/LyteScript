@@ -3,13 +3,14 @@ package com.lyte.core;
 import com.lyte.objs.LyteError;
 import com.lyte.objs.LytePackage;
 import com.lyte.objs.LyteValue;
+import com.lyte.stdlib.LyteStandardFunctions;
 import org.apache.commons.collections4.iterators.ArrayIterator;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Created by a0225785 on 7/2/2015.
@@ -36,11 +37,42 @@ public class LyteClassLoader {
     }
   }
 
+  private static void importNatives(LyteContext context, String[] paths) {
+    LyteValue lytePackage = context.get(paths[0]);
+    int i;
+
+    for (i = 1; i < (paths.length - 1); i++) {
+      lytePackage = lytePackage.getProperty(paths[i]);
+    }
+
+    if (i < paths.length) {
+      if (paths[i].equals("*")) {
+        for (String property : (Set<String>) lytePackage.getProperties()) {
+          if (!context.has(property)) {
+            context.set(property, lytePackage.getProperty(property), true);
+          }
+        }
+      } else {
+        if (!context.has(paths[i])) {
+          context.set(paths[i], lytePackage.getProperty(paths[i]), true);
+        }
+      }
+    }
+
+    return;
+  }
+
   public static void load(LyteContext context, String target) throws IOException {
     String tmp, packagePath = "";
     String[] paths = target.split("\\.");
     ArrayIterator<String> iterator = new ArrayIterator<String>(paths);
     LytePackage workingPackage = null;
+
+
+    if (paths.length > 0 && paths[0].equals(LyteStandardFunctions.TOP_LEVEL_NAMESPACE)) {
+      importNatives(context, paths);
+      return;
+    }
 
     while(iterator.hasNext()) {
       tmp = iterator.next();

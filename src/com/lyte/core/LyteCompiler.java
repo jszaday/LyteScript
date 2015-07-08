@@ -96,7 +96,8 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
       // Visit each of the properties
       for (LyteParser.KeyValuePairContext keyValue : keyValueList) {
         // Adding it to the raw object as it goes
-        rawObject.set(keyValue.Identifier().getText(), (LyteStatement) visitPushableStatement(keyValue.pushable()));
+        String keyName = keyValue.Identifier() != null ? keyValue.Identifier().getText() : visitStringLiteral(keyValue.stringLiteral()).toString();
+        rawObject.set(keyName, (LyteStatement) visitPushableStatement(keyValue.pushable()));
       }
     }
     return rawObject;
@@ -142,10 +143,10 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
       number = number.substring(2, number.length());
     } else {
       // Unless it is simply a decimal value, at which point just parse it directly
-      return new LyteNumber(number);
+      return LyteNumber.valueOf(number);
     }
     // Otherwise, parse it as an integer with the determined radix
-    return new LyteNumber(number, radix);
+    return LyteNumber.valueOf(number, radix);
   }
 
   @Override

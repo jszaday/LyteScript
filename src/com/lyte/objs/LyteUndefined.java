@@ -4,6 +4,8 @@ import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 
+import java.util.Set;
+
 /**
  * Created by jszaday on 6/19/15.
  */
@@ -75,7 +77,7 @@ public enum LyteUndefined implements LyteValue {
 
   @Override
   public boolean equals(LyteValue other) {
-    if (other.typeOf().equals(typeOf())) {
+    if (other.is(typeOf())) {
       return equalsStrict(other);
     } else if (other.isSimpleComparison()) {
       return other.equals(this);
@@ -92,5 +94,15 @@ public enum LyteUndefined implements LyteValue {
   @Override
   public boolean isSimpleComparison() {
     return true;
+  }
+
+  @Override
+  public boolean is(String type) {
+    return type.equals(typeOf());
+  }
+
+  @Override
+  public Set<String> getProperties() {
+    throw new LyteError("Cannot get the properties of " + typeOf() + "!");
   }
 }

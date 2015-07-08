@@ -53,7 +53,7 @@ parameters
 
 // Misc. Lists
 keyValuePair
-  : Identifier Colon pushable
+  : (Identifier | stringLiteral) Colon pushable
   ;
 
 keyValueList

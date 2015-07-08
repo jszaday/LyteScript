@@ -5,6 +5,7 @@ import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Created by a0225785 on 6/23/2015.
@@ -18,7 +19,7 @@ public class LyteError extends RuntimeException implements LyteValue<RuntimeExce
   }
 
   public LyteError(LyteValue value) {
-    super(value.typeOf().equals("error") ? ((LyteError) value).getMessage() : value.toString());
+    super(value.is("error") ? ((LyteError) value).getMessage() : value.toString());
   }
 
   @Override
@@ -84,7 +85,7 @@ public class LyteError extends RuntimeException implements LyteValue<RuntimeExce
 
   @Override
   public boolean equals(LyteValue other) {
-    if (other.typeOf().equals(typeOf())) {
+    if (other.is(typeOf())) {
       return equalsStrict(other);
     } else if (other.isSimpleComparison()) {
       return other.equals(this);
@@ -101,5 +102,15 @@ public class LyteError extends RuntimeException implements LyteValue<RuntimeExce
   @Override
   public boolean isSimpleComparison() {
     return false;
+  }
+
+  @Override
+  public boolean is(String type) {
+    return type.equals(typeOf());
+  }
+
+  @Override
+  public Set<String> getProperties() {
+    throw new LyteError("Cannot get the properties of " + typeOf() + "!");
   }
 }

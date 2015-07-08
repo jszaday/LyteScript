@@ -12,7 +12,7 @@ public class LyteListFunctions extends LyteSimpleInjectable {
   public static LyteNativeBlock listPush = new LyteNativeBlock("List", "push") {
     @Override
     public void invoke(LyteContext context) {
-      if (!context.self.typeOf().equals("list")) {
+      if (!context.self.is("list")) {
         throw new LyteError("Cannot apply push to an " + context.self.typeOf());
       }
       ((LyteList) context.self).get().add(context.stack.pop().apply(context));
@@ -21,7 +21,7 @@ public class LyteListFunctions extends LyteSimpleInjectable {
   public static LyteNativeBlock listPop = new LyteNativeBlock("List", "pop") {
     @Override
     public void invoke(LyteContext context) {
-      if (!context.self.typeOf().equals("list")) {
+      if (!context.self.is("list")) {
         throw new LyteError("Cannot apply push to an " + context.self.typeOf());
       }
       context.push(((LyteList) context.self).get().pop());
@@ -30,7 +30,7 @@ public class LyteListFunctions extends LyteSimpleInjectable {
   public static LyteNativeBlock listLength = new LyteNativeBlock("List", "length") {
     @Override
     public void invoke(LyteContext context) {
-      if (!context.self.typeOf().equals("list")) {
+      if (!context.self.is("list")) {
         throw new LyteError("Cannot apply push to an " + context.self.typeOf());
       }
       context.push(((LyteList) context.self).get().size());
@@ -39,7 +39,7 @@ public class LyteListFunctions extends LyteSimpleInjectable {
   public static LyteNativeBlock listIsEmpty = new LyteNativeBlock("List", "empty?") {
     @Override
     public void invoke(LyteContext context) {
-      if (!context.self.typeOf().equals("list")) {
+      if (!context.self.is("list")) {
         throw new LyteError("Cannot apply push to an " + context.self.typeOf());
       }
       context.push(((LyteList) context.self).get().isEmpty());

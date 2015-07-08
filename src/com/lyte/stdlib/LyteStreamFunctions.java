@@ -55,7 +55,7 @@ public class LyteStreamFunctions extends LyteSimpleInjectable {
     @Override
     public void invoke(LyteStream self, LyteContext context) {
       LyteValue value = context.apply();
-      if (value.typeOf().equals("string")) {
+      if (value.is("string")) {
         self.write(value.toString());
       } else {
         self.write((int) value.toNumber());

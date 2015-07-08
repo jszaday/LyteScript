@@ -4,6 +4,8 @@ import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 
+import java.util.Set;
+
 public interface LyteValue<T> {
 
   T get();
@@ -26,4 +28,7 @@ public interface LyteValue<T> {
   boolean equals(LyteValue other);
   boolean equalsStrict(LyteValue other);
   boolean isSimpleComparison();
+
+  boolean is(String type);
+  Set<String> getProperties();
 }

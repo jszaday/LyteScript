@@ -31,12 +31,13 @@ public class LyteRawObject extends LyteRawValue<HashMap<String, LyteValue>>  {
       // Cache the scope
       mCachedScope = context.scope;
     }
-    // TODO Use a more "global" stack...
-    LyteObject newObject = new LyteObject(this);
+    LyteObject newObject = new LyteObject(this, properties);
+    LyteContext objectContext = new LyteContext(newObject, context);
+
     for (String key : mProperties.keySet()) {
-      properties.put(key, mProperties.get(key).apply(context));
+      properties.put(key, mProperties.get(key).apply(objectContext));
     }
-    newObject.set(properties);
+
     return newObject;
   }
 

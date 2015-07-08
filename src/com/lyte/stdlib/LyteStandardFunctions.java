@@ -89,7 +89,7 @@ public class LyteStandardFunctions {
     public void invoke(LyteContext context) {
       LyteValue value = context.pop();
 
-      if (value.typeOf().equals("block")) {
+      if (value.is("block")) {
         ((LyteBlock) value).invoke(context);
       } else {
         context.push(value);
@@ -103,9 +103,9 @@ public class LyteStandardFunctions {
       LyteValue value2 = context.apply();
       LyteValue value1 = context.apply();
 
-      if (value1.typeOf().equals("string") || value2.typeOf().equals("string")) {
+      if (value1.is("string") || value2.is("string")) {
         context.push(value1.toString() + value2.toString());
-      } else if (value1.typeOf().equals("list") && value2.typeOf().equals("list")) {
+      } else if (value1.is("list") && value2.is("list")) {
         context.push(new LyteList((LyteList) value1, (LyteList) value2));
       } else {
         throw new LyteError("Cannot concatenate a(n) " + value1.typeOf() + " and a(n) " + value2.typeOf());
@@ -132,7 +132,7 @@ public class LyteStandardFunctions {
     public void invoke(LyteContext context) {
       if (!context.isEmpty()) {
         LyteValue value1 = context.apply();
-        if (value1.typeOf().equals("stream")) {
+        if (value1.is("stream")) {
           LyteStream stream = (LyteStream) value1;
           if (context.isEmpty()) {
             stream.writeLine("");
@@ -153,7 +153,7 @@ public class LyteStandardFunctions {
     @Override
     public void invoke(LyteContext context) {
       LyteValue value1 = context.apply();
-      if (value1.typeOf().equals("stream")) {
+      if (value1.is("stream")) {
         ((LyteStream) value1).write(context.apply().toString());
         ((LyteStream) value1).flush();
       } else {
@@ -185,7 +185,7 @@ public class LyteStandardFunctions {
       LyteValue falseValue = context.pop();
       LyteValue selectedValue = condition.apply(context).toBoolean() ? trueValue : falseValue;
 
-      if (selectedValue.typeOf().equals("block")) {
+      if (selectedValue.is("block")) {
         ((LyteBlock) selectedValue).invoke(context);
       } else {
         context.push(selectedValue.apply(context));
@@ -198,7 +198,7 @@ public class LyteStandardFunctions {
     public void invoke(LyteContext context) {
       // TODO this assumes the two things are on the same context.stack, we have to move scoping out of blocks!!!
       LyteValue value = context.apply();
-      if (!value.typeOf().equals("object")) {
+      if (!value.is("object")) {
         throw new LyteError("Cannot Instantiate a(n) " + value.typeOf() + ".");
       }
       if (!value.hasProperty("__constructor")) {
@@ -221,7 +221,7 @@ public class LyteStandardFunctions {
       LyteValue value2 = context.pop();
       LyteValue value1 = context.pop();
 
-      if (!(value1.typeOf().equals("object") && value2.typeOf().equals("object"))) {
+      if (!(value1.is("object") && value2.is("object"))) {
         throw new LyteError("Cannot mix " + value1 + " with " + value2);
       }
 
@@ -235,7 +235,7 @@ public class LyteStandardFunctions {
       LyteValue value1 = context.pop();
       LyteValue value2 = context.pop();
 
-      if (!value1.typeOf().equals("block") || !value2.typeOf().equals("block")) {
+      if (!value1.is("block") || !value2.is("block")) {
         throw new LyteError("Try requires both parameters to be blocks!");
       }
 
@@ -286,10 +286,10 @@ public class LyteStandardFunctions {
       LyteValue value1 = context.apply();
       LyteValue value2;
 
-      if (value1.typeOf().equals("list")) {
+      if (value1.is("list")) {
         value2 = context.pop();
 
-        if (!value2.typeOf().equals("block")) {
+        if (!value2.is("block")) {
           throw new LyteError("For expected a block, not a(n) " + value2.typeOf());
         }
 
@@ -300,21 +300,21 @@ public class LyteStandardFunctions {
           ((LyteBlock) value2).invoke(context);
         }
       } else {
-        int number1 = (int) value1.toNumber();
-        int number2 = (int) context.apply().toNumber();
+        long number1 = (long) value1.toNumber();
+        long number2 = (long) context.apply().toNumber();
         value2 = context.pop();
-        if (!value2.typeOf().equals("block")) {
+        if (!value2.is("block")) {
           throw new LyteError("For expected a block, not a(n) " + value2.typeOf());
         }
         if (number1 < number2) {
-          for (int i = number1; i < number2; i++) {
+          for (long i = number1; i < number2; i++) {
             // Push the number onto the context.stack
             context.push(i);
             // Then invoke the function
             ((LyteBlock) value2).invoke(context);
           }
         } else {
-          for (int i = (number1 - 1); i >= number2; i--) {
+          for (long i = (number1 - 1); i >= number2; i--) {
             // Push the number onto the context.stack
             context.push(i);
             // Then invoke the function
@@ -330,7 +330,7 @@ public class LyteStandardFunctions {
     public void invoke(LyteContext context) {
       LyteValue value1 = context.pop();
       LyteValue value2 = context.pop();
-      if (!value2.typeOf().equals("block")) {
+      if (!value2.is("block")) {
         throw new LyteError("While expected a block, not a(n) " + value2.typeOf());
       }
       while (value1.apply(context).toBoolean()) {
@@ -344,7 +344,7 @@ public class LyteStandardFunctions {
     public void invoke(LyteContext context) {
       LyteValue value1 = context.pop();
       LyteValue value2 = context.pop();
-      if (!value2.typeOf().equals("block")) {
+      if (!value2.is("block")) {
         throw new LyteError("Until expected a block, not a(n) " + value2.typeOf());
       }
       while (!value1.apply(context).toBoolean()) {
@@ -386,6 +386,13 @@ public class LyteStandardFunctions {
       LyteValue value1 = context.apply();
       LyteValue value2 = context.apply();
       context.push(value1.equalsStrict(value2));
+    }
+  };
+
+  public static LyteNativeBlock coreSame = new LyteNativeBlock("Core", "Same", "Same?") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(context.apply() == context.apply());
     }
   };
 
@@ -489,8 +496,8 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock coreBitwiseAnd = new LyteNativeBlock("Core", "BitwiseAnd", null) {
     @Override
     public void invoke(LyteContext context) {
-      int val1 = (int) context.apply().toNumber();
-      int val2 = (int) context.apply().toNumber();
+      long val1 = (long) context.apply().toNumber();
+      long val2 = (long) context.apply().toNumber();
       context.push(val1 & val2);
     }
   };
@@ -498,8 +505,8 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock coreBitwiseOr = new LyteNativeBlock("Core", "BitwiseOr", null) {
     @Override
     public void invoke(LyteContext context) {
-      int val1 = (int) context.apply().toNumber();
-      int val2 = (int) context.apply().toNumber();
+      long val1 = (long) context.apply().toNumber();
+      long val2 = (long) context.apply().toNumber();
       context.push(val1 | val2);
     }
   };
@@ -507,8 +514,8 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock coreBitwiseXor = new LyteNativeBlock("Core", "BitwiseXor", null) {
     @Override
     public void invoke(LyteContext context) {
-      int val1 = (int) context.apply().toNumber();
-      int val2 = (int) context.apply().toNumber();
+      long val1 = (long) context.apply().toNumber();
+      long val2 = (long) context.apply().toNumber();
       context.push(val1 ^ val2);
     }
   };
@@ -516,7 +523,7 @@ public class LyteStandardFunctions {
   public static LyteNativeBlock coreBitwiseNot = new LyteNativeBlock("Core", "BitwiseNot", null) {
     @Override
     public void invoke(LyteContext context) {
-      int val1 = (int) context.apply().toNumber();
+      long val1 = (long) context.apply().toNumber();
       context.push(~val1);
     }
   };

@@ -83,8 +83,8 @@ public class LyteMathFunctions {
 
     @Override
     public void invoke(LyteContext context) {
-      int val1 = (int) context.apply().toNumber();
-      int val2 = (int) context.apply().toNumber();
+      long val1 = (long) context.apply().toNumber();
+      long val2 = (long) context.apply().toNumber();
       context.push(val2 / val1);
     }
   };
@@ -93,8 +93,8 @@ public class LyteMathFunctions {
 
     @Override
     public void invoke(LyteContext context) {
-      int val1 = (int) context.apply().toNumber();
-      int val2 = (int) context.apply().toNumber();
+      long val1 = (long) context.apply().toNumber();
+      long val2 = (long) context.apply().toNumber();
       context.push(val2 % val1);
     }
   };
@@ -145,11 +145,11 @@ public class LyteMathFunctions {
 
       if (val1 <= val2) {
         for (double i = val1; i <= val2; i += 1) {
-          range.add(new LyteNumber(i));
+          range.add(LyteNumber.valueOf(i));
         }
       } else {
         for (double i = val1; i >= val2; i -= 1) {
-          range.add(new LyteNumber(i));
+          range.add(LyteNumber.valueOf(i));
         }
       }
 
@@ -175,7 +175,7 @@ public class LyteMathFunctions {
         }
 
         for (double i = val1; i <= val2; i += val3) {
-          range.add(new LyteNumber(i));
+          range.add(LyteNumber.valueOf(i));
         }
       } else {
         if (val3 > 0) {
@@ -183,7 +183,7 @@ public class LyteMathFunctions {
         }
 
         for (double i = val1; i >= val2; i += val3) {
-          range.add(new LyteNumber(i));
+          range.add(LyteNumber.valueOf(i));
         }
       }
 

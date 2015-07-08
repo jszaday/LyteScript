@@ -24,12 +24,20 @@ public class LyteContext implements LyteInjectable {
     this.stack = stack;
   }
 
+  public LyteContext(LyteValue self, LyteContext context) {
+    this(self, context.scope, context.stack);
+  }
+
+  public LyteContext(LyteValue self, LyteValue... args) {
+    this(self, null, new LyteStack(args));
+  }
+
   public void push(String string) {
     push(new LyteString(string));
   }
 
   public void push(Double number) {
-    push(new LyteNumber(number));
+    push(LyteNumber.valueOf(number));
   }
 
   public void push(Boolean bool) {
@@ -37,7 +45,11 @@ public class LyteContext implements LyteInjectable {
   }
 
   public void push(Integer integer) {
-    push(new LyteNumber(integer));
+    push(LyteNumber.valueOf(integer));
+  }
+
+  public void push(Long number) {
+    push(LyteNumber.valueOf(number.doubleValue()));
   }
 
   public void push(LyteValue value) {
@@ -145,7 +157,7 @@ public class LyteContext implements LyteInjectable {
       if (!shouldApply(specifierIterator, applyLast)) {
         if (primaryIdentifier.startsWith("#")) {
           lastObj = stack.peek();
-        } else if (primaryIdentifier.startsWith("@") || obj.typeOf().equals("block")) {
+        } else if (primaryIdentifier.startsWith("@") || obj.is("block")) {
           lastObj = self;
         }
       } else {

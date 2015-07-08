@@ -4,8 +4,10 @@ import com.lyte.core.LyteCompiler;
 import com.lyte.core.LyteContext;
 import com.lyte.core.LyteEvaluator;
 import com.lyte.core.LyteInvokeStatement;
-import com.lyte.objs.LyteError;
-import com.lyte.objs.LyteRawBlock;
+import com.lyte.objs.*;
+
+import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Created by a0225785 on 7/2/2015.
@@ -46,6 +48,17 @@ public class LyteReflectionFunctions {
       } else {
         context.scope.finalizeVariable(target);
       }
+    }
+  };
+
+  public static final LyteNativeBlock reflectGetProperties = new LyteNativeBlock("Reflect", "GetProperties", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      ArrayList<LyteValue> properties = new ArrayList<>();
+      for (String property : (Set<String>) context.apply().getProperties()) {
+        properties.add(new LyteString(property));
+      }
+      context.push(new LyteList(properties));
     }
   };
 }

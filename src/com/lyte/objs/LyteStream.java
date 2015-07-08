@@ -4,6 +4,7 @@ import com.lyte.core.LyteContext;
 import com.lyte.stdlib.LyteStreamFunctions;
 
 import java.io.*;
+import java.util.Set;
 
 /**
  * Created by a0225785 on 7/1/2015.
@@ -173,7 +174,7 @@ public class LyteStream implements LyteValue<Closeable>, Closeable {
 
   @Override
   public boolean equals(LyteValue other) {
-    if (other.typeOf().equals(typeOf())) {
+    if (other.is(typeOf())) {
       return equalsStrict(other);
     } else if (other.isSimpleComparison()) {
       return other.equals(this);
@@ -190,6 +191,16 @@ public class LyteStream implements LyteValue<Closeable>, Closeable {
   @Override
   public boolean isSimpleComparison() {
     return false;
+  }
+
+  @Override
+  public boolean is(String type) {
+    return typeOf().equals(type);
+  }
+
+  @Override
+  public Set<String> getProperties() {
+    return streamFunctions.getProperties();
   }
 
   @Override

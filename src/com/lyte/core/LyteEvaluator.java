@@ -4,6 +4,7 @@ import com.lyte.objs.*;
 import com.lyte.stdlib.LyteMathFunctions;
 import com.lyte.stdlib.LyteReflectionFunctions;
 import com.lyte.stdlib.LyteStandardFunctions;
+import com.lyte.stdlib.LyteTestFunctions;
 import com.lyte.utils.LyteNativeInjector;
 import org.antlr.v4.runtime.*;
 
@@ -40,6 +41,7 @@ public class LyteEvaluator implements AutoCloseable {
     LyteNativeInjector.injectNatives(LyteStandardFunctions.class, mContext, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
     LyteNativeInjector.injectNatives(LyteReflectionFunctions.class, mContext, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
     LyteNativeInjector.injectNatives(LyteMathFunctions.class, mContext, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
+    LyteNativeInjector.injectNatives(LyteTestFunctions.class, mContext, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
     mContext.set("Math", mContext.get(LyteStandardFunctions.TOP_LEVEL_NAMESPACE).getProperty("Math"), true);
   }
 

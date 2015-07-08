@@ -29,7 +29,7 @@ public class LyteInvokeStatement extends LyteStatement {
   public void applyTo(LyteContext context) {
     if (isSimpleInvokation()) {
       LyteValue value = context.get(mPrimaryIdentifier);
-      if (value.typeOf().equals("block")) {
+      if (value.is("block")) {
         ((LyteBlock) value).invoke(context);
       } else {
         context.stack.push(value);

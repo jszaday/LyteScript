@@ -2,16 +2,47 @@
 Import("Animal.*")
 Import("Barker")
 
+Import("Lyte.Reflect.GetProperties")
+Import("Lyte.Test.*")
+
 /* Icky Math */
 Factorial <- @(n) {
-  If (n `<=` 1, {
+  If (n `<` 0, {
+    Raise("Cannot compute the factorial of " `++` n)
+  }, If (n `<=` 1, {
     1
   }, {
     n `*` Factorial(n `-` 1)
-  })
+  }))
 }
 
-6 Factorial EchoLn
+FactorialTests <- %{
+  "Value for Zero": {
+    AssertEquals("Factorial(0) should be 1", Factorial(0), 1)
+  },
+  "Value for One": {
+    AssertEquals("Factorial(1) should be 1", Factorial(1), 1)
+  },
+  "Value for Six": {
+    AssertEquals("Factorial(6) should be 720", Factorial(6), 720)
+  },
+  "Value for -1": {
+    AssertRaises("Factorial(-1) should raise an error", "Cannot compute the factorial of -1", Factorial(-1))
+  },
+  "Will Fail": {
+    Fail("This test is guaranteed to fail")
+  }
+}
+
+Test(FactorialTests) -> testResults
+For (GetProperties(testResults), @(test) {
+  If (testResults[test] `==` "Success", {
+    EchoLn("Test \"" `++` test `++` "\" Passed!")
+  }, {
+    EchoLn("Test \"" `++` test `++` "\" Failed, reason \"" `++` testResults[test] `++` "\"")
+  })
+})
+EchoLn
 
 /* Puppy Dogs*/
 Instantiate(Animal.Dog, "Fido") -> fido
@@ -52,7 +83,7 @@ For(0:4:16, @(i) {
   })
 })
 
-Test <- %{
+TestObj <- %{
   name: "Bob",
   changeName: {
     Apply -> newName
@@ -65,15 +96,7 @@ Test <- %{
   }
 }
 
-EchoLn(StdOut, Test.changeName("Jeff"))
-
-/* OpenFile("test.lyte", "r") -> file
-file.readLn -> line
-Until(line Undefined?, {
-  EchoLn(line)
-  file.readLn -> line
-})
-file.close */
+EchoLn(StdOut, TestObj.changeName("Jeff"))
 
 EchoLn(Eval("2 `+` 2"))
 EchoLn(Lyte Type?)
@@ -92,6 +115,14 @@ getNumbers <- {
 getNumbers() -> [AnotherTest.i, AnotherTest.j]
 EchoLn(AnotherTest)
 
-/* %[262, 294, 330, 349, 392, 440, 494, 523] -> frequencies
+/* OpenFile("test.lyte", "r") -> file
+file.readLn -> line
+Until(line Undefined?, {
+  EchoLn(line)
+  file.readLn -> line
+})
+file.close
+
+%[262, 294, 330, 349, 392, 440, 494, 523] -> frequencies
 %[5, 5, 6, 7, 7, 6, 5, 4, 3, 3, 4, 5, 5, 4, 4] -> notes
 For(notes, @(note) { Lyte.System.Beep(frequencies[note], 500) }) */

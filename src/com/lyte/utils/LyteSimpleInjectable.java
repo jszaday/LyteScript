@@ -3,6 +3,7 @@ package com.lyte.utils;
 import com.lyte.objs.LyteValue;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Created by a0225785 on 6/29/2015.
@@ -35,5 +36,9 @@ public abstract class LyteSimpleInjectable implements LyteInjectable {
   @Override
   public String toString() {
     return mFunctions.toString();
+  }
+
+  public Set<String> getProperties() {
+    return mFunctions.keySet();
   }
 }

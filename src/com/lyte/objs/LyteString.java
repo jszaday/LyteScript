@@ -58,7 +58,7 @@ public class LyteString extends LytePrimitive<String> {
 
   @Override
   public boolean equals(LyteValue other) {
-    if (other.typeOf().equals(typeOf())) {
+    if (other.is(typeOf())) {
       return equalsStrict(other);
     } else if (other.isSimpleComparison()) {
       return other.equals(this);

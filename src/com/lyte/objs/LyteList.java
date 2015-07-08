@@ -6,8 +6,7 @@ import com.lyte.core.LyteStack;
 import com.lyte.stdlib.LyteListFunctions;
 import com.lyte.stdlib.LyteNativeBlock;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class LyteList implements LyteValue<LinkedList<LyteValue>> {
   private static final LyteListFunctions listFunctions = new LyteListFunctions();
@@ -18,7 +17,7 @@ public class LyteList implements LyteValue<LinkedList<LyteValue>> {
     mList = new LinkedList<LyteValue>();
   }
 
-  public LyteList(List<LyteValue> list) {
+  public LyteList(Collection<LyteValue> list) {
     mList = new LinkedList<LyteValue>();
     mList.addAll(list);
   }
@@ -125,7 +124,7 @@ public class LyteList implements LyteValue<LinkedList<LyteValue>> {
 
   @Override
   public boolean equals(LyteValue other) {
-    if (other.typeOf().equals(typeOf())) {
+    if (other.is(typeOf())) {
       return equalsStrict(other);
     } else if (other.isSimpleComparison()) {
       return other.equals(this);
@@ -136,7 +135,7 @@ public class LyteList implements LyteValue<LinkedList<LyteValue>> {
 
   @Override
   public boolean equalsStrict(LyteValue other) {
-    if (other.typeOf().equals(typeOf())) {
+    if (other.is(typeOf())) {
       return other.get().equals(get());
     } else {
       return false;
@@ -156,5 +155,21 @@ public class LyteList implements LyteValue<LinkedList<LyteValue>> {
   @Override
   public String typeOf() {
     return "list";
+  }
+
+  @Override
+  public boolean is(String type) {
+    return type.equals(typeOf());
+  }
+
+  @Override
+  public Set<String> getProperties() {
+    return new HashSet<String>() {{
+      addAll(listFunctions.getProperties());
+
+      for (int i = 0; i < size(); i++) {
+        add(String.valueOf(i));
+      }
+    }};
   }
 }
