@@ -9,9 +9,9 @@ import java.util.HashMap;
  * Created by jszaday on 6/22/15.
  */
 public class LytePackage extends LyteObject {
+
   public LytePackage() {
     super(null);
-    set(new HashMap<String, LyteValue>());
   }
 
   public LytePackage getNamespace(String key) {

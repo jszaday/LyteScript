@@ -102,4 +102,9 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
       return null;
     }
   }
+
+  @Override
+  public String toJSONString() {
+    throw new LyteError("Cannot encode a block as JSON!");
+  }
 }

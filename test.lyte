@@ -57,13 +57,15 @@ Instantiate(Animal.Cat, "Garfield") -> garfield
 garfield.attack(fido)
 garfield.pet(5)
 
-/* Exceptions */
-Try(Gregor, @(error) {
-  EchoLn("Gregor ees sad Gregor does not exist.")
-  EchoLn(error)
-})
+{ Raise("Some men just want to see the world burn") } -> errorRaiser
 
-Try(Raise("Some men just want to see the world burn!"), EchoLn)
+/* Exceptions */
+Try(errorRaiser, @(error) {
+  EchoLn("ERROR! Reason: " `++` error.message `++` ", Stack Trace: ")
+  For (error.stackTrace, @(line) {
+    EchoLn("\tLine " `++` line)
+  })
+})
 
 "A string separated by spaces" -> myString
 myString.toUpperCase().split(" ") -> myWords

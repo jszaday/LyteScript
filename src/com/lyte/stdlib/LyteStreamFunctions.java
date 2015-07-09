@@ -2,6 +2,7 @@ package com.lyte.stdlib;
 
 import com.lyte.core.LyteContext;
 import com.lyte.objs.*;
+import com.lyte.utils.LyteMemberBlock;
 import com.lyte.utils.LyteSimpleInjectable;
 
 import java.io.IOException;
@@ -11,14 +12,14 @@ import java.io.IOException;
  */
 public class LyteStreamFunctions extends LyteSimpleInjectable {
 
-  public static final LyteNativeBlock streamRead = new LyteStreamBlock("read") {
+  public static final LyteNativeBlock streamRead = new LyteMemberBlock<LyteStream>("read") {
     @Override
     public void invoke(LyteStream self, LyteContext context) {
       context.push(self.read());
     }
   };
 
-  public static final LyteNativeBlock streamReadLn = new LyteStreamBlock("readLn") {
+  public static final LyteNativeBlock streamReadLn = new LyteMemberBlock<LyteStream>("readLn") {
     @Override
     public void invoke(LyteStream self, LyteContext context) {
       String line = self.readLine();
@@ -26,7 +27,7 @@ public class LyteStreamFunctions extends LyteSimpleInjectable {
     }
   };
 
-  public static final LyteNativeBlock streamClose = new LyteStreamBlock("close") {
+  public static final LyteNativeBlock streamClose = new LyteMemberBlock<LyteStream>("close") {
     @Override
     public void invoke(LyteStream self, LyteContext context) {
       try {
@@ -37,21 +38,21 @@ public class LyteStreamFunctions extends LyteSimpleInjectable {
     }
   };
 
-  public static final LyteNativeBlock streamIsReadable = new LyteStreamBlock("readable?") {
+  public static final LyteNativeBlock streamIsReadable = new LyteMemberBlock<LyteStream>("readable?") {
     @Override
     public void invoke(LyteStream self, LyteContext context) {
       context.push(self.isReadable());
     }
   };
 
-  public static final LyteNativeBlock streamIsWritable = new LyteStreamBlock("writable?") {
+  public static final LyteNativeBlock streamIsWritable = new LyteMemberBlock<LyteStream>("writable?") {
     @Override
     public void invoke(LyteStream self, LyteContext context) {
       context.push(!self.isReadable());
     }
   };
 
-  public static final LyteNativeBlock streamWrite = new LyteStreamBlock("write") {
+  public static final LyteNativeBlock streamWrite = new LyteMemberBlock<LyteStream>("write") {
     @Override
     public void invoke(LyteStream self, LyteContext context) {
       LyteValue value = context.apply();
@@ -63,35 +64,18 @@ public class LyteStreamFunctions extends LyteSimpleInjectable {
     }
   };
 
-  public static final LyteNativeBlock streamWriteLn = new LyteStreamBlock("writeLn") {
+  public static final LyteNativeBlock streamWriteLn = new LyteMemberBlock<LyteStream>("writeLn") {
     @Override
     public void invoke(LyteStream self, LyteContext context) {
       self.writeLine(context.apply().toString());
     }
   };
 
-  public static final LyteNativeBlock streamFlush = new LyteStreamBlock("flush") {
+  public static final LyteNativeBlock streamFlush = new LyteMemberBlock<LyteStream>("flush") {
     @Override
     public void invoke(LyteStream self, LyteContext context) {
       self.flush();
     }
   };
 
-  private static abstract class LyteStreamBlock extends LyteNativeBlock {
-
-    public LyteStreamBlock(String alias) {
-      super("Stream", alias);
-    }
-
-    public abstract void invoke(LyteStream self, LyteContext context);
-
-    @Override
-    public void invoke(LyteContext context) {
-      if (context.self instanceof LyteStream) {
-        invoke((LyteStream) context.self, context);
-      } else {
-        throw new LyteError("Cannot invoke " + alias + " on " + context.self);
-      }
-    }
-  }
 }

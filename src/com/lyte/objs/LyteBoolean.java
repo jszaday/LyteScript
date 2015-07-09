@@ -5,8 +5,15 @@ package com.lyte.objs;
  */
 public class LyteBoolean extends LytePrimitive<Boolean> {
 
-    public LyteBoolean(Boolean value) {
+    public static final LyteBoolean TRUE = new LyteBoolean(true);
+    public static final LyteBoolean FALSE = new LyteBoolean(false);
+
+    private LyteBoolean(Boolean value) {
         super(value);
+    }
+
+    public static LyteBoolean valueOf(Boolean b) {
+        return b ? TRUE : FALSE;
     }
 
     @Override
@@ -27,5 +34,10 @@ public class LyteBoolean extends LytePrimitive<Boolean> {
     @Override
     public boolean isSimpleComparison() {
         return true;
+    }
+
+    @Override
+    public String toJSONString() {
+        return toString();
     }
 }

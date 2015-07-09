@@ -23,7 +23,6 @@ public class LyteRawObject extends LyteRawValue<HashMap<String, LyteValue>>  {
 
   @Override
   public LyteValue<HashMap<String, LyteValue>> clone(LyteContext context) {
-    HashMap<String, LyteValue> properties = new HashMap<String, LyteValue>();
     if (context.scope == null) {
       // Uncache the scope
       context.scope = mCachedScope;
@@ -31,11 +30,11 @@ public class LyteRawObject extends LyteRawValue<HashMap<String, LyteValue>>  {
       // Cache the scope
       mCachedScope = context.scope;
     }
-    LyteObject newObject = new LyteObject(this, properties);
+    LyteObject newObject = new LyteObject(this);
     LyteContext objectContext = new LyteContext(newObject, context);
 
     for (String key : mProperties.keySet()) {
-      properties.put(key, mProperties.get(key).apply(objectContext));
+      newObject.setProperty(key, mProperties.get(key).apply(objectContext));
     }
 
     return newObject;

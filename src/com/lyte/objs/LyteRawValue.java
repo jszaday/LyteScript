@@ -17,11 +17,6 @@ public abstract class LyteRawValue<T> implements LyteValue<T> {
   }
 
   @Override
-  public void set(T newValue) {
-
-  }
-
-  @Override
   public LyteValue getProperty(String property) {
     throw new LyteError("You can't get the properties of a raw value!");
   }
@@ -79,5 +74,10 @@ public abstract class LyteRawValue<T> implements LyteValue<T> {
   @Override
   public Set<String> getProperties() {
     throw new LyteError("Cannot get the properties of " + typeOf() + "!");
+  }
+
+  @Override
+  public String toJSONString() {
+    throw new LyteError("Cannot encode a " + typeOf() + " value as JSON!");
   }
 }

@@ -3,46 +3,35 @@ package com.lyte.stdlib;
 import com.lyte.core.LyteContext;
 import com.lyte.objs.LyteError;
 import com.lyte.objs.LyteList;
+import com.lyte.utils.LyteMemberBlock;
 import com.lyte.utils.LyteSimpleInjectable;
 
 /**
  * Created by a0225785 on 6/29/2015.
  */
 public class LyteListFunctions extends LyteSimpleInjectable {
-  public static LyteNativeBlock listPush = new LyteNativeBlock("List", "push") {
+  public static LyteNativeBlock listPush = new LyteMemberBlock<LyteList>("push") {
     @Override
-    public void invoke(LyteContext context) {
-      if (!context.self.is("list")) {
-        throw new LyteError("Cannot apply push to an " + context.self.typeOf());
-      }
-      ((LyteList) context.self).get().add(context.stack.pop().apply(context));
+    public void invoke(LyteList self, LyteContext context) {
+      self.push(context.apply());
     }
   };
-  public static LyteNativeBlock listPop = new LyteNativeBlock("List", "pop") {
+  public static LyteNativeBlock listPop = new LyteMemberBlock<LyteList>("pop") {
     @Override
-    public void invoke(LyteContext context) {
-      if (!context.self.is("list")) {
-        throw new LyteError("Cannot apply push to an " + context.self.typeOf());
-      }
-      context.push(((LyteList) context.self).get().pop());
+    public void invoke(LyteList self, LyteContext context) {
+      context.push(self.pop());
     }
   };
-  public static LyteNativeBlock listLength = new LyteNativeBlock("List", "length") {
+  public static LyteNativeBlock listLength = new LyteMemberBlock<LyteList>("length") {
     @Override
-    public void invoke(LyteContext context) {
-      if (!context.self.is("list")) {
-        throw new LyteError("Cannot apply push to an " + context.self.typeOf());
-      }
-      context.push(((LyteList) context.self).get().size());
+    public void invoke(LyteList self, LyteContext context) {
+      context.push(self.size());
     }
   };
-  public static LyteNativeBlock listIsEmpty = new LyteNativeBlock("List", "empty?") {
+  public static LyteNativeBlock listIsEmpty = new LyteMemberBlock<LyteList>("empty?") {
     @Override
-    public void invoke(LyteContext context) {
-      if (!context.self.is("list")) {
-        throw new LyteError("Cannot apply push to an " + context.self.typeOf());
-      }
-      context.push(((LyteList) context.self).get().isEmpty());
+    public void invoke(LyteList self, LyteContext context) {
+      context.push(self.isEmpty());
     }
   };
 }

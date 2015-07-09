@@ -3,8 +3,11 @@ package com.lyte.objs;
 import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
+import com.lyte.stdlib.LyteErrorFunctions;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Set;
 
 /**
@@ -12,7 +15,12 @@ import java.util.Set;
  */
 public class LyteError extends RuntimeException implements LyteValue<RuntimeException> {
 
+  private static final LyteErrorFunctions ERROR_FUNCTIONS = new LyteErrorFunctions();
   private ArrayList<String> mLineNumbers = new ArrayList<String>();
+
+  public LyteError(Exception e) {
+    super(e.getMessage());
+  }
 
   public LyteError(String value) {
     super(value);
@@ -27,15 +35,19 @@ public class LyteError extends RuntimeException implements LyteValue<RuntimeExce
     return this;
   }
 
-  @Override
-  public void set(RuntimeException newValue) {
-    throw new LyteError("Cannot set the value of an Error Object!");
+  public LyteList getLyteStackTrace() {
+    LyteList stackTrace = new LyteList();
+
+    for (String lineNumber : mLineNumbers) {
+      stackTrace.add(new LyteString(lineNumber));
+    }
+
+    return stackTrace;
   }
 
   @Override
   public LyteValue getProperty(String property) {
-    // TODO Implement Logic
-    return null;
+    return ERROR_FUNCTIONS.getProperty(property);
   }
 
   @Override
@@ -45,8 +57,7 @@ public class LyteError extends RuntimeException implements LyteValue<RuntimeExce
 
   @Override
   public boolean hasProperty(String property) {
-    // TODO Implement Logic
-    return false;
+    return ERROR_FUNCTIONS.hasProperty(property);
   }
 
   @Override
@@ -111,6 +122,14 @@ public class LyteError extends RuntimeException implements LyteValue<RuntimeExce
 
   @Override
   public Set<String> getProperties() {
-    throw new LyteError("Cannot get the properties of " + typeOf() + "!");
+    return ERROR_FUNCTIONS.getProperties();
+  }
+
+  @Override
+  public String toJSONString() {
+    JSONObject object = new JSONObject();
+    object.put("message", getMessage());
+    object.put("stackTrace", getLyteStackTrace());
+    return object.toJSONString();
   }
 }

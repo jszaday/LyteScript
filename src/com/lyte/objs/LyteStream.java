@@ -123,11 +123,6 @@ public class LyteStream implements LyteValue<Closeable>, Closeable {
   }
 
   @Override
-  public void set(Closeable newValue) {
-    throw new LyteError("Cannot set the value of a stream!");
-  }
-
-  @Override
   public LyteValue getProperty(String property) {
     return streamFunctions.getProperty(property);
   }
@@ -206,5 +201,10 @@ public class LyteStream implements LyteValue<Closeable>, Closeable {
   @Override
   public void close() throws IOException {
     get().close();
+  }
+
+  @Override
+  public String toJSONString() {
+    throw new LyteError("Cannot encode a stream as JSON!");
   }
 }

@@ -1,6 +1,7 @@
 package com.lyte.objs;
 
 import com.lyte.core.LyteScope;
+import org.json.simple.JSONValue;
 
 import java.util.HashMap;
 
@@ -84,5 +85,10 @@ public class LyteNumber extends LytePrimitive<Double> {
     } else {
       return String.format("%.0f", get());
     }
+  }
+
+  @Override
+  public String toJSONString() {
+    return JSONValue.toJSONString(this.get());
   }
 }

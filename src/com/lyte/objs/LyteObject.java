@@ -4,6 +4,7 @@ import com.lyte.core.LyteContext;
 import com.lyte.core.LyteInvokeStatement;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
+import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -11,38 +12,27 @@ import java.util.Set;
 /**
  * Created by a0225785 on 6/17/2015.
  */
-public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
+public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<HashMap<String, LyteValue>> {
 
-  private HashMap<String, LyteValue> mProperties;
   private LyteRawObject mBase;
 
-  public LyteObject(LyteRawObject base, HashMap<String, LyteValue> properties) {
-    mProperties = properties;
+  public LyteObject(LyteRawObject base) {
     mBase = base;
-  }
-
-  public LyteObject(HashMap<String, LyteValue> properties) {
-    this(null, properties);
   }
 
   @Override
   public HashMap<String, LyteValue> get() {
-    return mProperties;
-  }
-
-  @Override
-  public void set(HashMap<String, LyteValue> newValue) {
-    mProperties = newValue;
+    return this;
   }
 
   public void unsetProperty(String key) {
-    mProperties.remove(key);
+    remove(key);
   }
 
   @Override
   public LyteValue getProperty(String property) {
     if (hasProperty(property)) {
-      return mProperties.get(property);
+      return get(property);
     } else {
       throw new LyteError("Cannot Resolve Property " + property + " of Object " + toString());
     }
@@ -50,12 +40,12 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
 
   @Override
   public void setProperty(String property, LyteValue newValue) {
-    mProperties.put(property, newValue);
+    put(property, newValue);
   }
 
   @Override
   public boolean hasProperty(String property) {
-    return mProperties.containsKey(property);
+    return containsKey(property);
   }
 
   public LyteObject mixWith(LyteObject object) {
@@ -70,7 +60,7 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
     if (hasProperty("__toBoolean")) {
       return getProperty("__toBoolean").apply(new LyteContext(this)).toBoolean();
     } else {
-      return !mProperties.isEmpty();
+      return !isEmpty();
     }
   }
 
@@ -79,7 +69,7 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
     if (hasProperty("__toNumber")) {
       return getProperty("__toNumber").apply(new LyteContext(this)).toNumber();
     } else {
-      return mProperties.size();
+      return size();
     }
   }
 
@@ -88,7 +78,7 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
     if (hasProperty("__toString")) {
       return getProperty("__toString").apply(new LyteContext(this)).toString();
     } else {
-      return mProperties.toString();
+      return toString();
     }
   }
 
@@ -110,7 +100,6 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
   public LyteValue apply(LyteContext context) {
     return this;
   }
-
 
   @Override
   public boolean equals(LyteValue other) {
@@ -142,6 +131,20 @@ public class LyteObject implements LyteValue<HashMap<String, LyteValue>> {
 
   @Override
   public Set<String> getProperties() {
-    return mProperties.keySet();
+    return keySet();
+  }
+
+  @Override
+  public String toJSONString() {
+    LyteValue value;
+    JSONObject obj = new JSONObject();
+    for (String property : getProperties()) {
+      if ((value = getProperty(property)).is("block")) {
+        continue;
+      } else {
+        obj.put(property, value);
+      }
+    }
+    return obj.toJSONString();
   }
 }

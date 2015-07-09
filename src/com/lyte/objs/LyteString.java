@@ -2,13 +2,17 @@ package com.lyte.objs;
 
 
 import com.lyte.stdlib.LyteStringFunctions;
+import org.json.simple.JSONValue;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by jszaday on 6/22/15.
  */
 public class LyteString extends LytePrimitive<String> {
 
-  private static final LyteStringFunctions sFunctions = new LyteStringFunctions();
+  private static final LyteStringFunctions STRING_FUNCTIONS = new LyteStringFunctions();
 
   public LyteString(String value) {
     super(value);
@@ -49,8 +53,8 @@ public class LyteString extends LytePrimitive<String> {
       } catch (StringIndexOutOfBoundsException e) {
         throw new LyteError("Index out of bounds, " + index + "!");
       }
-    } else if (sFunctions.hasProperty(property)) {
-      return sFunctions.getProperty(property);
+    } else if (STRING_FUNCTIONS.hasProperty(property)) {
+      return STRING_FUNCTIONS.getProperty(property);
     } else {
       throw new LyteError("Cannot invoke the property " + property + " of a string.");
     }
@@ -70,5 +74,26 @@ public class LyteString extends LytePrimitive<String> {
   @Override
   public boolean isSimpleComparison() {
     return true;
+  }
+
+  @Override
+  public boolean hasProperty(String property) {
+    return STRING_FUNCTIONS.hasProperty(property) || (LyteList.tryParse(property) != null);
+  }
+
+  @Override
+  public Set<String> getProperties() {
+    return new HashSet<String>() {{
+      addAll(STRING_FUNCTIONS.getProperties());
+
+      for (int i = 0; i < length(); i++) {
+        add(String.valueOf(i));
+      }
+    }};
+  }
+
+  @Override
+  public String toJSONString() {
+    return JSONValue.toJSONString(get());
   }
 }

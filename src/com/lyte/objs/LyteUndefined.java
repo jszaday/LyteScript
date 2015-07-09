@@ -46,11 +46,6 @@ public enum LyteUndefined implements LyteValue {
   }
 
   @Override
-  public void set(Object newValue) {
-    throw new LyteError("Cannot set the value of a(n) " + typeOf() + " value!");
-  }
-
-  @Override
   public LyteValue getProperty(String property) {
     throw new LyteError("Cannot get property " + property + " from a(n) " + typeOf() + "!");
   }
@@ -104,5 +99,14 @@ public enum LyteUndefined implements LyteValue {
   @Override
   public Set<String> getProperties() {
     throw new LyteError("Cannot get the properties of " + typeOf() + "!");
+  }
+
+  @Override
+  public String toJSONString() {
+    if (this == NULL) {
+      return toString();
+    } else {
+      throw new LyteError("Can't encode the value " + toString() + " as JSON!");
+    }
   }
 }

@@ -3,16 +3,14 @@ package com.lyte.stdlib;
 import com.lyte.core.*;
 import com.lyte.objs.*;
 import com.lyte.utils.LyteBeeper;
+import com.lyte.utils.LyteJsonParser;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.omg.SendingContext.RunTime;
 
 import javax.sound.sampled.LineUnavailableException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -666,6 +664,20 @@ public class LyteStandardFunctions {
     public void invoke(LyteContext context) {
       String c = context.apply().toString();
       context.push(StringEscapeUtils.unescapeEcmaScript(c));
+    }
+  };
+
+  public static LyteNativeBlock jsonParseJSON = new LyteNativeBlock("JSON", "ParseJSON", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(LyteJsonParser.parseJson(context.apply().toString()));
+    }
+  };
+
+  public static LyteNativeBlock jsonToJSON = new LyteNativeBlock("JSON", "ToJSON", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(context.apply().toJSONString());
     }
   };
 }

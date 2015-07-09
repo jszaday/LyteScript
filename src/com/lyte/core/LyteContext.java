@@ -41,7 +41,7 @@ public class LyteContext implements LyteInjectable {
   }
 
   public void push(Boolean bool) {
-    push(new LyteBoolean(bool));
+    push(LyteBoolean.valueOf(bool));
   }
 
   public void push(Integer integer) {

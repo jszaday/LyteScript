@@ -37,7 +37,7 @@ public class LyteTestFunctions {
       LyteValue value = context.apply();
       LyteContext testContext = new LyteContext(value, context.scope, new LyteStack());
       Set<String> properties = value.getProperties();
-      HashMap<String, LyteValue> results = new HashMap<String, LyteValue>();
+      LyteObject result = new LyteObject(null);
 
       if (!value.is("object")) {
         throw new LyteError("Cannot test an object of type " + value.typeOf() + "!");
@@ -51,13 +51,13 @@ public class LyteTestFunctions {
         try {
           LyteBlock test = (LyteBlock) value.getProperty(property);
           test.invoke(testContext);
-          results.put(property, SUCCESS);
+          result.setProperty(property, SUCCESS);
         } catch (Exception e) {
-          results.put(property, new LyteString(e.getMessage()));
+          result.setProperty(property, new LyteString(e.getMessage()));
         }
       }
 
-      context.push(new LyteObject(results));
+      context.push(result);
     }
   };
 

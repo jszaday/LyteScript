@@ -23,11 +23,6 @@ public abstract class LytePrimitive<T> implements LyteValue<T> {
   }
 
   @Override
-  public void set(T newValue) {
-    mValue = newValue;
-  }
-
-  @Override
   public LyteValue getProperty(String property) {
     throw new LyteError("Cannot get property " + property + " from a(n) " + typeOf() + "!");
   }
