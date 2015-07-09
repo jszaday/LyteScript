@@ -37,7 +37,7 @@ public class LyteNumber extends LytePrimitive<Double> {
     return valueOf(Double.parseDouble(number));
   }
 
-  public static LyteNumber valueOf(Integer number) {
+  public static LyteNumber valueOf(Number number) {
     return valueOf(number.doubleValue());
   }
 

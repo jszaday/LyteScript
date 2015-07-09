@@ -56,24 +56,14 @@ public class LyteStringFunctions extends LyteSimpleInjectable {
 
     @Override
     public void invoke(LyteString self, LyteContext context) {
-      if (self instanceof LyteString) {
-        String value1 = context.apply().toString();
-        context.push(self.get().startsWith(value1));
-      } else {
-        throw new LyteError("Cannot take the substring of " + self);
-      }
+      context.push(self.get().startsWith(context.apply().toString()));
     }
   };
   public static LyteNativeBlock stringEndsWith = new LyteMemberBlock<LyteString>("endsWith") {
 
     @Override
     public void invoke(LyteString self, LyteContext context) {
-      if (self instanceof LyteString) {
-        String value1 = context.apply().toString();
-        context.push(self.get().endsWith(value1));
-      } else {
-        throw new LyteError("Cannot take the substring of " + self);
-      }
+      context.push(self.get().endsWith(context.apply().toString()));
     }
   };
   public static LyteNativeBlock stringLength = new LyteMemberBlock<LyteString>("length") {
