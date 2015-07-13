@@ -96,7 +96,14 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
       // Visit each of the properties
       for (LyteParser.KeyValuePairContext keyValue : keyValueList) {
         // Adding it to the raw object as it goes
-        String keyName = keyValue.Identifier() != null ? keyValue.Identifier().getText() : visitStringLiteral(keyValue.stringLiteral()).toString();
+        String keyName;
+        if (keyValue.Identifier() != null) {
+          keyName = keyValue.Identifier().getText();
+        } else if (keyValue.stringLiteral() != null) {
+          keyName = visitStringLiteral(keyValue.stringLiteral()).toString();
+        } else {
+          keyName = visitNumericLiteral(keyValue.numericLiteral()).toString();
+        }
         rawObject.set(keyName, (LyteStatement) visitPushableStatement(keyValue.pushable()));
       }
     }
@@ -107,11 +114,11 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
   public Object visitRange(LyteParser.RangeContext ctx) {
     LyteRawBlock block = mCurrentBlock.enter();
 
-    for (int i = (ctx.numericLiteral().size() - 1); i >= 0; i--) {
-      block.addStatement(new LytePushStatement(getLineNumber(ctx), (LyteValue) visitNumericLiteral(ctx.numericLiteral(i))));
+    for (int i = (ctx.pushable().size() - 1); i >= 0; i--) {
+      block.addStatement(new LytePushStatement(getLineNumber(ctx), (LyteValue) visitPushable(ctx.pushable(i))));
     }
 
-    block.addStatement(new LyteInvokeStatement(getLineNumber(ctx), "Range" + ctx.numericLiteral().size()));
+    block.addStatement(new LyteInvokeStatement(getLineNumber(ctx), "Range" + ctx.pushable().size()));
 
     return block;
   }

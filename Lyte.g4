@@ -53,7 +53,7 @@ parameters
 
 // Misc. Lists
 keyValuePair
-  : (Identifier | stringLiteral) Colon pushable
+  : (Identifier | stringLiteral | numericLiteral) Colon pushable
   ;
 
 keyValueList
@@ -113,7 +113,7 @@ lambdaExpression
   ;
 
 range
-	: numericLiteral Colon (numericLiteral Colon)? numericLiteral
+	: Percent LeftBracket pushable Colon (pushable Colon)? pushable RightBracket
 	;
 
 // Misc. Symbols

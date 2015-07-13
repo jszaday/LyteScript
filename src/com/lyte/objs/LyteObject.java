@@ -78,7 +78,7 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
     if (hasProperty("__toString")) {
       return getProperty("__toString").apply(new LyteContext(this)).toString();
     } else {
-      return toString();
+      return super.toString();
     }
   }
 
