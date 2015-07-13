@@ -2,6 +2,7 @@ package com.lyte.stdlib;
 
 import com.lyte.core.LyteContext;
 import com.lyte.objs.*;
+import com.lyte.utils.LyteRangeMaker;
 
 /**
  * Created by a0225785 on 7/1/2015.
@@ -409,19 +410,7 @@ public class LyteMathFunctions {
 
     @Override
     public LyteValue compute(double val1, double val2) {
-      LyteList range = new LyteList();
-
-      if (val1 <= val2) {
-        for (double i = val1; i <= val2; i += 1) {
-          range.add(LyteNumber.valueOf(i));
-        }
-      } else {
-        for (double i = val1; i >= val2; i -= 1) {
-          range.add(LyteNumber.valueOf(i));
-        }
-      }
-
-      return range;
+      return LyteRangeMaker.range(val1, val2);
     }
   };
 
@@ -431,31 +420,7 @@ public class LyteMathFunctions {
       double val1 = context.apply().toNumber();
       double val3 = context.apply().toNumber();
       double val2 = context.apply().toNumber();
-      LyteList range = new LyteList();
-
-      if (val1 != val2 && val3 == 0) {
-        throw new LyteError("Impossible to reach " + val2 + " from " + val1 + " by incrementing by zero");
-      }
-
-      if (val1 <= val2) {
-        if (val3 < 0) {
-          throw new LyteError("Impossible to reach " + val2 + " from " + val1 + " by incrementing by " + val3);
-        }
-
-        for (double i = val1; i <= val2; i += val3) {
-          range.add(LyteNumber.valueOf(i));
-        }
-      } else {
-        if (val3 > 0) {
-          throw new LyteError("Impossible to reach " + val2 + " from " + val1 + " by incrementing by " + val3);
-        }
-
-        for (double i = val1; i >= val2; i += val3) {
-          range.add(LyteNumber.valueOf(i));
-        }
-      }
-
-      context.push(range);
+      context.push(LyteRangeMaker.range(val1, val3, val2));
     }
   };
 

@@ -4,6 +4,7 @@ import com.lyte.gen.LyteBaseVisitor;
 import com.lyte.gen.LyteLexer;
 import com.lyte.gen.LyteParser;
 import com.lyte.objs.*;
+import com.lyte.utils.LyteAppliable;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -112,15 +113,19 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
 
   @Override
   public Object visitRange(LyteParser.RangeContext ctx) {
-    LyteRawBlock block = mCurrentBlock.enter();
+    List<LyteParser.PushableContext> pushables = ctx.pushable();
+    LyteAppliable start = (LyteAppliable) visitPushableStatement(pushables.get(0));
+    LyteAppliable step, finish;
 
-    for (int i = (ctx.pushable().size() - 1); i >= 0; i--) {
-      block.addStatement(new LytePushStatement(getLineNumber(ctx), (LyteValue) visitPushable(ctx.pushable(i))));
+    if (pushables.size() == 2) {
+      step = null;
+      finish = (LyteAppliable) visitPushableStatement(pushables.get(1));
+    } else {
+      step = (LyteAppliable) visitPushableStatement(pushables.get(1));
+      finish = (LyteAppliable) visitPushableStatement(pushables.get(2));
     }
 
-    block.addStatement(new LyteInvokeStatement(getLineNumber(ctx), "Range" + ctx.pushable().size()));
-
-    return block;
+    return new LyteRawRange(start, step, finish);
   }
 
   @Override
@@ -128,8 +133,14 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
     LyteRawArray array = new LyteRawArray();
     LyteParser.ValueListContext valueList = ctx.valueList();
     if (valueList != null) {
-      for (LyteParser.PushableContext pushable : valueList.pushable()) {
-        array.add((LyteStatement) visitPushableStatement(pushable));
+      ParseTree tree;
+      for (int i = 0; i < valueList.getChildCount(); i++) {
+        tree = valueList.getChild(i);
+        if (tree.getText().equals(",")) {
+          continue;
+        } else {
+          array.add((LyteAppliable) visit(tree));
+        }
       }
     }
     return array;

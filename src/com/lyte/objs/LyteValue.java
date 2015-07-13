@@ -3,11 +3,12 @@ package com.lyte.objs;
 import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
+import com.lyte.utils.LyteAppliable;
 import org.json.simple.JSONAware;
 
 import java.util.Set;
 
-public interface LyteValue<T> extends JSONAware {
+public interface LyteValue<T> extends JSONAware, LyteAppliable {
 
   T get();
 
@@ -19,16 +20,11 @@ public interface LyteValue<T> extends JSONAware {
   double toNumber();
   String toString();
 
-  String typeOf();
-
   LyteValue<T> clone(LyteContext context);
-
-  LyteValue apply(LyteContext context);
 
   boolean equals(LyteValue other);
   boolean equalsStrict(LyteValue other);
   boolean isSimpleComparison();
 
-  boolean is(String type);
   Set<String> getProperties();
 }

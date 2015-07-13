@@ -1,11 +1,10 @@
 package com.lyte.objs;
 
 import com.lyte.core.LyteContext;
-import com.lyte.core.LyteScope;
-import com.lyte.core.LyteStack;
-import com.lyte.core.LyteStatement;
+import com.lyte.utils.LyteAppliable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 
 /**
@@ -13,14 +12,14 @@ import java.util.LinkedList;
  */
 public class LyteRawArray extends LyteRawValue<ArrayList<LyteValue>> {
 
-  private ArrayList<LyteStatement> mStatements;
+  private ArrayList<LyteAppliable> mValues;
 
   public LyteRawArray() {
-    mStatements = new ArrayList<LyteStatement>();
+    mValues = new ArrayList<LyteAppliable>();
   }
 
-  public boolean add(LyteStatement statement) {
-    return mStatements.add(statement);
+  public boolean add(LyteAppliable value) {
+    return mValues.add(value);
   }
 
   @Override
@@ -30,15 +29,19 @@ public class LyteRawArray extends LyteRawValue<ArrayList<LyteValue>> {
 
   @Override
   public String toString() {
-    return mStatements.toString();
+    return mValues.toString();
   }
 
   @Override
   public LyteValue clone(LyteContext context) {
     LinkedList<LyteValue> values = new LinkedList<LyteValue>();
 
-    for (LyteStatement statement : mStatements) {
-      values.add(statement.apply(context));
+    for (LyteAppliable value : mValues) {
+      if (value.is("rawRange")) {
+        values.addAll((LyteList) ((LyteRawRange) value).clone(context));
+      } else {
+        values.add(value.apply(context));
+      }
     }
 
     return new LyteList(values);

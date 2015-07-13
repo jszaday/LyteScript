@@ -65,7 +65,7 @@ lambdaArgsList
   ;
 
 valueList
-  : pushable (Comma pushable)*
+  : (pushable | range) (Comma (pushable | range))*
   ;
 
 parameterList
@@ -82,7 +82,6 @@ literal
   | numericLiteral
   | objectLiteral
   | arrayLiteral
-	| range
   ;
 
 stringLiteral
@@ -113,7 +112,7 @@ lambdaExpression
   ;
 
 range
-	: Percent LeftBracket pushable Colon (pushable Colon)? pushable RightBracket
+	: pushable Colon (pushable Colon)? pushable
 	;
 
 // Misc. Symbols
