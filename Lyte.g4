@@ -8,9 +8,10 @@ designator
 	: LeftBracket simpleStatement+ RightBracket
 	| Period Identifier
 	;
-
+  
 invokable
 	: Identifier (designator | parameters)*
+  | (Hashtag | Atpersand) designator (designator | parameters)*
 	;
 
 bindingExpression
@@ -48,7 +49,7 @@ pushable
 	;
 
 parameters
-	: LeftParen parameterList? Comma? RightParen
+	: LeftParen parameterList? RightParen
 	;
 
 // Misc. Lists
@@ -65,7 +66,7 @@ lambdaArgsList
   ;
 
 valueList
-  : (pushable | range) (Comma (pushable | range))*
+  : (simpleStatement+ | range) (Comma (simpleStatement+ | range))*
   ;
 
 parameterList
@@ -89,11 +90,11 @@ stringLiteral
   ;
 
 arrayLiteral
-  : Percent LeftBracket valueList? Comma? RightBracket
+  : Percent LeftBracket valueList? RightBracket
   ;
 
 objectLiteral
-  : Percent LeftBrace keyValueList? Comma? RightBrace
+  : Percent LeftBrace keyValueList? RightBrace
   ;
 
 numericLiteral
@@ -134,24 +135,24 @@ Atpersand:    '@';
 VerticalBar:  '|';
 Percent:			'%';
 Semicolon:    ';';
-
+  
 Identifier
   : IdentifierStart IdentifierPart*
 	| Sign (IdentifierStart | Sign)*
-  | Atpersand IdentifierPart+
-	| Percent IdentifierPart+
+  | (Hashtag | Atpersand | Percent) IdentifierPart+
   ;
-
+  
 fragment Sign
 	: [-+]
 	;
 
 fragment IdentifierStart
-  : [_~!$^&\*=|<>?\/\\#a-zA-Z]
+  : [_~!$^&\*=|<>?\/\\a-zA-Z]
   ;
 
 fragment IdentifierPart
   : IdentifierStart
+  | Percent
 	| Sign
   | [0-9]
   ;

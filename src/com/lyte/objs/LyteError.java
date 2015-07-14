@@ -8,6 +8,7 @@ import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -43,6 +44,10 @@ public class LyteError extends RuntimeException implements LyteValue<RuntimeExce
     }
 
     return stackTrace;
+  }
+
+  public List<String> getLines() {
+    return mLineNumbers;
   }
 
   @Override

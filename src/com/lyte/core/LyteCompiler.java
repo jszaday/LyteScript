@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -133,13 +134,39 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
     LyteRawArray array = new LyteRawArray();
     LyteParser.ValueListContext valueList = ctx.valueList();
     if (valueList != null) {
-      ParseTree tree;
-      for (int i = 0; i < valueList.getChildCount(); i++) {
-        tree = valueList.getChild(i);
-        if (tree.getText().equals(",")) {
-          continue;
+      // Initialize the groups
+      List<List<ParseTree>> tokenGroups = new ArrayList<>();
+      List<ParseTree> currentGroup = new ArrayList<>();
+      tokenGroups.add(currentGroup);
+      // For each of the children
+      for (ParseTree child : valueList.children) {
+        // If the child is a comma
+        if (child.getText().equals(",")) {
+          // Create a new group and add it to the list of groups
+          tokenGroups.add(currentGroup = new ArrayList<>());
         } else {
-          array.add((LyteAppliable) visit(tree));
+          // Otherwise, simply add the child to the current group
+          currentGroup.add(child);
+        }
+      }
+      // Then, for each of the groups
+      for (List<ParseTree> group : tokenGroups) {
+        // If the group is only one element long
+        if (group.size() == 1) {
+          // Simply treat it as an appliable
+          array.add((LyteAppliable) visit(group.get(0)));
+        } else {
+          // Otherwise, enter a new block
+          mCurrentBlock = mCurrentBlock.enter();
+          // And add each of the statements to it
+          for (ParseTree tree : group) {
+            mCurrentBlock.addStatement((LyteStatement) visit(tree));
+          }
+          // Before adding it to the array and leaving it
+          /* NOTE We don't have to worry about simplification here because of the prior
+                  test to check if the group was only one element long */
+          array.add(mCurrentBlock);
+          mCurrentBlock = mCurrentBlock.leave();
         }
       }
     }
@@ -199,8 +226,14 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
   }
 
   public Object visitInvokeStatement(LyteParser.InvokableContext ctx) {
-    // If there is only one child
-    String primaryIdentifier = ctx.Identifier().getText();
+    String primaryIdentifier;
+
+    if (ctx.Identifier() != null) {
+      primaryIdentifier = ctx.Identifier().getText();
+    } else {
+      primaryIdentifier = ctx.Atpersand() != null ? "@" : "#";
+    }
+
     if (ctx.getChildCount() == 1) {
       // Simply return a simple invokable
       return new LyteInvokeStatement(getLineNumber(ctx), primaryIdentifier);
@@ -209,8 +242,8 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
       List<LyteInvokeStatement.LyteSpecifier> designators = new ArrayList<LyteInvokeStatement.LyteSpecifier>();
       LyteInvokeStatement.LyteSpecifier designator;
 
-      for (int i = 1; i < ctx.getChildCount(); i++) {
-        if ((designator = (LyteInvokeStatement.LyteSpecifier) visit(ctx.getChild(i))) != null) {
+      for (ParseTree child : ctx.children) {
+        if ((designator = (LyteInvokeStatement.LyteSpecifier) visit(child)) != null) {
           designators.add(designator);
         }
       }
@@ -235,10 +268,8 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
   @Override
   public Object visitParameterList(LyteParser.ParameterListContext ctx) {
     List<LyteRawBlock> parameters = new ArrayList<LyteRawBlock>();
-    ParseTree child;
     mCurrentBlock = mCurrentBlock.enter();
-    for (int i = 0; i < ctx.getChildCount(); i++) {
-      child = ctx.getChild(i);
+    for (ParseTree child : ctx.children) {
       // If we hit a comma
       if (child.getText().equals(",")) {
         // Add the simplified block to the parameters list

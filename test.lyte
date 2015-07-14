@@ -61,10 +61,7 @@ garfield.pet(5)
 
 /* Exceptions */
 Try(errorRaiser, @(error) {
-  EchoLn("ERROR! Reason: " `++` error.message `++` ", Stack Trace: ")
-  For (error.stackTrace, @(line) {
-    EchoLn("\tLine " `++` line)
-  })
+  error.printStackTrace()
 })
 
 "A string separated by spaces" -> myString
@@ -118,7 +115,10 @@ getNumbers() -> [AnotherTest.i, AnotherTest.j]
 EchoLn(AnotherTest)
 
 %{1: "3"} -> meep
-meep EchoLn
+meep Lyte.JSON.ToJSON EchoLn
+"Derp" #["length"] EchoLn #length EchoLn Pop
+
+%["String " `++` "Concatenation", "and something..."] EchoLn
 
 /* OpenFile("test.lyte", "r") -> file
 file.readLn -> line

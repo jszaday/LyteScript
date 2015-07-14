@@ -6,15 +6,16 @@ import com.lyte.core.LyteStack;
 import com.lyte.core.LyteStatement;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class LyteRawObject extends LyteRawValue<HashMap<String, LyteValue>>  {
 
   private LyteScope mCachedScope;
 
-  private HashMap<String, LyteStatement> mProperties;
+  private LinkedHashMap<String, LyteStatement> mProperties;
 
   public LyteRawObject() {
-    mProperties = new HashMap<String, LyteStatement>();
+    mProperties = new LinkedHashMap<String, LyteStatement>();
   }
 
   public LyteStatement set(String key, LyteStatement value) {

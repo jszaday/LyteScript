@@ -1,0 +1,22 @@
+Import("Lyte.Thread.*")
+
+// Instantiate(Lock) -> myThreadLock
+
+MyThread <- %{
+  __constructor: @(name) {
+    name -> @name
+  },
+  run: {
+    // myThreadLock.acquire()
+    EchoLn("Hello from " `++` @name `++` "!")
+    // myThreadLock.release()
+  }
+}
+
+MyThread `MixWith` Thread
+
+Instantiate(MyThread, "Thread #1") -> thread1
+Instantiate(MyThread, "Thread #2") -> thread2
+
+thread1.start()
+thread2.start()

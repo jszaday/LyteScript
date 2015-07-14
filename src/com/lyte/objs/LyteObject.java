@@ -15,9 +15,11 @@ import java.util.Set;
 public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<HashMap<String, LyteValue>> {
 
   private LyteRawObject mBase;
+  private HashMap<String, Object> mMetadata;
 
   public LyteObject(LyteRawObject base) {
     mBase = base;
+    mMetadata = new HashMap<>();
   }
 
   @Override
@@ -34,7 +36,7 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
     if (hasProperty(property)) {
       return get(property);
     } else {
-      throw new LyteError("Cannot Resolve Property " + property + " of Object " + toString());
+      throw new LyteError("Cannot Resolve Property " + property + " of object " + toString());
     }
   }
 
@@ -48,9 +50,19 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
     return containsKey(property);
   }
 
-  public LyteObject mixWith(LyteObject object) {
-    for (String key : object.get().keySet()) {
-      setProperty(key, object.getProperty(key));
+  public LyteObject mixWith(LyteContext context, LyteValue value) {
+    LyteBlock mixedCallback = null;
+    for (String property : (Set<String>) value.getProperties()) {
+      if (property.equals("__init") && value.getProperty(property).is("block")) {
+        mixedCallback = (LyteBlock) value.getProperty(property);
+      } if (value.getProperty(property) == LyteUndefined.NULL && !hasProperty(property)) {
+        throw new LyteError("Object does not implement virtual method " + property);
+      } else if (!hasProperty(property)){
+        setProperty(property, value.getProperty(property));
+      }
+    }
+    if (mixedCallback != null) {
+      mixedCallback.invoke(new LyteContext(this, context));
     }
     return this;
   }
@@ -90,7 +102,7 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
   @Override
   public LyteValue<HashMap<String, LyteValue>> clone(LyteContext context) {
     if (mBase != null) {
-      return ((LyteObject) mBase.clone(context)).mixWith(this);
+      return ((LyteObject) mBase.clone(context)).mixWith(context, this);
     } else {
       throw new LyteError("Cannot clone an object without a base!");
     }
@@ -146,5 +158,17 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
       }
     }
     return obj.toJSONString();
+  }
+
+  public void putMetadata(String key, Object value) {
+    mMetadata.put(key, value);
+  }
+
+  public boolean hasMetadata(String key) {
+    return mMetadata.containsKey(key);
+  }
+
+  public Object getMetadata(String key) {
+    return mMetadata.get(key);
   }
 }

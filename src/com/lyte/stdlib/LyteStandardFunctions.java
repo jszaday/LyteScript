@@ -21,6 +21,7 @@ public class LyteStandardFunctions {
   public static String TOP_LEVEL_NAMESPACE = "Lyte";
   public static String VERSION = "0.0.1";
 
+  private static final LyteStream stdErr = new LyteStream(System.err);
   private static final LyteStream stdIn = new LyteStream(System.in);
   private static final LyteStream stdOut = new LyteStream(System.out);
 
@@ -125,6 +126,13 @@ public class LyteStandardFunctions {
     }
   };
 
+  public static LyteNativeBlock ioStdErr = new LyteNativeBlock("IO", "StdErr") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(stdErr);
+    }
+  };
+
   public static LyteNativeBlock ioEchoLn = new LyteNativeBlock("IO", "EchoLn") {
     @Override
     public void invoke(LyteContext context) {
@@ -199,31 +207,31 @@ public class LyteStandardFunctions {
       if (!value.is("object")) {
         throw new LyteError("Cannot Instantiate a(n) " + value.typeOf() + ".");
       }
-      if (!value.hasProperty("__constructor")) {
-        throw new LyteError("Error, object has no constructor!");
-      }
       LyteObject obj = (LyteObject) value.clone(new LyteContext(null, null, context.stack));
-      try {
-        ((LyteBlock) obj.getProperty("__constructor")).invoke(new LyteContext(obj, null, context.stack));
-      } catch (ClassCastException e) {
-        throw new LyteError("Expected __constructor to be a block for object " + obj);
+      if (value.hasProperty("__constructor")) {
+        try {
+          ((LyteBlock) obj.getProperty("__constructor")).invoke(new LyteContext(obj, null, context.stack));
+        } catch (ClassCastException e) {
+          throw new LyteError("Expected __constructor to be a block for object " + obj);
+        }
+        obj.unsetProperty("__constructor");
       }
-      obj.unsetProperty("__constructor");
       context.push(obj);
     }
   };
 
-  public static LyteNativeBlock coreMixWith = new LyteNativeBlock("Core", "MixWith") {
+  public static LyteNativeBlock coreMixWith = new LyteNativeBlock("Util", "MixWith") {
     @Override
     public void invoke(LyteContext context) {
       LyteValue value2 = context.pop();
       LyteValue value1 = context.pop();
+      System.out.println(value1 + " " + value2);
 
-      if (!(value1.is("object") && value2.is("object"))) {
-        throw new LyteError("Cannot mix " + value1 + " with " + value2);
+      if (!value1.is("object") || !(value2.is("object") || value2.is("mixin"))) {
+        throw new LyteError("Cannot mix a(n) " + value1 + " with a(n) " + value2);
       }
 
-      ((LyteObject) value1).mixWith((LyteObject) value2);
+      ((LyteObject) value1).mixWith(context, value2);
     }
   };
 

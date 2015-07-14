@@ -148,7 +148,11 @@ public class LyteContext implements LyteInjectable {
     LyteValue obj, lastObj = primaryIdentifier.startsWith("#") ? stack.peek() : self;
 
     try {
-      obj = get(primaryIdentifier);
+      if (primaryIdentifier.equals("#") || primaryIdentifier.equals("@")) {
+        obj = lastObj;
+      } else {
+        obj = get(primaryIdentifier);
+      }
 
       if (shouldApply(specifierIterator, applyLast)) {
         obj = obj.apply(new LyteContext(lastObj, scope, stack));

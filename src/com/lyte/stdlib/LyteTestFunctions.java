@@ -108,7 +108,7 @@ public class LyteTestFunctions {
     }
   };
 
-  public static LyteNativeBlock assertNotSame = new LyteTestBlock("AssertNotSame") {
+  public static LyteNativeBlock assertDifferent = new LyteTestBlock("AssertDifferent") {
 
     @Override
     protected boolean testCondition(LyteContext context) {
