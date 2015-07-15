@@ -225,7 +225,6 @@ public class LyteStandardFunctions {
     public void invoke(LyteContext context) {
       LyteValue value2 = context.pop();
       LyteValue value1 = context.pop();
-      System.out.println(value1 + " " + value2);
 
       if (!value1.is("object") || !(value2.is("object") || value2.is("mixin"))) {
         throw new LyteError("Cannot mix a(n) " + value1 + " with a(n) " + value2);

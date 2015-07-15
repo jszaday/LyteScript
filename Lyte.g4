@@ -1,7 +1,7 @@
 grammar Lyte;
 
 program
-	: (statement Semicolon?)* EOF
+	: (statement)* EOF
 	;
 
 designator
@@ -53,8 +53,15 @@ parameters
 	;
 
 // Misc. Lists
+key
+  : stringLiteral
+  | numericLiteral
+  | LeftBracket simpleStatement+ RightBracket
+  | Identifier
+  ;
+
 keyValuePair
-  : (Identifier | stringLiteral | numericLiteral) Colon pushable
+  : (LeftBind | RightBind)? key Colon pushable
   ;
 
 keyValueList
@@ -134,7 +141,6 @@ Hashtag:      '#';
 Atpersand:    '@';
 VerticalBar:  '|';
 Percent:			'%';
-Semicolon:    ';';
   
 Identifier
   : IdentifierStart IdentifierPart*
@@ -147,7 +153,7 @@ fragment Sign
 	;
 
 fragment IdentifierStart
-  : [_~!$^&\*=|<>?\/\\a-zA-Z]
+  : [_~!$^&\*=|;<>?\/\\a-zA-Z]
   ;
 
 fragment IdentifierPart

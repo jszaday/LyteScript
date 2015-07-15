@@ -37,7 +37,7 @@ public class LyteTestFunctions {
       LyteValue value = context.apply();
       LyteContext testContext = new LyteContext(value, context.scope, new LyteStack());
       Set<String> properties = value.getProperties();
-      LyteObject result = new LyteObject(null);
+      LyteObject result = new LyteObject();
 
       if (!value.is("object")) {
         throw new LyteError("Cannot test an object of type " + value.typeOf() + "!");

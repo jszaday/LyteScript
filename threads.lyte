@@ -1,22 +1,54 @@
+// Import all the items in the threads package
 Import("Lyte.Thread.*")
-
-// Instantiate(Lock) -> myThreadLock
-
+// Get the number of available processors & initialize a lock and the thread pool
+AvailableProcessors -> numThreads
+  Instantiate(Lock) -> lock
+                %[] -> threadPool
+// Then set up the custom thread class
 MyThread <- %{
   __constructor: @(name) {
     name -> @name
   },
-  run: {
-    // myThreadLock.acquire()
-    EchoLn("Hello from " `++` @name `++` "!")
-    // myThreadLock.release()
+  ["ru" `++` "n"]: {
+    // Acquire the lock
+    lock.acquire()
+    // Loop for the numThreads times
+    For(0, numThreads, @(i) {
+      // Printing a hello message each time
+      EchoLn("Hello from " `++` @name `++` "!")
+    })
+    // Finally, release the lock and finish
+    lock.release()
+  }
+}
+// And mix it with the thread mixin
+MyThread `MixWith` Thread
+// Next, for each of the available processors
+For(0, numThreads, @(i) {
+  // Create an instance of a thread
+  Instantiate(MyThread, "Thread #" `++` i) -> thread
+  // add it to the thread pool
+  threadPool.push(thread)
+  // and start it
+  thread.start()
+})
+// Then, join each of the threads to the main thread
+For(threadPool, @(thread) {
+  thread.join()
+})
+// Exiting when they are all done
+EchoLn("Main thread exiting...")
+
+/* PotatoHolder <- %{
+  <- potato: {
+    Try(@actualPotato, @(e) {
+      "the potato is a lie"
+    })
+  },
+  -> [potato]: @(value) {
+    value -> @actualPotato
   }
 }
 
-MyThread `MixWith` Thread
-
-Instantiate(MyThread, "Thread #1") -> thread1
-Instantiate(MyThread, "Thread #2") -> thread2
-
-thread1.start()
-thread2.start()
+EchoLn(PotatoHolder)
+"white" -> PotatoHolder.potato */

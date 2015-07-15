@@ -14,7 +14,7 @@ public class LyteThreadMixin extends LyteSimpleInjectable {
   public static final String THREAD_METADATA = "thread";
   public static final String RUN = "run";
 
-  private static final LyteThreadMixin singleton = new LyteThreadMixin();
+  private static LyteThreadMixin singleton = null;
 
   private LyteThreadMixin() {
     elevatedSet(RUN, LyteUndefined.NULL);
@@ -85,6 +85,10 @@ public class LyteThreadMixin extends LyteSimpleInjectable {
   };
 
   public static LyteThreadMixin getSingleton() {
-    return singleton;
+    if (singleton == null) {
+      return (singleton = new LyteThreadMixin());
+    } else {
+      return singleton;
+    }
   }
 }

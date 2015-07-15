@@ -14,12 +14,25 @@ import java.util.Set;
  */
 public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<HashMap<String, LyteValue>> {
 
-  private LyteRawObject mBase;
+  private LyteRawObject mBase = null;
   private HashMap<String, Object> mMetadata;
+  private HashMap<String, LyteBlock> mGetters;
+  private HashMap<String, LyteBlock> mSetters;
+
+  public LyteObject() {
+    mMetadata = new HashMap<>();
+    mGetters = new HashMap<>();
+    mSetters = new HashMap<>();
+  }
+
+  public LyteObject(HashMap<String, LyteValue> base) {
+    this();
+    putAll(base);
+  }
 
   public LyteObject(LyteRawObject base) {
+    this();
     mBase = base;
-    mMetadata = new HashMap<>();
   }
 
   @Override
@@ -35,6 +48,8 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
   public LyteValue getProperty(String property) {
     if (hasProperty(property)) {
       return get(property);
+    } else if (mGetters.containsKey(property)) {
+      return mGetters.get(property).apply(new LyteContext(this));
     } else {
       throw new LyteError("Cannot Resolve Property " + property + " of object " + toString());
     }
@@ -42,12 +57,28 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
 
   @Override
   public void setProperty(String property, LyteValue newValue) {
-    put(property, newValue);
+    if (mSetters.containsKey(property)) {
+      mSetters.get(property).apply(new LyteContext(this, newValue));
+    } else {
+      put(property, newValue);
+    }
   }
 
   @Override
   public boolean hasProperty(String property) {
-    return containsKey(property);
+    return containsKey(property) || mGetters.containsKey(property);
+  }
+
+  public void putGetter(String property, LyteBlock block) {
+    mGetters.put(property, block);
+  }
+
+  public void putSetter(String property, LyteBlock block) {
+    mSetters.put(property, block);
+  }
+
+  public LyteObject mixWith(LyteValue value) {
+    return mixWith(null, value);
   }
 
   public LyteObject mixWith(LyteContext context, LyteValue value) {
@@ -61,7 +92,7 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
         setProperty(property, value.getProperty(property));
       }
     }
-    if (mixedCallback != null) {
+    if (mixedCallback != null && context != null) {
       mixedCallback.invoke(new LyteContext(this, context));
     }
     return this;
@@ -102,9 +133,9 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
   @Override
   public LyteValue<HashMap<String, LyteValue>> clone(LyteContext context) {
     if (mBase != null) {
-      return ((LyteObject) mBase.clone(context)).mixWith(context, this);
+      return ((LyteObject) mBase.clone(context)).mixWith(this);
     } else {
-      throw new LyteError("Cannot clone an object without a base!");
+      return new LyteObject(this);
     }
   }
 

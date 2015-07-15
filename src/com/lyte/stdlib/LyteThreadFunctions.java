@@ -2,12 +2,18 @@ package com.lyte.stdlib;
 
 import com.lyte.core.LyteContext;
 import com.lyte.objs.LyteError;
+import com.lyte.objs.LyteObject;
+import com.lyte.objs.LyteValue;
+import com.lyte.utils.LyteMemberBlock;
 import com.lyte.utils.LyteSimpleInjectable;
+
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by a0225785 on 7/14/2015.
  */
 public class LyteThreadFunctions extends LyteSimpleInjectable {
+
   public static LyteNativeBlock threadThread = new LyteNativeBlock("Thread", "Thread", null) {
     @Override
     public void invoke(LyteContext context) {
@@ -25,6 +31,20 @@ public class LyteThreadFunctions extends LyteSimpleInjectable {
       } catch (InterruptedException e) {
         throw new LyteError(e);
       }
+    }
+  };
+
+  public static LyteNativeBlock threadAvailableProcessors = new LyteNativeBlock("Thread", "AvailableProcessors", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(Runtime.getRuntime().availableProcessors());
+    }
+  };
+
+  public static LyteNativeBlock threadLock = new LyteNativeBlock("Thread", "Lock", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(LyteLockTemplate.getSingleton());
     }
   };
 }

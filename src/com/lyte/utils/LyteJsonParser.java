@@ -45,7 +45,7 @@ public class LyteJsonParser implements ContentHandler {
 
   @Override
   public boolean startObject() throws ParseException, IOException {
-    mScopeStack.push(new LyteObject(null));
+    mScopeStack.push(new LyteObject());
     return true;
   }
 

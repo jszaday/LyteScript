@@ -11,7 +11,7 @@ import java.util.HashMap;
 public class LytePackage extends LyteObject {
 
   public LytePackage() {
-    super(null);
+    super();
   }
 
   public LytePackage getNamespace(String key) {

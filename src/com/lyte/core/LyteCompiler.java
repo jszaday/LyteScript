@@ -48,6 +48,24 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
   }
 
   @Override
+  public Object visitKey(LyteParser.KeyContext ctx) {
+    if (ctx.Identifier() != null) {
+      return new LyteString(ctx.Identifier().toString());
+    } else if (ctx.stringLiteral() != null) {
+      return visitStringLiteral(ctx.stringLiteral());
+    } else if (ctx.numericLiteral() != null) {
+      return visitNumericLiteral(ctx.numericLiteral());
+    } else {
+      LyteRawBlock block = mCurrentBlock = mCurrentBlock.enter();
+      for (LyteParser.SimpleStatementContext statement : ctx.simpleStatement()) {
+        mCurrentBlock.addStatement((LyteStatement) visitSimpleStatement(statement));
+      }
+      mCurrentBlock = mCurrentBlock.leave();
+      return block;
+    }
+  }
+
+  @Override
   public Object visitStatement(LyteParser.StatementContext ctx) {
     // Add the newly generated statement to the current block
     mCurrentBlock.addStatement((LyteStatement) visitChildren(ctx));
@@ -98,15 +116,7 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
       // Visit each of the properties
       for (LyteParser.KeyValuePairContext keyValue : keyValueList) {
         // Adding it to the raw object as it goes
-        String keyName;
-        if (keyValue.Identifier() != null) {
-          keyName = keyValue.Identifier().getText();
-        } else if (keyValue.stringLiteral() != null) {
-          keyName = visitStringLiteral(keyValue.stringLiteral()).toString();
-        } else {
-          keyName = visitNumericLiteral(keyValue.numericLiteral()).toString();
-        }
-        rawObject.set(keyName, (LyteStatement) visitPushableStatement(keyValue.pushable()));
+        rawObject.setProperty((LyteValue) visitKey(keyValue.key()), (LyteStatement) visitPushableStatement(keyValue.pushable()));
       }
     }
     return rawObject;
@@ -295,11 +305,13 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
       return new LyteInvokeStatement.LyteSpecifier(ctx.Identifier().toString());
     } else {
       // Enter a new block
-      LyteRawBlock block = mCurrentBlock.enter();
+      LyteRawBlock block = mCurrentBlock = mCurrentBlock.enter();
       // Adding each of the "simple" statements to the list
       for (LyteParser.SimpleStatementContext simpleStatementContext : ctx.simpleStatement()) {
-        block.addStatement((LyteStatement) visitSimpleStatement(simpleStatementContext));
+        mCurrentBlock.addStatement((LyteStatement) visitSimpleStatement(simpleStatementContext));
       }
+      // Leave it
+      mCurrentBlock = mCurrentBlock.leave();
       // Then return a new specifier with the block as its contents
       return new LyteInvokeStatement.LyteSpecifier(block);
     }
