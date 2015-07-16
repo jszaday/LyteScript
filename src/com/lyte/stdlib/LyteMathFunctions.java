@@ -409,8 +409,8 @@ public class LyteMathFunctions {
   public static LyteNativeBlock mathRange2 = new LyteMathBlock("Range2", true) {
 
     @Override
-    public LyteValue compute(double val1, double val2) {
-      return LyteRangeMaker.range(val1, val2);
+    public LyteValue compute(double start, double finish) {
+      return LyteRangeMaker.range(start, finish);
     }
   };
 
@@ -421,6 +421,24 @@ public class LyteMathFunctions {
       double val3 = context.apply().toNumber();
       double val2 = context.apply().toNumber();
       context.push(LyteRangeMaker.range(val1, val3, val2));
+    }
+  };
+
+  public static LyteNativeBlock mathLinspace = new LyteNativeBlock("Math", "Linspace") {
+    @Override
+    public void invoke(LyteContext context) {
+      double start = context.apply().toNumber();
+      double finish = context.apply().toNumber();
+      double number = context.apply().toNumber() - 1;
+      double step;
+
+      if (start > finish) {
+        step = (start - finish) / number;
+      } else {
+        step = (finish - start) / number;
+      }
+
+      context.push(LyteRangeMaker.range(start, step, finish));
     }
   };
 

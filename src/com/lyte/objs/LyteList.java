@@ -47,7 +47,7 @@ public class LyteList extends LinkedList<LyteValue> implements LyteValue<LinkedL
       add(LyteUndefined.UNDEFINED);
     }
     // Then finally perform the set
-    return set(index, newValue);
+    return super.set(index, newValue);
   }
 
   @Override

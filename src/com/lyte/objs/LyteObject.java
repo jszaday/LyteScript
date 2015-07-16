@@ -7,6 +7,7 @@ import com.lyte.core.LyteStack;
 import org.json.simple.JSONObject;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -174,7 +175,10 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
 
   @Override
   public Set<String> getProperties() {
-    return keySet();
+    return new HashSet<String>() {{
+      addAll(LyteObject.this.keySet());
+      addAll(mGetters.keySet());
+    }};
   }
 
   @Override
