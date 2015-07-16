@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static com.lyte.objs.LyteRawObject.LyteMemberType;
+
 /**
  * Created by a0225785 on 7/2/2015.
  */
@@ -113,10 +115,19 @@ public class LyteCompiler extends LyteBaseVisitor<Object> {
     LyteRawObject rawObject = new LyteRawObject();
     if (ctx.keyValueList() != null) {
       List<LyteParser.KeyValuePairContext> keyValueList = ctx.keyValueList().keyValuePair();
-      // Visit each of the properties
+      // For each of the properties
       for (LyteParser.KeyValuePairContext keyValue : keyValueList) {
-        // Adding it to the raw object as it goes
-        rawObject.setProperty((LyteValue) visitKey(keyValue.key()), (LyteStatement) visitPushableStatement(keyValue.pushable()));
+        LyteMemberType memberType;
+        // Detect the member type
+        if (keyValue.LeftBind() != null) {
+          memberType = LyteMemberType.GETTER;
+        } else if (keyValue.RightBind() != null) {
+          memberType = LyteMemberType.SETTER;
+        } else {
+          memberType = LyteMemberType.NORMAL;
+        }
+        // Then add it to the raw object
+        rawObject.setProperty((LyteValue) visitKey(keyValue.key()), (LyteStatement) visitPushableStatement(keyValue.pushable()), memberType);
       }
     }
     return rawObject;

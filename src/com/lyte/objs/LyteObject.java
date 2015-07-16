@@ -47,7 +47,7 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
 
   @Override
   public LyteValue getProperty(String property) {
-    if (hasProperty(property)) {
+    if (this.containsKey(property)) {
       return get(property);
     } else if (mGetters.containsKey(property)) {
       return mGetters.get(property).apply(new LyteContext(this));
@@ -60,8 +60,10 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
   public void setProperty(String property, LyteValue newValue) {
     if (mSetters.containsKey(property)) {
       mSetters.get(property).apply(new LyteContext(this, newValue));
-    } else {
+    } else if (!mGetters.containsKey(property)) {
       put(property, newValue);
+    } else {
+      throw new LyteError("Cannot set property " + property + " of object " + toString());
     }
   }
 

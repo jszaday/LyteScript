@@ -120,6 +120,21 @@ meep Lyte.JSON.ToJSON EchoLn
 
 %["String " `++` "Concatenation", "and something..."] EchoLn
 
+PotatoHolder <- %{
+  <- potato: {
+    Try(@actualPotato, @(e) {
+      "no potatoes"
+    })
+  },
+  -> potato: @(kind) {
+    kind `++` " potato" -> @actualPotato
+  }
+}
+
+EchoLn(PotatoHolder.potato)
+"white" -> PotatoHolder.potato
+EchoLn(PotatoHolder.potato)
+
 /* OpenFile("test.lyte", "r") -> file
 file.readLn -> line
 Until(line Undefined?, {

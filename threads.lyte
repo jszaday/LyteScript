@@ -38,17 +38,3 @@ For(threadPool, @(thread) {
 })
 // Exiting when they are all done
 EchoLn("Main thread exiting...")
-
-/* PotatoHolder <- %{
-  <- potato: {
-    Try(@actualPotato, @(e) {
-      "the potato is a lie"
-    })
-  },
-  -> [potato]: @(value) {
-    value -> @actualPotato
-  }
-}
-
-EchoLn(PotatoHolder)
-"white" -> PotatoHolder.potato */

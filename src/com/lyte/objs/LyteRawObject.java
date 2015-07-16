@@ -43,7 +43,23 @@ public class LyteRawObject extends LyteRawValue<HashMap<String, LyteValue>>  {
 
     for (LyteKVPair pair : mKeyValues) {
       String key = pair.key.apply(context).toString();
-      newObject.setProperty(key, pair.value.apply(objectContext));
+      LyteValue value = pair.value.apply(objectContext);
+
+      switch(pair.memberType) {
+        case GETTER:
+          if (value.is("block")) {
+            newObject.putGetter(key, (LyteBlock) value);
+            break;
+          }
+        case SETTER:
+          if (value.is("block")) {
+            newObject.putSetter(key, (LyteBlock) value);
+            break;
+          }
+        case NORMAL:
+          newObject.setProperty(key, value);
+          break;
+      }
     }
 
     return newObject;
