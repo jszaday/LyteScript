@@ -3,7 +3,7 @@ package com.lyte.utils;
 import com.lyte.core.LyteContext;
 import com.lyte.objs.LyteError;
 import com.lyte.objs.LyteValue;
-import com.lyte.stdlib.LyteNativeBlock;
+import com.lyte.objs.LyteNativeBlock;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

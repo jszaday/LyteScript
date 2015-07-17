@@ -21,25 +21,6 @@ public class LyteStandardFunctions {
   public static String TOP_LEVEL_NAMESPACE = "Lyte";
   public static String VERSION = "0.0.1";
 
-  private static final LyteStream stdErr = new LyteStream(System.err);
-  private static final LyteStream stdIn = new LyteStream(System.in);
-  private static final LyteStream stdOut = new LyteStream(System.out);
-
-  public static LyteNativeBlock systemExit = new LyteNativeBlock("System", "Exit") {
-    @Override
-    public void invoke(LyteContext context) {
-      if (context.isEmpty()) {
-        System.exit(-1);
-      } else {
-        try {
-          System.exit((int) context.apply().toNumber());
-        } catch (Exception e) {
-          System.exit(-1);
-        }
-      }
-    }
-  };
-
   public static LyteNativeBlock coreTrue = new LyteNativeBlock("Core", "True") {
     @Override
     public void invoke(LyteContext context) {
@@ -112,76 +93,6 @@ public class LyteStandardFunctions {
     }
   };
 
-  public static LyteNativeBlock ioStdIn = new LyteNativeBlock("IO", "StdIn") {
-    @Override
-    public void invoke(LyteContext context) {
-      context.push(stdIn);
-    }
-  };
-
-  public static LyteNativeBlock ioStdOut = new LyteNativeBlock("IO", "StdOut") {
-    @Override
-    public void invoke(LyteContext context) {
-      context.push(stdOut);
-    }
-  };
-
-  public static LyteNativeBlock ioStdErr = new LyteNativeBlock("IO", "StdErr") {
-    @Override
-    public void invoke(LyteContext context) {
-      context.push(stdErr);
-    }
-  };
-
-  public static LyteNativeBlock ioEchoLn = new LyteNativeBlock("IO", "EchoLn") {
-    @Override
-    public void invoke(LyteContext context) {
-      if (!context.isEmpty()) {
-        LyteValue value1 = context.apply();
-        if (value1.is("stream")) {
-          LyteStream stream = (LyteStream) value1;
-          if (context.isEmpty()) {
-            stream.writeLine("");
-          } else {
-            stream.writeLine(context.apply().toString());
-          }
-          stream.flush();
-        } else {
-          System.out.println(value1);
-        }
-      } else {
-        System.out.println();
-      }
-    }
-  };
-
-  public static LyteNativeBlock ioEcho = new LyteNativeBlock("IO", "Echo") {
-    @Override
-    public void invoke(LyteContext context) {
-      LyteValue value1 = context.apply();
-      if (value1.is("stream")) {
-        ((LyteStream) value1).write(context.apply().toString());
-        ((LyteStream) value1).flush();
-      } else {
-        System.out.print(value1);
-      }
-    }
-  };
-
-  public static LyteNativeBlock ioReadLn = new LyteNativeBlock("IO", "ReadLn") {
-    @Override
-    public void invoke(LyteContext context) {
-      context.push(stdIn.readLine());
-    }
-  };
-
-  public static LyteNativeBlock ioRead = new LyteNativeBlock("IO", "Read") {
-    @Override
-    public void invoke(LyteContext context) {
-      context.push(stdIn.read());
-    }
-  };
-
   public static LyteNativeBlock coreIf = new LyteNativeBlock("Core", "If") {
 
     @Override
@@ -196,68 +107,6 @@ public class LyteStandardFunctions {
       } else {
         context.push(selectedValue.apply(context));
       }
-    }
-  };
-
-  public static LyteNativeBlock utilInstantiate = new LyteNativeBlock("Util", "Instantiate") {
-    @Override
-    public void invoke(LyteContext context) {
-      // TODO this assumes the two things are on the same context.stack, we have to move scoping out of blocks!!!
-      LyteValue value = context.apply();
-      if (!value.is("object")) {
-        throw new LyteError("Cannot Instantiate a(n) " + value.typeOf() + ".");
-      }
-      LyteObject obj = (LyteObject) value.clone(new LyteContext(null, null, context.stack));
-      if (value.hasProperty("__constructor")) {
-        try {
-          ((LyteBlock) obj.getProperty("__constructor")).invoke(new LyteContext(obj, null, context.stack));
-        } catch (ClassCastException e) {
-          throw new LyteError("Expected __constructor to be a block for object " + obj);
-        }
-        obj.unsetProperty("__constructor");
-      }
-      context.push(obj);
-    }
-  };
-
-  public static LyteNativeBlock coreMixWith = new LyteNativeBlock("Util", "MixWith") {
-    @Override
-    public void invoke(LyteContext context) {
-      LyteValue value2 = context.pop();
-      LyteValue value1 = context.pop();
-
-      if (!value1.is("object") || !(value2.is("object") || value2.is("mixin"))) {
-        throw new LyteError("Cannot mix a(n) " + value1 + " with a(n) " + value2);
-      }
-
-      ((LyteObject) value1).mixWith(context, value2);
-    }
-  };
-
-  public static LyteNativeBlock errorTry = new LyteNativeBlock("Error", "Try") {
-    @Override
-    public void invoke(LyteContext context) {
-      LyteValue value1 = context.pop();
-      LyteValue value2 = context.pop();
-
-      if (!value1.is("block") || !value2.is("block")) {
-        throw new LyteError("Try requires both parameters to be blocks!");
-      }
-
-      try {
-        ((LyteBlock) value1).invoke(context);
-      } catch (LyteError e) {
-        context.push(e);
-        ((LyteBlock) value2).invoke(context);
-      }
-    }
-  };
-
-  public static LyteNativeBlock errorRaise = new LyteNativeBlock("Error", "Raise") {
-    @Override
-    public void invoke(LyteContext context) {
-      // Throw the result to the wolves
-      throw new LyteError(context.apply());
     }
   };
 
@@ -419,32 +268,6 @@ public class LyteStandardFunctions {
     }
   };
 
-  public static LyteNativeBlock ioOpenFile = new LyteNativeBlock("IO", "OpenFile") {
-    @Override
-    public void invoke(LyteContext context) {
-      String filename = context.apply().toString();
-      String mode = context.apply().toString();
-
-      try {
-        switch (mode) {
-          case "r":
-            context.push(new LyteStream(new FileReader(filename)));
-            break;
-          case "w":
-            context.push(new LyteStream(new FileWriter(filename)));
-            break;
-          case "a":
-            context.push(new LyteStream(new FileWriter(filename, true)));
-            break;
-          default:
-            throw new LyteError("Cannot open file in mode " + mode);
-        }
-      } catch (IOException e) {
-        throw new LyteError(e.getMessage());
-      }
-    }
-  };
-
   public static LyteNativeBlock coreTypeOf = new LyteNativeBlock("Core", "TypeOf", "Type?") {
     @Override
     public void invoke(LyteContext context) {
@@ -574,12 +397,45 @@ public class LyteStandardFunctions {
     }
   };
 
-  public static LyteNativeBlock utilMakeList = new LyteNativeBlock("Util", "MakeList") {
+  public static LyteNativeBlock errorTry = new LyteNativeBlock("Error", "Try") {
     @Override
     public void invoke(LyteContext context) {
-      LyteList list = new LyteList(context.stack);
-      context.stack.clear();
-      context.stack.push(list);
+      LyteValue value1 = context.pop();
+      LyteValue value2 = context.pop();
+
+      if (!value1.is("block") || !value2.is("block")) {
+        throw new LyteError("Try requires both parameters to be blocks!");
+      }
+
+      try {
+        ((LyteBlock) value1).invoke(context);
+      } catch (LyteError e) {
+        context.push(e);
+        ((LyteBlock) value2).invoke(context);
+      }
+    }
+  };
+
+  public static LyteNativeBlock errorRaise = new LyteNativeBlock("Error", "Raise") {
+    @Override
+    public void invoke(LyteContext context) {
+      // Throw the result to the wolves
+      throw new LyteError(context.apply());
+    }
+  };
+
+  public static LyteNativeBlock systemExit = new LyteNativeBlock("System", "Exit") {
+    @Override
+    public void invoke(LyteContext context) {
+      if (context.isEmpty()) {
+        System.exit(-1);
+      } else {
+        try {
+          System.exit((int) context.apply().toNumber());
+        } catch (Exception e) {
+          System.exit(-1);
+        }
+      }
     }
   };
 
@@ -590,17 +446,25 @@ public class LyteStandardFunctions {
     }
   };
 
-  public static LyteNativeBlock systemPathSeperator = new LyteNativeBlock("System", "PathSeperator", null) {
+  public static LyteNativeBlock systemPathSeparator = new LyteNativeBlock("System", "PathSeparator", null) {
     @Override
     public void invoke(LyteContext context) {
       context.push(File.pathSeparator);
     }
   };
 
-  public static LyteNativeBlock systemSeperator = new LyteNativeBlock("System", "Separator", null) {
+  public static LyteNativeBlock systemSeparator = new LyteNativeBlock("System", "Separator", null) {
     @Override
     public void invoke(LyteContext context) {
       context.push(File.separator);
+    }
+  };
+
+
+  public static LyteNativeBlock systemLineSeparator = new LyteNativeBlock("System", "LineSeparator", null) {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(System.lineSeparator());
     }
   };
 
@@ -635,42 +499,6 @@ public class LyteStandardFunctions {
       } catch (LineUnavailableException e) {
         throw new LyteError("No audio line available.");
       }
-    }
-  };
-
-  public static LyteNativeBlock utilCharToInt = new LyteNativeBlock("Util", "CharToInt", null) {
-    @Override
-    public void invoke(LyteContext context) {
-      String c = context.apply().toString();
-      if (c.length() != 1) {
-        throw new LyteError("Expected String to be one character long, instead found \"" + c + "\"");
-      } else {
-        context.push((int) c.charAt(0));
-      }
-    }
-  };
-
-  public static LyteNativeBlock utilIntToChar = new LyteNativeBlock("Util", "IntToChar", null) {
-    @Override
-    public void invoke(LyteContext context) {
-      int c = (int) context.apply().toNumber();
-      context.push(Character.toString((char) c));
-    }
-  };
-
-  public static LyteNativeBlock utilEscapeString = new LyteNativeBlock("Util", "EscapeString", null) {
-    @Override
-    public void invoke(LyteContext context) {
-      String c = context.apply().toString();
-      context.push(StringEscapeUtils.escapeEcmaScript(c));
-    }
-  };
-
-  public static LyteNativeBlock utilUnescapeString = new LyteNativeBlock("Util", "UnescapeString", null) {
-    @Override
-    public void invoke(LyteContext context) {
-      String c = context.apply().toString();
-      context.push(StringEscapeUtils.unescapeEcmaScript(c));
     }
   };
 

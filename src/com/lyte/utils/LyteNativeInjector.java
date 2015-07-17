@@ -1,9 +1,8 @@
 package com.lyte.utils;
 
-import com.lyte.core.LyteScope;
 import com.lyte.objs.LytePackage;
 import com.lyte.objs.LyteValue;
-import com.lyte.stdlib.LyteNativeBlock;
+import com.lyte.objs.LyteNativeBlock;
 
 import java.lang.reflect.Field;
 

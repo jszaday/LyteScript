@@ -1,18 +1,14 @@
 package com.lyte.stdlib;
 
 import com.lyte.core.LyteContext;
-import com.lyte.core.LyteStack;
-import com.lyte.objs.LyteList;
-import com.lyte.objs.LyteError;
-import com.lyte.objs.LyteString;
-import com.lyte.objs.LyteValue;
+import com.lyte.objs.*;
 import com.lyte.utils.LyteMemberBlock;
 import com.lyte.utils.LyteSimpleInjectable;
 
 /**
  * Created by a0225785 on 6/29/2015.
  */
-public class LyteStringFunctions extends LyteSimpleInjectable {
+public class LyteStringMembers extends LyteSimpleInjectable {
 
   public static LyteNativeBlock stringSubstring = new LyteMemberBlock<LyteString>("substring") {
 

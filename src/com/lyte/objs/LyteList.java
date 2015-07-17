@@ -1,14 +1,13 @@
 package com.lyte.objs;
 
 import com.lyte.core.LyteContext;
-import com.lyte.stdlib.LyteListFunctions;
+import com.lyte.stdlib.LyteListMembers;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONValue;
 
 import java.util.*;
 
 public class LyteList extends LinkedList<LyteValue> implements LyteValue<LinkedList<LyteValue>> {
-  private static final LyteListFunctions LIST_FUNCTIONS = new LyteListFunctions();
+  private static final LyteListMembers LIST_FUNCTIONS = new LyteListMembers();
 
   public LyteList() {
     super();

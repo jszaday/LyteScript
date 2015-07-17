@@ -1,13 +1,10 @@
 package com.lyte.objs;
 
 import com.lyte.core.LyteContext;
-import com.lyte.core.LyteScope;
-import com.lyte.core.LyteStack;
-import com.lyte.stdlib.LyteErrorFunctions;
+import com.lyte.stdlib.LyteErrorMembers;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -16,7 +13,7 @@ import java.util.Set;
  */
 public class LyteError extends RuntimeException implements LyteValue<RuntimeException> {
 
-  private static final LyteErrorFunctions ERROR_FUNCTIONS = new LyteErrorFunctions();
+  private static final LyteErrorMembers ERROR_FUNCTIONS = new LyteErrorMembers();
   private ArrayList<String> mLineNumbers = new ArrayList<String>();
 
   public LyteError(Exception e) {

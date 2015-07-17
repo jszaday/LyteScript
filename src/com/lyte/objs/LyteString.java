@@ -1,7 +1,7 @@
 package com.lyte.objs;
 
 
-import com.lyte.stdlib.LyteStringFunctions;
+import com.lyte.stdlib.LyteStringMembers;
 import org.json.simple.JSONValue;
 
 import java.util.HashSet;
@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class LyteString extends LytePrimitive<String> {
 
-  private static final LyteStringFunctions STRING_FUNCTIONS = new LyteStringFunctions();
+  private static final LyteStringMembers STRING_FUNCTIONS = new LyteStringMembers();
 
   public LyteString(String value) {
     super(value);

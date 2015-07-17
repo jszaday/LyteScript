@@ -2,6 +2,7 @@ package com.lyte.stdlib;
 
 import com.lyte.core.LyteContext;
 import com.lyte.objs.LyteError;
+import com.lyte.objs.LyteNativeBlock;
 import com.lyte.objs.LyteObject;
 import com.lyte.objs.LyteValue;
 import com.lyte.utils.LyteMemberBlock;

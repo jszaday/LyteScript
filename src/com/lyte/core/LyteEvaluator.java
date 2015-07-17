@@ -19,6 +19,21 @@ public class LyteEvaluator implements AutoCloseable {
   private LyteContext mContext;
   private LyteCompiler mCompiler;
 
+  private static LyteScope globalSingleton;
+
+  static {
+    // Initialize the singleton
+    globalSingleton = LyteScope.newGlobal();
+    // and inject the native functions
+    LyteNativeInjector.injectNatives(LyteStandardFunctions.class, globalSingleton, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
+    LyteNativeInjector.injectNatives(LyteIOFunctions.class, globalSingleton, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
+    LyteNativeInjector.injectNatives(LyteReflectionFunctions.class, globalSingleton, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
+    LyteNativeInjector.injectNatives(LyteMathFunctions.class, globalSingleton, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
+    LyteNativeInjector.injectNatives(LyteTestFunctions.class, globalSingleton, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
+    LyteNativeInjector.injectNatives(LyteThreadFunctions.class, globalSingleton, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
+    globalSingleton.putVariable("Math", globalSingleton.getVariable(LyteStandardFunctions.TOP_LEVEL_NAMESPACE).getProperty("Math"), true);
+  }
+
   public LyteEvaluator(String fileName) throws IOException {
     this(new FileInputStream(fileName), false);
   }
@@ -32,15 +47,8 @@ public class LyteEvaluator implements AutoCloseable {
     mReplMode = replMode;
     mReader = new InputStreamReader(inputStream);
     // Initialize our other fields
-    mContext = new LyteContext(null, LyteScope.newGlobal(), new LyteStack());
+    mContext = new LyteContext(null, globalSingleton.enter(), new LyteStack());
     mCompiler = new LyteCompiler();
-    // And inject the native functions
-    LyteNativeInjector.injectNatives(LyteStandardFunctions.class, mContext, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
-    LyteNativeInjector.injectNatives(LyteReflectionFunctions.class, mContext, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
-    LyteNativeInjector.injectNatives(LyteMathFunctions.class, mContext, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
-    LyteNativeInjector.injectNatives(LyteTestFunctions.class, mContext, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
-    LyteNativeInjector.injectNatives(LyteThreadFunctions.class, mContext, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
-    mContext.set("Math", mContext.get(LyteStandardFunctions.TOP_LEVEL_NAMESPACE).getProperty("Math"), true);
   }
 
   public LyteValue get(String name) {
