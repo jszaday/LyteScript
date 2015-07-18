@@ -115,7 +115,7 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
     if (hasProperty("__toNumber")) {
       return getProperty("__toNumber").apply(new LyteContext(this)).toNumber();
     } else {
-      return size();
+      return hashCode();
     }
   }
 

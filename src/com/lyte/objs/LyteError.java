@@ -69,7 +69,7 @@ public class LyteError extends RuntimeException implements LyteValue<RuntimeExce
 
   @Override
   public double toNumber() {
-    return this.hashCode();
+    return hashCode();
   }
 
   @Override

@@ -19,16 +19,8 @@ public class LyteFile extends File implements LyteValue<File> {
     super(pathname);
   }
 
-  public LyteFile(String parent, String child) {
-    super(parent, child);
-  }
-
-  public LyteFile(File parent, String child) {
-    super(parent, child);
-  }
-
-  public LyteFile(URI uri) {
-    super(uri);
+  public LyteFile(File file) {
+    super(file.getPath());
   }
 
   @Override
@@ -43,16 +35,34 @@ public class LyteFile extends File implements LyteValue<File> {
 
   @Override
   public void setProperty(String property, LyteValue newValue) {
+    boolean result;
+
     switch (property) {
       case LyteFileMembers.EXECUTABLE:
-        setExecutable(newValue.toBoolean());
+        result = setExecutable(newValue.toBoolean());
         break;
       case LyteFileMembers.READABLE:
-        setReadable(newValue.toBoolean());
+        result = setReadable(newValue.toBoolean());
         break;
       case LyteFileMembers.WRITABLE:
-        setWritable(newValue.toBoolean());
+        result = setWritable(newValue.toBoolean());
         break;
+      case LyteFileMembers.READ_ONLY:
+        result = setReadOnly();
+        break;
+      case LyteFileMembers.NAME:
+        File file = newValue.is(typeOf()) ? (LyteFile) newValue : new File(newValue.toString());
+        result = renameTo(file);
+        break;
+      case LyteFileMembers.LAST_MODIFIED:
+        result = setLastModified((long) newValue.toNumber());
+        break;
+      default:
+        throw new LyteError("Cannot set the property " + property + " of a " + typeOf());
+    }
+
+    if (!result) {
+      throw new LyteError("Unable to set the value of " + property + " to " + newValue);
     }
   }
 
@@ -68,7 +78,7 @@ public class LyteFile extends File implements LyteValue<File> {
 
   @Override
   public double toNumber() {
-    throw new LyteError("Cannot coerce " + typeOf() + " as an number!");
+    return hashCode();
   }
 
   @Override

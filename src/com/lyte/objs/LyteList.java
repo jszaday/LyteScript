@@ -92,7 +92,7 @@ public class LyteList extends LinkedList<LyteValue> implements LyteValue<LinkedL
 
   @Override
   public double toNumber() {
-    return size();
+    return hashCode();
   }
 
   @Override

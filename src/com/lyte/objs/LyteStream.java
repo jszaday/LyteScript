@@ -144,7 +144,7 @@ public class LyteStream implements LyteValue<Closeable>, Closeable {
 
   @Override
   public double toNumber() {
-    return 0;
+    return hashCode();
   }
 
   @Override

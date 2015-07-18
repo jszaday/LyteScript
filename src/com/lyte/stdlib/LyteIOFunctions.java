@@ -1,10 +1,7 @@
 package com.lyte.stdlib;
 
 import com.lyte.core.LyteContext;
-import com.lyte.objs.LyteError;
-import com.lyte.objs.LyteNativeBlock;
-import com.lyte.objs.LyteStream;
-import com.lyte.objs.LyteValue;
+import com.lyte.objs.*;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -96,7 +93,7 @@ public class LyteIOFunctions {
       String mode = context.apply().toString();
 
       try {
-        switch (mode) {
+        switch (mode.toLowerCase()) {
           case "r":
             context.push(new LyteStream(new FileReader(filename)));
             break;
@@ -112,6 +109,13 @@ public class LyteIOFunctions {
       } catch (IOException e) {
         throw new LyteError(e.getMessage());
       }
+    }
+  };
+
+  public static LyteNativeBlock ioFile = new LyteNativeBlock("IO", "File") {
+    @Override
+    public void invoke(LyteContext context) {
+      context.push(new LyteFile(context.apply().toString()));
     }
   };
 }

@@ -31,6 +31,7 @@ public class LyteEvaluator implements AutoCloseable {
     LyteNativeInjector.injectNatives(LyteMathFunctions.class, globalSingleton, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
     LyteNativeInjector.injectNatives(LyteTestFunctions.class, globalSingleton, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
     LyteNativeInjector.injectNatives(LyteThreadFunctions.class, globalSingleton, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
+    LyteNativeInjector.injectNatives(LyteUtilFunctions.class, globalSingleton, LyteStandardFunctions.TOP_LEVEL_NAMESPACE);
     globalSingleton.putVariable("Math", globalSingleton.getVariable(LyteStandardFunctions.TOP_LEVEL_NAMESPACE).getProperty("Math"), true);
   }
 
