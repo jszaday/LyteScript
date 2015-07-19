@@ -3,6 +3,7 @@ package com.lyte.stdlib;
 import com.lyte.core.LyteContext;
 import com.lyte.objs.LyteError;
 import com.lyte.objs.LyteNativeBlock;
+import com.lyte.objs.LyteString;
 import com.lyte.utils.LyteMemberBlock;
 import com.lyte.utils.LyteSimpleInjectable;
 
@@ -43,6 +44,15 @@ public class LyteErrorMembers extends LyteSimpleInjectable {
         for (String line : lines.subList(1, lines.size())) {
           System.err.println("\tCalled by line " + line + ".");
         }
+      }
+    }
+  };
+
+  public static LyteNativeBlock generator = new LyteMemberBlock<LyteError>("__generator") {
+    @Override
+    public void invoke(LyteError self, LyteContext context) {
+      for (String line : self.getLines()) {
+        context.yield(new LyteString(line));
       }
     }
   };

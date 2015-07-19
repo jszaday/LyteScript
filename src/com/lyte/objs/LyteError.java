@@ -92,6 +92,11 @@ public class LyteError extends RuntimeException implements LyteValue<RuntimeExce
     return (!mLineNumbers.isEmpty() ? "Line " + mLineNumbers.get(0) + ": " : "") + getMessage();
   }
 
+  @Override
+  public LyteBlock generator() {
+    return ERROR_FUNCTIONS.generator;
+  }
+
   public void addLineNumber(String lineNumber) {
     mLineNumbers.add(lineNumber);
   }

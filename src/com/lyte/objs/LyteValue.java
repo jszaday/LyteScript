@@ -20,6 +20,7 @@ public interface LyteValue<T> extends JSONAware, LyteAppliable {
   double toNumber();
   String toString();
 
+  LyteBlock generator();
   LyteValue<T> clone(LyteContext context);
 
   boolean equals(LyteValue other);

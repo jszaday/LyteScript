@@ -128,12 +128,17 @@ PotatoHolder <- %{
   },
   -> potato: @(kind) {
     kind `++` " potato" -> @actualPotato
+  },
+  __generator: {
+    1 2 3 Yield Yield Yield
   }
 }
 
 EchoLn(PotatoHolder.potato)
 "white" -> PotatoHolder.potato
 EchoLn(PotatoHolder.potato)
+
+For(PotatoHolder, " " ++ Echo)
 
 /* OpenFile("test.lyte", "r") -> file
 file.readLn -> line

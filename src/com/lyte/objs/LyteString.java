@@ -1,7 +1,9 @@
 package com.lyte.objs;
 
 
+import com.lyte.core.LyteContext;
 import com.lyte.stdlib.LyteStringMembers;
+import com.lyte.utils.LyteMemberBlock;
 import org.json.simple.JSONValue;
 
 import java.util.HashSet;
@@ -95,5 +97,10 @@ public class LyteString extends LytePrimitive<String> {
   @Override
   public String toJSONString() {
     return JSONValue.toJSONString(get());
+  }
+
+  @Override
+  public LyteBlock generator() {
+    return (LyteBlock) getProperty("__generator");
   }
 }

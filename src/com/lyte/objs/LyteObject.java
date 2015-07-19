@@ -129,6 +129,16 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
   }
 
   @Override
+  public LyteBlock generator() {
+    LyteValue generator = getProperty("__generator");
+    if (generator.is("block")) {
+      return (LyteBlock) generator;
+    } else {
+      throw new LyteError("Cannot use a(n) " + generator.typeOf() + " as a generator method");
+    }
+  }
+
+  @Override
   public String typeOf() {
     return "object";
   }

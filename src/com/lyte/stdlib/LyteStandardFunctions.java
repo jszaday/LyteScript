@@ -4,6 +4,7 @@ import com.lyte.core.*;
 import com.lyte.objs.*;
 import com.lyte.utils.LyteBeeper;
 import com.lyte.utils.LyteJsonParser;
+import com.lyte.utils.LyteYieldListener;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.sound.sampled.LineUnavailableException;
@@ -136,45 +137,49 @@ public class LyteStandardFunctions {
 
   public static LyteNativeBlock coreFor = new LyteNativeBlock("Core", "For") {
     @Override
-    public void invoke(LyteContext context) {
-      LyteValue value1 = context.apply();
-      LyteValue value2;
+    public void invoke(final LyteContext context) {
+      LyteValue obj = context.apply();
 
-      if (value1.is("list")) {
-        value2 = context.pop();
-
-        if (!value2.is("block")) {
-          throw new LyteError("For expected a block, not a(n) " + value2.typeOf());
-        }
-
-        for (LyteValue value : ((List<LyteValue>) value1.get())) {
-          // Push the value onto the context.stack
-          context.push(value);
-          // Then invoke the function
-          ((LyteBlock) value2).invoke(context);
-        }
-      } else {
-        long number1 = (long) value1.toNumber();
+      if (obj.is("number")) {
+        long number1 = (long) obj.toNumber();
         long number2 = (long) context.apply().toNumber();
-        value2 = context.pop();
-        if (!value2.is("block")) {
-          throw new LyteError("For expected a block, not a(n) " + value2.typeOf());
+        final LyteValue value = context.pop();
+        if (!value.is("block")) {
+          throw new LyteError("For expected a block, not a(n) " + value.typeOf());
         }
         if (number1 < number2) {
           for (long i = number1; i < number2; i++) {
             // Push the number onto the context.stack
             context.push(i);
             // Then invoke the function
-            ((LyteBlock) value2).invoke(context);
+            ((LyteBlock) value).invoke(context);
           }
         } else {
           for (long i = (number1 - 1); i >= number2; i--) {
             // Push the number onto the context.stack
             context.push(i);
             // Then invoke the function
-            ((LyteBlock) value2).invoke(context);
+            ((LyteBlock) value).invoke(context);
           }
         }
+      } else {
+        final LyteValue block = context.pop();
+
+        if (!block.is("block")) {
+          throw new LyteError("For expected a block, not a(n) " + block.typeOf());
+        }
+
+        LyteContext generatorContext = new LyteContext(obj, context);
+        generatorContext.setListener(new LyteYieldListener() {
+          @Override
+          public void onYield(LyteValue value) {
+            // Push the value onto the context.stack
+            context.push(value);
+            // Then invoke the function
+            ((LyteBlock) block).invoke(context);
+          }
+        });
+        obj.generator().invoke(generatorContext);
       }
     }
   };
@@ -394,6 +399,14 @@ public class LyteStandardFunctions {
     @Override
     public void invoke(LyteContext context) {
       context.push(context.apply().toBoolean());
+    }
+  };
+
+  public static LyteNativeBlock coreYield = new LyteNativeBlock("Core", "Yield") {
+
+    @Override
+    public void invoke(LyteContext context) {
+      context.yield();
     }
   };
 

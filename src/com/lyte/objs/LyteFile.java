@@ -87,6 +87,11 @@ public class LyteFile extends File implements LyteValue<File> {
   }
 
   @Override
+  public LyteBlock generator() {
+    throw new LyteError("Cannot iterate over a(n) " + typeOf());
+  }
+
+  @Override
   public LyteValue<File> clone(LyteContext context) {
     return new LyteFile(getPath());
   }

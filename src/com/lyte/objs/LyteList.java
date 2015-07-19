@@ -96,6 +96,11 @@ public class LyteList extends LinkedList<LyteValue> implements LyteValue<LinkedL
   }
 
   @Override
+  public LyteBlock generator() {
+    return (LyteBlock) getProperty("__generator");
+  }
+
+  @Override
   public LyteValue clone(LyteContext context) {
     return new LyteList((LinkedList<LyteValue>) clone());
   }

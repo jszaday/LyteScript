@@ -207,4 +207,9 @@ public class LyteStream implements LyteValue<Closeable>, Closeable {
   public String toJSONString() {
     throw new LyteError("Cannot encode a stream as JSON!");
   }
+
+  @Override
+  public LyteBlock generator() {
+    throw new LyteError("Cannot iterate over a(n) " + typeOf());
+  }
 }

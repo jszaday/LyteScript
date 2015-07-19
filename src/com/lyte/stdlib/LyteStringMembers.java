@@ -130,4 +130,14 @@ public class LyteStringMembers extends LyteSimpleInjectable {
       context.push(self.get().toLowerCase());
     }
   };
+
+  public static LyteNativeBlock stringGenerator = new LyteMemberBlock<LyteString>("__generator") {
+
+    @Override
+    public void invoke(LyteString self, LyteContext context) {
+      for (char c : self.get().toCharArray()) {
+        context.yield(new LyteString(c));
+      }
+    }
+  };
 }

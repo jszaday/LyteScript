@@ -1,8 +1,7 @@
 package com.lyte.stdlib;
 
 import com.lyte.core.LyteContext;
-import com.lyte.objs.LyteList;
-import com.lyte.objs.LyteNativeBlock;
+import com.lyte.objs.*;
 import com.lyte.utils.LyteMemberBlock;
 import com.lyte.utils.LyteSimpleInjectable;
 
@@ -32,6 +31,14 @@ public class LyteListMembers extends LyteSimpleInjectable {
     @Override
     public void invoke(LyteList self, LyteContext context) {
       context.push(self.isEmpty());
+    }
+  };
+  public static LyteNativeBlock listGenerator = new LyteMemberBlock<LyteList>("__generator") {
+    @Override
+    public void invoke(LyteList self, LyteContext context) {
+      for (LyteValue value : self) {
+        context.yield(value);
+      }
     }
   };
 }

@@ -80,4 +80,9 @@ public abstract class LyteRawValue<T> implements LyteValue<T> {
   public String toJSONString() {
     throw new LyteError("Cannot encode a " + typeOf() + " value as JSON!");
   }
+
+  @Override
+  public LyteBlock generator() {
+    throw new LyteError("Cannot iterate over a(n) " + typeOf());
+  }
 }

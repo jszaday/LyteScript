@@ -3,10 +3,10 @@ package com.lyte.core;
 import com.lyte.objs.*;
 import com.lyte.stdlib.LyteReflectionFunctions;
 import com.lyte.utils.LyteInjectable;
+import com.lyte.utils.LyteYieldListener;
 import org.apache.commons.collections4.iterators.PeekingIterator;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 import static com.lyte.core.LyteInvokeStatement.LyteSpecifier;
 
@@ -17,15 +17,21 @@ public class LyteContext implements LyteInjectable {
   public LyteValue self;
   public LyteScope scope;
   public LyteStack stack;
+  private LyteYieldListener listener;
 
   public LyteContext(LyteValue self, LyteScope scope, LyteStack stack) {
+    this(self, scope, stack, null);
+  }
+
+  public LyteContext(LyteValue self, LyteScope scope, LyteStack stack, LyteYieldListener listener) {
     this.self = self;
     this.scope = scope;
     this.stack = stack;
+    this.listener = listener;
   }
 
   public LyteContext(LyteValue self, LyteContext context) {
-    this(self, context.scope, context.stack);
+    this(self, context.scope, context.stack, context.listener);
   }
 
   public LyteContext(LyteValue self, LyteValue... args) {
@@ -202,8 +208,24 @@ public class LyteContext implements LyteInjectable {
     return obj;
   }
 
+  public void yield() {
+    yield(apply());
+  }
+
+  public void yield(LyteValue value) {
+    if (listener != null) {
+      listener.onYield(value);
+    } else {
+      throw new LyteError("Unable to yield to anything.");
+    }
+  }
+
+  public void setListener(LyteYieldListener listener) {
+    this.listener = listener;
+  }
+
   public LyteContext enter(LyteContext context, boolean shouldEnter, boolean hasSelf) {
-    return new LyteContext(hasSelf ? self : context.self, shouldEnter ? scope.enter() : scope, context.stack);
+    return new LyteContext(hasSelf ? self : context.self, shouldEnter ? scope.enter() : scope, context.stack, context.listener);
   }
 
   private static boolean shouldApply(PeekingIterator<LyteSpecifier> specifierIterator, boolean applyLast) {
