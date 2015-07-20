@@ -47,13 +47,4 @@ public class LyteErrorMembers extends LyteSimpleInjectable {
       }
     }
   };
-
-  public static LyteNativeBlock generator = new LyteMemberBlock<LyteError>("__generator") {
-    @Override
-    public void invoke(LyteError self, LyteContext context) {
-      for (String line : self.getLines()) {
-        context.yield(new LyteString(line));
-      }
-    }
-  };
 }

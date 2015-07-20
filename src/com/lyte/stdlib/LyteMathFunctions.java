@@ -429,16 +429,9 @@ public class LyteMathFunctions {
     public void invoke(LyteContext context) {
       double start = context.apply().toNumber();
       double finish = context.apply().toNumber();
-      double number = context.apply().toNumber() - 1;
-      double step;
+      double number = context.apply().toNumber();
 
-      if (start > finish) {
-        step = (start - finish) / number;
-      } else {
-        step = (finish - start) / number;
-      }
-
-      context.push(LyteRangeMaker.range(start, step, finish));
+      context.push(LyteRangeMaker.linspace(start, finish, number));
     }
   };
 

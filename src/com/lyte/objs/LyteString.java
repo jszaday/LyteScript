@@ -4,15 +4,15 @@ package com.lyte.objs;
 import com.lyte.core.LyteContext;
 import com.lyte.stdlib.LyteStringMembers;
 import com.lyte.utils.LyteMemberBlock;
+import org.apache.commons.collections4.iterators.ArrayIterator;
 import org.json.simple.JSONValue;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by jszaday on 6/22/15.
  */
-public class LyteString extends LytePrimitive<String> {
+public class LyteString extends LytePrimitive<String> implements LyteIterable {
 
   private static final LyteStringMembers STRING_FUNCTIONS = new LyteStringMembers();
 
@@ -102,5 +102,16 @@ public class LyteString extends LytePrimitive<String> {
   @Override
   public LyteBlock generator() {
     return (LyteBlock) getProperty("__generator");
+  }
+
+  @Override
+  public Iterator<LyteValue> iterator() {
+    List<LyteValue> characters = new LinkedList<>();
+
+    for (char c : get().toCharArray()) {
+      characters.add(new LyteString(c));
+    }
+
+    return characters.iterator();
   }
 }

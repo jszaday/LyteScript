@@ -4,6 +4,7 @@ import com.lyte.core.*;
 import com.lyte.objs.*;
 import com.lyte.utils.LyteBeeper;
 import com.lyte.utils.LyteJsonParser;
+import com.lyte.utils.LyteRangeMaker;
 import com.lyte.utils.LyteYieldListener;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -12,6 +13,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -139,47 +141,46 @@ public class LyteStandardFunctions {
     @Override
     public void invoke(final LyteContext context) {
       LyteValue obj = context.apply();
+      LyteBlock block;
 
+      // If the first value is a number
       if (obj.is("number")) {
-        long number1 = (long) obj.toNumber();
-        long number2 = (long) context.apply().toNumber();
-        final LyteValue value = context.pop();
-        if (!value.is("block")) {
-          throw new LyteError("For expected a block, not a(n) " + value.typeOf());
-        }
-        if (number1 < number2) {
-          for (long i = number1; i < number2; i++) {
-            // Push the number onto the context.stack
-            context.push(i);
-            // Then invoke the function
-            ((LyteBlock) value).invoke(context);
-          }
+        double start = obj.toNumber();
+        double finish = context.apply().toNumber();
+
+        if (start > finish) {
+          start = Math.ceil(start);
         } else {
-          for (long i = (number1 - 1); i >= number2; i--) {
-            // Push the number onto the context.stack
-            context.push(i);
-            // Then invoke the function
-            ((LyteBlock) value).invoke(context);
-          }
+          start = Math.floor(start);
         }
+
+        if (finish == 0) {
+          finish = Math.signum(start);
+        } else {
+          finish = Math.floor(finish) - Math.signum(finish) * 1;
+        }
+
+        // Make a range, popping the final value off of the stack
+        obj = LyteRangeMaker.range(start, finish);
+      } else if (!(obj instanceof LyteIterable)) {
+        // Simply throw an error if the object is not an iterable
+        throw new LyteError("For expected an iterable not a(n) " + obj.typeOf());
+      }
+
+      // If the next value is a block
+      if (context.peek().is("block")) {
+        // Pop it off of the stack
+        block = (LyteBlock) context.pop();
       } else {
-        final LyteValue block = context.pop();
+        // Otherwise, simply throw an error
+        throw new LyteError("For expected a block, not a(n) " + context.pop().typeOf());
+      }
 
-        if (!block.is("block")) {
-          throw new LyteError("For expected a block, not a(n) " + block.typeOf());
-        }
-
-        LyteContext generatorContext = new LyteContext(obj, context);
-        generatorContext.setListener(new LyteYieldListener() {
-          @Override
-          public void onYield(LyteValue value) {
-            // Push the value onto the context.stack
-            context.push(value);
-            // Then invoke the function
-            ((LyteBlock) block).invoke(context);
-          }
-        });
-        obj.generator().invoke(generatorContext);
+      // Finally, iterate through the values
+      Iterator<LyteValue> iterator  = ((LyteIterable) obj).iterator();
+      while (iterator.hasNext()) {
+        context.push(iterator.next());
+        block.invoke(context);
       }
     }
   };

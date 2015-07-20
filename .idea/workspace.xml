@@ -10,24 +10,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8b01841e-2d6b-454c-b175-3663cc7889a4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/lyte/objs/LyteFile.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteFileMembers.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteIOFunctions.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteUtilFunctions.java" />
-      <change type="MOVED" beforePath="C:\Users\A0225785\Documents\LyteScript\src\com\lyte\stdlib\LyteErrorFunctions.java" afterPath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteErrorMembers.java" />
-      <change type="MOVED" beforePath="C:\Users\A0225785\Documents\LyteScript\src\com\lyte\stdlib\LyteListFunctions.java" afterPath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteListMembers.java" />
-      <change type="MOVED" beforePath="C:\Users\A0225785\Documents\LyteScript\src\com\lyte\stdlib\LyteNativeBlock.java" afterPath="$PROJECT_DIR$/src/com/lyte/objs/LyteNativeBlock.java" />
-      <change type="MOVED" beforePath="C:\Users\A0225785\Documents\LyteScript\src\com\lyte\stdlib\LyteStringFunctions.java" afterPath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteStringMembers.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/lyte/objs/LyteIterable.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/objs/LyteBlock.java" afterPath="$PROJECT_DIR$/src/com/lyte/objs/LyteBlock.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/objs/LyteError.java" afterPath="$PROJECT_DIR$/src/com/lyte/objs/LyteError.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/core/LyteEvaluator.java" afterPath="$PROJECT_DIR$/src/com/lyte/core/LyteEvaluator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteErrorMembers.java" afterPath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteErrorMembers.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/objs/LyteFile.java" afterPath="$PROJECT_DIR$/src/com/lyte/objs/LyteFile.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/objs/LyteList.java" afterPath="$PROJECT_DIR$/src/com/lyte/objs/LyteList.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteLockTemplate.java" afterPath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteLockTemplate.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/utils/LyteMemberBlock.java" afterPath="$PROJECT_DIR$/src/com/lyte/utils/LyteMemberBlock.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/utils/LyteNativeInjector.java" afterPath="$PROJECT_DIR$/src/com/lyte/utils/LyteNativeInjector.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteMathFunctions.java" afterPath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteMathFunctions.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/objs/LyteObject.java" afterPath="$PROJECT_DIR$/src/com/lyte/objs/LyteObject.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/objs/LytePrimitive.java" afterPath="$PROJECT_DIR$/src/com/lyte/objs/LytePrimitive.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/utils/LyteRangeMaker.java" afterPath="$PROJECT_DIR$/src/com/lyte/utils/LyteRangeMaker.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/objs/LyteRawValue.java" afterPath="$PROJECT_DIR$/src/com/lyte/objs/LyteRawValue.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteStandardFunctions.java" afterPath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteStandardFunctions.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/objs/LyteStream.java" afterPath="$PROJECT_DIR$/src/com/lyte/objs/LyteStream.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/objs/LyteString.java" afterPath="$PROJECT_DIR$/src/com/lyte/objs/LyteString.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteTestFunctions.java" afterPath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteTestFunctions.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteThreadFunctions.java" afterPath="$PROJECT_DIR$/src/com/lyte/stdlib/LyteThreadFunctions.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/objs/LyteUndefined.java" afterPath="$PROJECT_DIR$/src/com/lyte/objs/LyteUndefined.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/lyte/objs/LyteValue.java" afterPath="$PROJECT_DIR$/src/com/lyte/objs/LyteValue.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/test.lyte" afterPath="$PROJECT_DIR$/test.lyte" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Lyte.iws" />
@@ -50,112 +49,112 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="LyteStandardFunctions.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="LyteStandardFunctions.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteStandardFunctions.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="437" column="7" selection-start-line="437" selection-start-column="7" selection-end-line="437" selection-end-column="7" />
+            <state vertical-scroll-proportion="0.77366257">
+              <caret line="162" column="65" selection-start-line="162" selection-start-column="65" selection-end-line="162" selection-end-column="65" />
               <folding>
-                <element signature="e#14258#14259#0" expanded="true" />
-                <element signature="e#14308#14309#0" expanded="true" />
+                <element signature="e#6692#6693#0" expanded="true" />
+                <element signature="e#6737#6738#0" expanded="true" />
+                <element signature="e#7780#7781#0" expanded="true" />
+                <element signature="e#7842#7843#0" expanded="true" />
+                <element signature="e#8615#8616#0" expanded="true" />
+                <element signature="e#8665#8666#0" expanded="true" />
+                <element signature="e#9887#9888#0" expanded="true" />
+                <element signature="e#9943#9944#0" expanded="true" />
+                <element signature="e#11281#11282#0" expanded="true" />
+                <element signature="e#11316#11317#0" expanded="true" />
+                <element signature="e#11934#11935#0" expanded="true" />
+                <element signature="e#11988#11989#0" expanded="true" />
+                <element signature="e#12143#12144#0" expanded="true" />
+                <element signature="e#12197#12198#0" expanded="true" />
+                <element signature="e#12354#12355#0" expanded="true" />
+                <element signature="e#12409#12410#0" expanded="true" />
+                <element signature="e#12559#12560#0" expanded="true" />
+                <element signature="e#12588#12589#0" expanded="true" />
+                <element signature="e#13927#13928#0" expanded="true" />
+                <element signature="e#13985#13986#0" expanded="true" />
+                <element signature="e#14160#14161#0" expanded="true" />
+                <element signature="e#14206#14207#0" expanded="true" />
+                <element signature="e#14373#14374#0" expanded="true" />
+                <element signature="e#14415#14416#0" expanded="true" />
+                <element signature="e#14591#14592#0" expanded="true" />
+                <element signature="e#14641#14642#0" expanded="true" />
+                <element signature="e#14806#14807#0" expanded="true" />
+                <element signature="e#14863#14864#0" expanded="true" />
+                <element signature="e#15902#15903#0" expanded="true" />
+                <element signature="e#15982#15983#0" expanded="true" />
+                <element signature="e#16139#16140#0" expanded="true" />
+                <element signature="e#16197#16198#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LyteFile.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteFile.java">
+      <file leaf-file-name="Math.java" pinned="false" current-in-tab="false">
+        <entry file="jar://C:/Program Files/Java/jdk1.7.0_75/src.zip!/java/lang/Math.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="2.4074075">
-              <caret line="102" column="3" selection-start-line="102" selection-start-column="3" selection-end-line="102" selection-end-column="3" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="1012" column="25" selection-start-line="1012" selection-start-column="25" selection-end-line="1012" selection-end-column="25" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#421#422#0" expanded="true" />
-                <element signature="e#446#447#0" expanded="true" />
-                <element signature="e#496#497#0" expanded="true" />
-                <element signature="e#526#527#0" expanded="true" />
-                <element signature="e#574#575#0" expanded="true" />
-                <element signature="e#604#605#0" expanded="true" />
-                <element signature="e#634#635#0" expanded="true" />
-                <element signature="e#654#655#0" expanded="true" />
-                <element signature="e#689#690#0" expanded="true" />
-                <element signature="e#710#711#0" expanded="true" />
-                <element signature="e#773#774#0" expanded="true" />
-                <element signature="e#824#825#0" expanded="true" />
-                <element signature="e#1286#1287#0" expanded="true" />
-                <element signature="e#1337#1338#0" expanded="true" />
-                <element signature="e#1381#1382#0" expanded="true" />
-                <element signature="e#1406#1407#0" expanded="true" />
-                <element signature="e#1448#1449#0" expanded="true" />
-                <element signature="e#1525#1526#0" expanded="true" />
-                <element signature="e#1567#1568#0" expanded="true" />
-                <element signature="e#1593#1594#0" expanded="true" />
-                <element signature="e#1660#1661#0" expanded="true" />
-                <element signature="e#1700#1701#0" expanded="true" />
-                <element signature="e#2003#2004#0" expanded="true" />
-                <element signature="e#2039#2040#0" expanded="true" />
-                <element signature="e#2092#2093#0" expanded="true" />
-                <element signature="e#2114#2115#0" expanded="true" />
-                <element signature="e#2166#2167#0" expanded="true" />
-                <element signature="e#2211#2212#0" expanded="true" />
-                <element signature="e#2257#2258#0" expanded="true" />
-                <element signature="e#2312#2313#0" expanded="true" />
-                <element signature="e#2373#2374#0" expanded="true" />
-                <element signature="e#2394#2395#0" expanded="true" />
-                <element signature="e#2442#2443#0" expanded="true" />
-                <element signature="e#2480#2481#0" expanded="true" />
-                <element signature="e#2520#2521#0" expanded="true" />
-                <element signature="e#2543#2544#0" expanded="true" />
+                <element signature="e#40261#40262#0" expanded="true" />
+                <element signature="e#40310#40311#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LyteFileMembers.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteFileMembers.java">
+      <file leaf-file-name="LyteRawObject.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteRawObject.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="36" column="4" selection-start-line="36" selection-start-column="4" selection-end-line="36" selection-end-column="4" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#654#655#0" expanded="true" />
-                <element signature="e#699#700#0" expanded="true" />
-                <element signature="e#877#878#0" expanded="true" />
-                <element signature="e#919#920#0" expanded="true" />
-                <element signature="e#1097#1098#0" expanded="true" />
-                <element signature="e#1140#1141#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LyteMemberBlock.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/lyte/utils/LyteMemberBlock.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="17" column="9" selection-start-line="17" selection-start-column="9" selection-end-line="17" selection-end-column="9" />
+              <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LyteStream.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteStream.java">
+      <file leaf-file-name="LyteMathFunctions.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteMathFunctions.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="169" column="0" selection-start-line="169" selection-start-column="0" selection-end-line="183" selection-end-column="3" />
+              <caret line="430" column="49" selection-start-line="430" selection-start-column="49" selection-end-line="430" selection-end-column="49" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LyteUtilFunctions.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteUtilFunctions.java">
+      <file leaf-file-name="LyteRangeMaker.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/lyte/utils/LyteRangeMaker.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="90" column="4" selection-start-line="90" selection-start-column="4" selection-end-line="90" selection-end-column="4" />
+              <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LyteBoolean.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteBoolean.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LyteObject.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteObject.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="144" column="0" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#2082#2083#0" expanded="true" />
+                <element signature="e#2121#2122#0" expanded="true" />
+                <element signature="e#4135#4299#0" expanded="true" />
+                <element signature="e#4298#4299#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -171,34 +170,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LyteListMembers.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteListMembers.java">
+      <file leaf-file-name="LyteList.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteList.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="35" selection-end-column="4" />
+              <caret line="100" column="3" selection-start-line="100" selection-start-column="3" selection-end-line="100" selection-end-column="3" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LyteIOFunctions.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteIOFunctions.java">
+      <file leaf-file-name="LyteIterable.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteIterable.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="115" column="4" selection-start-line="115" selection-start-column="4" selection-end-line="115" selection-end-column="4" />
+              <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LyteEvaluator.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/lyte/core/LyteEvaluator.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -208,8 +197,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -224,32 +213,20 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/com/lyte/core/LyteInvokeStatement.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/core/LyteClassLoader.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteReflectionFunctions.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteStreamFunctions.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/utils/LyteMemberBlock.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/utils/LyteJSONParser.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/objs/LytePrimitive.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteBoolean.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteRawValue.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteStream.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteUndefined.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteBlock.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteString.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/utils/LyteJsonUtils.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteNumber.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteStringFunctions.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/utils/LyteRangeGenerator.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/utils/LyteRangeCreator.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/utils/LyteRangeMaker.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteValue.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/utils/LyteAppliable.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/core/LyteStatement.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteRawRange.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteRawArray.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/core/LyteContext.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteError.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteErrorFunctions.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteThreadFunctio9ns.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteThread.java" />
@@ -265,16 +242,28 @@
         <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteTestFunctions.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/core/LyteCompiler.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteRawObject.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteList.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteMathFunctions.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteObject.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/core/LyteEvaluator.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteNativeBlock.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteIOFunctions.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteUtilFunctions.java" />
-        <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteStandardFunctions.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteFileMembers.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteIterable.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteIterable.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteValue.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteUndefined.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteString.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteStream.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteRawValue.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/objs/LytePrimitive.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteList.java" />
         <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteFile.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteError.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteBlock.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteErrorMembers.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/objs/LyteObject.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/utils/LyteRangeMaker.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteMathFunctions.java" />
+        <option value="$PROJECT_DIR$/src/com/lyte/stdlib/LyteStandardFunctions.java" />
       </list>
     </option>
   </component>
@@ -333,7 +322,8 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -486,14 +476,35 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="gen" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LyteScript" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="LyteScript" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="lyte" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="core" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -524,7 +535,7 @@
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="com.lyte.Main" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/threads.lyte" />
+      <option name="PROGRAM_PARAMETERS" value="$PROJECT_DIR$/test.lyte" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" value="" />
@@ -756,15 +767,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/com/lyte/objs/LyteRawObject.java</url>
-          <line>44</line>
-          <properties />
-          <option name="timeStamp" value="60" />
-        </line-breakpoint>
-      </breakpoints>
-      <option name="time" value="61" />
+      <option name="time" value="63" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -773,20 +776,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/gen/LyteParser.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="95" column="27" selection-start-line="95" selection-start-column="27" selection-end-line="95" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/core/LyteBindStatement.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="41" column="14" selection-start-line="41" selection-start-column="14" selection-end-line="41" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/lyte/utils/LyteBeeper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -808,41 +797,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteReflectionFunctions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="49" column="7" selection-start-line="49" selection-start-column="7" selection-end-line="49" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteStreamFunctions.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="54" column="61" selection-start-line="54" selection-start-column="61" selection-end-line="54" selection-end-column="61" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteBoolean.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteUndefined.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="95" column="25" selection-start-line="95" selection-start-column="25" selection-end-line="95" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteNumber.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="31" column="46" selection-start-line="31" selection-start-column="46" selection-end-line="31" selection-end-column="46" />
         </state>
       </provider>
     </entry>
@@ -874,14 +832,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteValue.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="20" column="20" selection-start-line="20" selection-start-column="20" selection-end-line="20" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteRawRange.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -896,23 +846,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteString.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.2839506">
-          <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LytePrimitive.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.40123457">
-          <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteStringMembers.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33333334">
@@ -920,35 +853,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/utils/LyteRangeMaker.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/lyte/core/LyteInvokeStatement.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.8586956">
           <caret line="113" column="26" selection-start-line="113" selection-start-column="26" selection-end-line="113" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteErrorMembers.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="42" column="32" selection-start-line="42" selection-start-column="32" selection-end-line="42" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteError.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="22" selection-start-line="0" selection-start-column="22" selection-end-line="0" selection-end-column="22" />
-          <folding>
-            <element signature="e#1060#1061#0" expanded="true" />
-            <element signature="e#1089#1090#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -999,31 +907,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteBlock.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="99" column="25" selection-start-line="99" selection-start-column="25" selection-end-line="99" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/core/LyteContext.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="133" column="7" selection-start-line="133" selection-start-column="7" selection-end-line="133" selection-end-column="7" />
-          <folding>
-            <element signature="method#resolve#1;class#LyteContext#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteRawValue.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.18724279">
-          <caret line="11" column="22" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteLockTemplate.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1065,53 +948,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteRawObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="58" column="0" selection-start-line="58" selection-start-column="0" selection-end-line="58" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteList.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="44" column="32" selection-start-line="44" selection-start-column="32" selection-end-line="44" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteMathFunctions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="425" column="0" selection-start-line="425" selection-start-column="0" selection-end-line="425" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="79" column="4" selection-start-line="79" selection-start-column="4" selection-end-line="79" selection-end-column="34" />
-          <folding>
-            <element signature="e#2081#2082#0" expanded="true" />
-            <element signature="e#2120#2121#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/lyte/core/LyteEvaluator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteNativeBlock.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="12" column="22" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -1119,7 +959,7 @@
     <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteIOFunctions.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="115" column="4" selection-start-line="115" selection-start-column="4" selection-end-line="115" selection-end-column="4" />
+          <caret line="119" column="4" selection-start-line="119" selection-start-column="4" selection-end-line="119" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1136,37 +976,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteStandardFunctions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="437" column="7" selection-start-line="437" selection-start-column="7" selection-end-line="437" selection-end-column="7" />
-          <folding>
-            <element signature="e#14258#14259#0" expanded="true" />
-            <element signature="e#14308#14309#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteStream.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="169" column="0" selection-start-line="169" selection-start-column="0" selection-end-line="183" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/lyte/utils/LyteMemberBlock.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="17" column="9" selection-start-line="17" selection-start-column="9" selection-end-line="17" selection-end-column="9" />
-          <folding />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteListMembers.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="35" selection-end-column="4" />
+          <caret line="29" column="0" selection-start-line="40" selection-start-column="7" selection-end-line="42" selection-end-column="4" />
           <folding />
         </state>
       </provider>
@@ -1174,61 +997,250 @@
     <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteFileMembers.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="36" column="4" selection-start-line="36" selection-start-column="4" selection-end-line="36" selection-end-column="4" />
+          <caret line="210" column="4" selection-start-line="210" selection-start-column="4" selection-end-line="210" selection-end-column="4" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#654#655#0" expanded="true" />
-            <element signature="e#699#700#0" expanded="true" />
-            <element signature="e#877#878#0" expanded="true" />
-            <element signature="e#919#920#0" expanded="true" />
-            <element signature="e#1097#1098#0" expanded="true" />
-            <element signature="e#1140#1141#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/core/LyteContext.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="189" column="48" selection-start-line="189" selection-start-column="48" selection-end-line="189" selection-end-column="48" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteReflectionFunctions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="28" column="13" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteValue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="20" column="20" selection-start-line="20" selection-start-column="20" selection-end-line="20" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteUndefined.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="110" column="3" selection-start-line="110" selection-start-column="3" selection-end-line="110" selection-end-column="3" />
+          <folding>
+            <element signature="e#1701#1702#0" expanded="true" />
+            <element signature="e#1739#1740#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteString.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="106" column="11" selection-start-line="106" selection-start-column="11" selection-end-line="106" selection-end-column="11" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteStream.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="208" column="3" selection-start-line="208" selection-start-column="3" selection-end-line="208" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteRawValue.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="81" column="3" selection-start-line="81" selection-start-column="3" selection-end-line="81" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LytePrimitive.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="88" column="3" selection-start-line="88" selection-start-column="3" selection-end-line="88" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteNumber.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="31" column="46" selection-start-line="31" selection-start-column="46" selection-end-line="31" selection-end-column="46" />
+          <folding>
+            <element signature="e#776#777#0" expanded="true" />
+            <element signature="e#840#841#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteFile.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.4074075">
-          <caret line="102" column="3" selection-start-line="102" selection-start-column="3" selection-end-line="102" selection-end-column="3" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="86" column="3" selection-start-line="86" selection-start-column="3" selection-end-line="86" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#421#422#0" expanded="true" />
-            <element signature="e#446#447#0" expanded="true" />
-            <element signature="e#496#497#0" expanded="true" />
-            <element signature="e#526#527#0" expanded="true" />
-            <element signature="e#574#575#0" expanded="true" />
-            <element signature="e#604#605#0" expanded="true" />
-            <element signature="e#634#635#0" expanded="true" />
-            <element signature="e#654#655#0" expanded="true" />
-            <element signature="e#689#690#0" expanded="true" />
-            <element signature="e#710#711#0" expanded="true" />
-            <element signature="e#773#774#0" expanded="true" />
-            <element signature="e#824#825#0" expanded="true" />
-            <element signature="e#1286#1287#0" expanded="true" />
-            <element signature="e#1337#1338#0" expanded="true" />
-            <element signature="e#1381#1382#0" expanded="true" />
-            <element signature="e#1406#1407#0" expanded="true" />
-            <element signature="e#1448#1449#0" expanded="true" />
-            <element signature="e#1525#1526#0" expanded="true" />
-            <element signature="e#1567#1568#0" expanded="true" />
-            <element signature="e#1593#1594#0" expanded="true" />
-            <element signature="e#1660#1661#0" expanded="true" />
-            <element signature="e#1700#1701#0" expanded="true" />
-            <element signature="e#2003#2004#0" expanded="true" />
-            <element signature="e#2039#2040#0" expanded="true" />
-            <element signature="e#2092#2093#0" expanded="true" />
-            <element signature="e#2114#2115#0" expanded="true" />
-            <element signature="e#2166#2167#0" expanded="true" />
-            <element signature="e#2211#2212#0" expanded="true" />
-            <element signature="e#2257#2258#0" expanded="true" />
-            <element signature="e#2312#2313#0" expanded="true" />
-            <element signature="e#2373#2374#0" expanded="true" />
-            <element signature="e#2394#2395#0" expanded="true" />
-            <element signature="e#2442#2443#0" expanded="true" />
-            <element signature="e#2480#2481#0" expanded="true" />
-            <element signature="e#2520#2521#0" expanded="true" />
-            <element signature="e#2543#2544#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteError.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="92" column="3" selection-start-line="92" selection-start-column="3" selection-end-line="92" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteBlock.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6522634">
+          <caret line="70" column="3" selection-start-line="68" selection-start-column="26" selection-end-line="70" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteBoolean.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteErrorMembers.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.78600824">
+          <caret line="48" column="4" selection-start-line="48" selection-start-column="4" selection-end-line="48" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteIterable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="100" column="3" selection-start-line="100" selection-start-column="3" selection-end-line="100" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteNativeBlock.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="22" selection-start-line="12" selection-start-column="22" selection-end-line="12" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="144" column="0" selection-start-line="144" selection-start-column="0" selection-end-line="144" selection-end-column="0" />
+          <folding>
+            <element signature="e#2082#2083#0" expanded="true" />
+            <element signature="e#2121#2122#0" expanded="true" />
+            <element signature="e#4135#4299#0" expanded="true" />
+            <element signature="e#4298#4299#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/utils/LyteRangeMaker.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteMathFunctions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="430" column="49" selection-start-line="430" selection-start-column="49" selection-end-line="430" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/objs/LyteRawObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.7.0_75/src.zip!/java/lang/Math.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="1012" column="25" selection-start-line="1012" selection-start-column="25" selection-end-line="1012" selection-end-column="25" />
+          <folding>
+            <element signature="e#40261#40262#0" expanded="true" />
+            <element signature="e#40310#40311#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/lyte/stdlib/LyteStandardFunctions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.77366257">
+          <caret line="162" column="65" selection-start-line="162" selection-start-column="65" selection-end-line="162" selection-end-column="65" />
+          <folding>
+            <element signature="e#6692#6693#0" expanded="true" />
+            <element signature="e#6737#6738#0" expanded="true" />
+            <element signature="e#7780#7781#0" expanded="true" />
+            <element signature="e#7842#7843#0" expanded="true" />
+            <element signature="e#8615#8616#0" expanded="true" />
+            <element signature="e#8665#8666#0" expanded="true" />
+            <element signature="e#9887#9888#0" expanded="true" />
+            <element signature="e#9943#9944#0" expanded="true" />
+            <element signature="e#11281#11282#0" expanded="true" />
+            <element signature="e#11316#11317#0" expanded="true" />
+            <element signature="e#11934#11935#0" expanded="true" />
+            <element signature="e#11988#11989#0" expanded="true" />
+            <element signature="e#12143#12144#0" expanded="true" />
+            <element signature="e#12197#12198#0" expanded="true" />
+            <element signature="e#12354#12355#0" expanded="true" />
+            <element signature="e#12409#12410#0" expanded="true" />
+            <element signature="e#12559#12560#0" expanded="true" />
+            <element signature="e#12588#12589#0" expanded="true" />
+            <element signature="e#13927#13928#0" expanded="true" />
+            <element signature="e#13985#13986#0" expanded="true" />
+            <element signature="e#14160#14161#0" expanded="true" />
+            <element signature="e#14206#14207#0" expanded="true" />
+            <element signature="e#14373#14374#0" expanded="true" />
+            <element signature="e#14415#14416#0" expanded="true" />
+            <element signature="e#14591#14592#0" expanded="true" />
+            <element signature="e#14641#14642#0" expanded="true" />
+            <element signature="e#14806#14807#0" expanded="true" />
+            <element signature="e#14863#14864#0" expanded="true" />
+            <element signature="e#15902#15903#0" expanded="true" />
+            <element signature="e#15982#15983#0" expanded="true" />
+            <element signature="e#16139#16140#0" expanded="true" />
+            <element signature="e#16197#16198#0" expanded="true" />
           </folding>
         </state>
       </provider>

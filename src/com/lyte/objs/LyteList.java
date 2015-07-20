@@ -6,7 +6,7 @@ import org.json.simple.JSONArray;
 
 import java.util.*;
 
-public class LyteList extends LinkedList<LyteValue> implements LyteValue<LinkedList<LyteValue>> {
+public class LyteList extends LinkedList<LyteValue> implements LyteValue<LinkedList<LyteValue>>, LyteIterable {
   private static final LyteListMembers LIST_FUNCTIONS = new LyteListMembers();
 
   public LyteList() {

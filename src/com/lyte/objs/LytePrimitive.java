@@ -87,9 +87,4 @@ public abstract class LytePrimitive<T> implements LyteValue<T> {
   public Set<String> getProperties() {
     throw new LyteError("Cannot get the properties of " + typeOf() + "!");
   }
-
-  @Override
-  public LyteBlock generator() {
-    throw new LyteError("Cannot iterate over a(n) " + typeOf());
-  }
 }

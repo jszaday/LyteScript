@@ -109,9 +109,4 @@ public enum LyteUndefined implements LyteValue {
       throw new LyteError("Can't encode the value " + toString() + " as JSON!");
     }
   }
-
-  @Override
-  public LyteBlock generator() {
-    throw new LyteError("Cannot iterate over a(n) " + typeOf());
-  }
 }

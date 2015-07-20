@@ -4,16 +4,15 @@ import com.lyte.core.LyteContext;
 import com.lyte.core.LyteInvokeStatement;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
+import com.lyte.utils.LyteYieldListener;
 import org.json.simple.JSONObject;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by a0225785 on 6/17/2015.
  */
-public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<HashMap<String, LyteValue>> {
+public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<HashMap<String, LyteValue>>, LyteIterable {
 
   private LyteRawObject mBase = null;
   private HashMap<String, Object> mMetadata;
@@ -136,6 +135,24 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
     } else {
       throw new LyteError("Cannot use a(n) " + generator.typeOf() + " as a generator method");
     }
+  }
+
+  @Override
+  public Iterator<LyteValue> iterator() {
+    final LinkedList<LyteValue> values = new LinkedList<>();
+    final LyteContext generatorContext = new LyteContext(this);
+    final LyteBlock generator = generator();
+
+    generatorContext.setListener(new LyteYieldListener() {
+      @Override
+      public void onYield(LyteValue value) {
+        // Add the value to the list
+        values.add(value);
+      }
+    });
+    generator.invoke(generatorContext);
+
+    return values.iterator();
   }
 
   @Override

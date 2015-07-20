@@ -8,6 +8,19 @@ import com.lyte.objs.LyteNumber;
  * Created by a0225785 on 7/13/2015.
  */
 public class LyteRangeMaker {
+  public static LyteList linspace(double start, double finish, double number) {
+    double step;
+    number = Math.floor(number) - 1;
+
+    if (start > finish) {
+      step = (start - finish) / number;
+    } else {
+      step = (finish - start) / number;
+    }
+
+    return range(start, step, finish);
+  }
+
   public static LyteList range(double start, double finish) {
     return range(start, start > finish ? -1 : 1, finish);
   }

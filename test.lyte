@@ -82,6 +82,8 @@ For(%[0:4:16], @(i) {
   })
 })
 
+For(5, 0, EchoLn)
+
 TestObj <- %{
   name: "Bob",
   changeName: {

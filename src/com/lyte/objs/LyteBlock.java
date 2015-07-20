@@ -71,11 +71,6 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
   }
 
   @Override
-  public LyteBlock generator() {
-    return null;
-  }
-
-  @Override
   public boolean toBoolean() {
     return true;
   }
