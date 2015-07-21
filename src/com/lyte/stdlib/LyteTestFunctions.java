@@ -3,6 +3,8 @@ package com.lyte.stdlib;
 import com.lyte.core.LyteContext;
 import com.lyte.core.LyteStack;
 import com.lyte.objs.*;
+import com.lyte.utils.LyteMemberBlock;
+import com.lyte.utils.LyteNativeInjector;
 
 import java.util.Set;
 
@@ -55,7 +57,8 @@ public class LyteTestFunctions {
           result.setProperty(property, new LyteString(e.getMessage()));
         }
       }
-
+      // Inject the print results function
+      result.setProperty(printResults.fullname, printResults);
       context.push(result);
     }
   };
@@ -170,6 +173,23 @@ public class LyteTestFunctions {
         return false;
       } catch (LyteError e) {
         return expectedError.equals(e.getMessage());
+      }
+    }
+  };
+
+  private static LyteNativeBlock printResults = new LyteMemberBlock<LyteObject>("printResults") {
+
+    @Override
+    public void invoke(LyteObject self, LyteContext context) {
+      LyteValue result;
+      for (String property : self.getProperties()) {
+        if (property.equals(this.fullname)) {
+          continue;
+        } else if ((result = self.getProperty(property)).equals(SUCCESS)) {
+          System.out.println("Test \"" + property + "\" Passed!");
+        } else {
+          System.out.println("Test \"" + property + "\" Failed Because \"" + result + "\"");
+        }
       }
     }
   };

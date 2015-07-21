@@ -17,7 +17,7 @@ Factorial <- @(n) {
 }
 
 FactorialTests <- %{
-  "Value for Zero": {
+  ["Value for" `++` " Zero"]: {
     AssertEquals("Factorial(0) should be 1", Factorial(0), 1)
   },
   "Value for One": {
@@ -34,15 +34,7 @@ FactorialTests <- %{
   }
 }
 
-Test(FactorialTests) -> testResults
-For (GetProperties(testResults), @(test) {
-  If (testResults[test] `==` "Success", {
-    EchoLn("Test \"" `++` test `++` "\" Passed!")
-  }, {
-    EchoLn("Test \"" `++` test `++` "\" Failed, reason \"" `++` testResults[test] `++` "\"")
-  })
-})
-EchoLn
+Test(FactorialTests).printResults()
 
 /* Puppy Dogs*/
 Instantiate(Animal.Dog, "Fido") -> fido
@@ -57,22 +49,17 @@ Instantiate(Animal.Cat, "Garfield") -> garfield
 garfield.attack(fido)
 garfield.pet(5)
 
-{ Raise("Some men just want to see the world burn") } -> errorRaiser
-
-/* Exceptions */
-Try(errorRaiser, @(error) {
-  error.printStackTrace()
-})
-
 "A string separated by spaces" -> myString
 myString.toUpperCase().split(" ") -> myWords
-Finalize("myWords")
 
 Until(myWords.empty?, {
   myWords.pop EchoLn
 })
 
-Try({Null -> myWords}, EchoLn)
+Finalize("myWords")
+Try({Null -> myWords}, @(error) {
+  error.printStackTrace()
+})
 
 For(%[0:4:16], @(i) {
   If(i `==` 16, {
@@ -82,65 +69,38 @@ For(%[0:4:16], @(i) {
   })
 })
 
-For(5, 0, EchoLn)
-
 TestObj <- %{
-  name: "Bob",
-  changeName: {
-    Apply -> newName
+  <- name: {
+    Try (@actualName, { Pop "Bob" })
+  },
+  -> name: @(newName) {
     Lyte.Core.If (@name `==` newName, {
       EchoLn("Nothing to change.")
     }, {
-      newName -> @name
-    })
-    Lyte.Reflect.Get("@name")
-  }
-}
-
-EchoLn(StdOut, TestObj.changeName("Jeff"))
-
-EchoLn(Eval("2 `+` 2"))
-EchoLn(Lyte Type?)
-
-AnotherTest <- %{
-  myString: "Hello",
-  __toString: {
-    @myString[@j @i * 1 +]
-  }
-}
-
-getNumbers <- {
-  2 1
-}
-
-getNumbers() -> [AnotherTest.i, AnotherTest.j]
-EchoLn(AnotherTest)
-
-%{1: "3"} -> meep
-meep Lyte.JSON.ToJSON EchoLn
-"Derp" #["length"] EchoLn #length EchoLn Pop
-
-%["String " `++` "Concatenation", "and something..."] EchoLn
-
-PotatoHolder <- %{
-  <- potato: {
-    Try(@actualPotato, @(e) {
-      "no potatoes"
+      newName -> @actualName
     })
   },
-  -> potato: @(kind) {
-    kind `++` " potato" -> @actualPotato
+  getNumbers: {
+    Math.Random @name.length * Math.Floor Math.Random @name.length * Math.Floor
   },
   __generator: {
-    1 2 3 Yield Yield Yield
+    @name -> potato
+    For (potato.length, 0, @(i) {
+      If (potato[i] `!=` " ", {
+        `Yield` potato[i]
+      }, {})
+    })
+  },
+  __toString: {
+    @getNumbers() -> [i, j]
+    @name[i] `++` @name[j]
   }
 }
 
-EchoLn(PotatoHolder.potato)
-"white" -> PotatoHolder.potato
-EchoLn(PotatoHolder.potato)
-
-For(PotatoHolder, " " ++ Echo)
+"Bob" -> TestObj.name
+Eval("For(TestObj, Echo) EchoLn")
+EchoLn({TestObj Type?} `++`  ": "`++` TestObj `++` " " `++` Lyte.JSON.ToJSON(TestObj))
+"Derp" #["length"] EchoLn #length EchoLn Pop
 
 /* OpenFile("test.lyte", "r") -> file
 file.readLn -> line

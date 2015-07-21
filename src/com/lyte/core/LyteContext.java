@@ -170,6 +170,10 @@ public class LyteContext implements LyteInjectable {
         } else if (primaryIdentifier.startsWith("@") || obj.is("block")) {
           lastObj = self;
         }
+
+        if (obj.is("block")) {
+          ((LyteBlock) obj).pushObjContext(lastObj);
+        }
       } else {
         lastObj = obj;
       }
@@ -186,16 +190,21 @@ public class LyteContext implements LyteInjectable {
           for (int i = (specifier.arguments.size() - 1); i >= 0; i--) {
             stack.push(specifier.arguments.get(i).clone(this, true, true));
           }
-          // Then invoke the block itself
-          if (obj == LyteReflectionFunctions.reflectGet || obj == LyteReflectionFunctions.reflectEval) {
-            obj = obj.apply(this);
-          } else {
-            obj = obj.apply(new LyteContext(lastObj, scope, stack));
-          }
         }
 
-        if (shouldApply(specifierIterator, applyLast) && specifier.arguments == null && obj != null) {
+        if (obj == null) {
+          continue;
+        } else if (shouldApply(specifierIterator, applyLast)) {
+          if (specifier.arguments != null) {
+            if (obj == LyteReflectionFunctions.reflectGet || obj == LyteReflectionFunctions.reflectEval) {
+              obj = obj.apply(this);
+            } else {
+              obj = obj.apply(new LyteContext(lastObj, scope, stack));
+            }
+          }
           lastObj = obj = obj.apply(new LyteContext(lastObj, scope, stack));
+        } else if (obj.is("block")) {
+          ((LyteBlock) obj).pushObjContext(lastObj);
         }
       }
     } catch (LyteError e) {
@@ -224,8 +233,8 @@ public class LyteContext implements LyteInjectable {
     this.listener = listener;
   }
 
-  public LyteContext enter(LyteContext context, boolean shouldEnter, boolean hasSelf) {
-    return new LyteContext(hasSelf ? self : context.self, shouldEnter ? scope.enter() : scope, context.stack, context.listener);
+  public LyteContext enter(LyteContext context, boolean shouldEnter, LyteValue otherSelf) {
+    return new LyteContext((otherSelf != null) ? otherSelf : context.self, shouldEnter ? scope.enter() : scope, context.stack, context.listener);
   }
 
   private static boolean shouldApply(PeekingIterator<LyteSpecifier> specifierIterator, boolean applyLast) {

@@ -57,7 +57,7 @@ public class LyteScope implements LyteInjectable {
   }
 
   public void putVariable(String name, LyteValue value, boolean finalVariable) {
-    if (mParent != null && !hasVariable(name)) {
+    if (mParent != null && mParent.hasVariable(name)) {
       mParent.putVariable(name, value, finalVariable);
     } else {
       putLocalVariable(name, value, finalVariable);

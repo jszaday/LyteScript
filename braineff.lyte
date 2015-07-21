@@ -2,6 +2,14 @@
  * Author: Justin Szaday
  */
 
+// If the stack is empty
+If(StackEmpty?, {
+  // Let the user know we expected arguments
+  EchoLn("Missing arguments, expected: braineff <file>")
+  // and Exit
+  Exit
+}, {})
+
 // Open the file given by the program's arguments
 "r" Swap OpenFile -> file
 
@@ -10,9 +18,9 @@
   0 -> index
   0 -> pc
  "" -> text
- 
+
 // Populate the memory (30000 cells) with zeros
-For(0:30000, @(i) { 0 -> memory[i] })
+For(0, 30000, @(i) { 0 -> memory[i] })
 
 // Read the first line to get started
 file.readLn -> line

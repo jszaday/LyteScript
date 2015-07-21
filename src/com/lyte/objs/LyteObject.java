@@ -51,7 +51,7 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
     } else if (mGetters.containsKey(property)) {
       return mGetters.get(property).apply(new LyteContext(this));
     } else {
-      throw new LyteError("Cannot Resolve Property " + property + " of object " + toString());
+      throw new LyteError("Cannot resolve property " + property + " of object " + super.toString());
     }
   }
 
@@ -62,7 +62,7 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
     } else if (!mGetters.containsKey(property)) {
       put(property, newValue);
     } else {
-      throw new LyteError("Cannot set property " + property + " of object " + toString());
+      throw new LyteError("Cannot set property " + property + " of object " + super.toString());
     }
   }
 

@@ -5,6 +5,7 @@ import com.lyte.core.LyteStack;
 import com.lyte.core.LyteStatement;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -15,7 +16,8 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
   private List<String> mArgs;
   protected LyteContext mContext;
   private boolean mCanEnterScope;
-  private boolean mHasSelf;
+  private final boolean mHasSelf;
+  private LinkedList<LyteValue> mObjContexts;
 
   public LyteBlock(LyteContext context, List<LyteStatement> statements) {
     this(context, statements, null, true, false);
@@ -26,7 +28,11 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
     mArgs = args;
     mCanEnterScope = canEnter;
     mContext = context;
-    mHasSelf = hasSelf;
+
+    mObjContexts = new LinkedList<>();
+    if (mHasSelf = hasSelf) {
+      mObjContexts.push(context.self);
+    }
   }
 
   private void popArgs(LyteContext context) {
@@ -44,7 +50,7 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
   public void invoke(LyteContext context) {
     LyteStatement statement = null;
     // Enter a new scope
-    context = mContext.enter(context, mCanEnterScope, mHasSelf);
+    context = mContext.enter(context, mCanEnterScope, mObjContexts.peek());
     // Pop any named arguments
     popArgs(context);
     // Then apply each of our statements to our scope
@@ -58,6 +64,8 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
         throw e;
       }
     }
+    // Pop any expired object context
+    popObjContext();
   }
 
   @Override
@@ -106,5 +114,31 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
   @Override
   public String toJSONString() {
     throw new LyteError("Cannot encode a block as JSON!");
+  }
+
+  private int mLastSize = 0;
+  public void pushObjContext(LyteValue value) {
+    if (value != null && !(hasObjContexts() && value.equals(mObjContexts.peek()))) {
+      mObjContexts.push(value);
+    }
+    if (mObjContexts.size() > mLastSize && mLastSize >= 2) {
+      System.out.println(this + " has grown, now contains " + mObjContexts);
+      System.out.println();
+    }
+    mLastSize = mObjContexts.size();
+  }
+
+  protected LyteValue popObjContext() {
+    if (mObjContexts.isEmpty()) {
+      return null;
+    } else if (mHasSelf && mObjContexts.size() == 1) {
+      return mObjContexts.peek();
+    } else {
+      return mObjContexts.pop();
+    }
+  }
+
+  protected boolean hasObjContexts() {
+    return !mObjContexts.isEmpty();
   }
 }

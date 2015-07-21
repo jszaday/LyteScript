@@ -148,16 +148,17 @@ public class LyteStandardFunctions {
         double start = obj.toNumber();
         double finish = context.apply().toNumber();
 
+        // If the list is reversed
         if (start > finish) {
-          start = Math.ceil(start);
+          // Exclude the start
+          start = ((start < 0) ? Math.ceil(start) : Math.floor(start)) - ((start == Math.floor(start)) ? Math.signum(start) : 0);
+          // And include the finish
+          finish = (finish < 0) ? Math.floor(finish) : Math.ceil(finish);
         } else {
-          start = Math.floor(start);
-        }
-
-        if (finish == 0) {
-          finish = Math.signum(start);
-        } else {
-          finish = Math.floor(finish) - Math.signum(finish) * 1;
+          // Include the start
+          start = (start < 0) ? Math.floor(start) : Math.ceil(start);
+          // And exclude the finish
+          finish = (finish < 0) ? Math.ceil(finish) : Math.floor(finish) - ((finish == Math.floor(finish)) ? Math.signum(finish) : 0);
         }
 
         // Make a range, popping the final value off of the stack

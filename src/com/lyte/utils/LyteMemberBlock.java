@@ -1,6 +1,7 @@
 package com.lyte.utils;
 
 import com.lyte.core.LyteContext;
+import com.lyte.objs.LyteBlock;
 import com.lyte.objs.LyteError;
 import com.lyte.objs.LyteValue;
 import com.lyte.objs.LyteNativeBlock;
@@ -36,10 +37,23 @@ public abstract class LyteMemberBlock<T extends LyteValue> extends LyteNativeBlo
 
   @Override
   public void invoke(LyteContext context) {
-    if (mClass.isInstance(context.self)) {
-      invoke((T) context.self, context);
+    LyteValue self;
+
+    if (hasObjContexts()) {
+      self = popObjContext();
     } else {
-      throw new LyteError("Cannot apply " + fullname + " to an " + context.self.typeOf() + "!");
+      self = context.self;
     }
+
+    if (mClass.isInstance(self)) {
+      invoke((T) self, context);
+    } else {
+      throw new LyteError("Cannot apply " + fullname + " to an " + (self == null ? null : self.typeOf()) + "!");
+    }
+  }
+
+  @Override
+  public String toString() {
+    return "[] => Lyte." + mClass.getSimpleName().replaceAll("Lyte", "") + "." + fullname;
   }
 }

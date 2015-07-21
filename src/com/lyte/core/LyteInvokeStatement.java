@@ -27,18 +27,20 @@ public class LyteInvokeStatement extends LyteStatement {
 
   @Override
   public void applyTo(LyteContext context) {
+    LyteValue value;
+
     if (isSimpleInvokation()) {
-      LyteValue value = context.get(mPrimaryIdentifier);
-      if (value.is("block")) {
-        ((LyteBlock) value).invoke(context);
-      } else {
-        context.stack.push(value);
-      }
+      value = context.get(mPrimaryIdentifier);
     } else {
-      LyteValue retVal = context.resolve(this, true);
-      if (retVal != null) {
-        context.stack.push(retVal);
-      }
+      value = context.resolve(this, true, false);
+    }
+
+    if (value == null) {
+      return;
+    } else if (value.is("block")) {
+      ((LyteBlock) value).invoke(context);
+    } else {
+      context.stack.push(value);
     }
   }
 
