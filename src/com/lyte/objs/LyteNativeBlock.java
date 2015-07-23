@@ -21,7 +21,11 @@ public abstract class LyteNativeBlock extends LyteBlock {
   }
 
   public LyteNativeBlock(String namespace, String fullname, String alias) {
-    super(null, null);
+    this(namespace, fullname, alias, false);
+  }
+
+  protected LyteNativeBlock(String namespace, String fullname, String alias, boolean maintainsObjs) {
+    super(null, null, null, false, false, maintainsObjs);
     this.alias = alias;
     this.namespace = namespace;
 

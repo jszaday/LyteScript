@@ -9,6 +9,12 @@ import com.lyte.utils.LyteSimpleInjectable;
  * Created by a0225785 on 6/29/2015.
  */
 public class LyteListMembers extends LyteSimpleInjectable {
+  public static LyteNativeBlock listAdd = new LyteMemberBlock<LyteList>("add") {
+    @Override
+    public void invoke(LyteList self, LyteContext context) {
+      self.add(context.apply());
+    }
+  };
   public static LyteNativeBlock listPush = new LyteMemberBlock<LyteList>("push") {
     @Override
     public void invoke(LyteList self, LyteContext context) {
@@ -19,6 +25,18 @@ public class LyteListMembers extends LyteSimpleInjectable {
     @Override
     public void invoke(LyteList self, LyteContext context) {
       context.push(self.pop());
+    }
+  };
+  public static LyteNativeBlock listPoll = new LyteMemberBlock<LyteList>("poll") {
+    @Override
+    public void invoke(LyteList self, LyteContext context) {
+      context.push(self.poll());
+    }
+  };
+  public static LyteNativeBlock listPeek = new LyteMemberBlock<LyteList>("peek") {
+    @Override
+    public void invoke(LyteList self, LyteContext context) {
+      context.push(self.peek());
     }
   };
   public static LyteNativeBlock listLength = new LyteMemberBlock<LyteList>("length") {

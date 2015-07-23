@@ -100,7 +100,7 @@ TestObj <- %{
 "Bob" -> TestObj.name
 Eval("For(TestObj, Echo) EchoLn")
 EchoLn({TestObj Type?} `++`  ": "`++` TestObj `++` " " `++` Lyte.JSON.ToJSON(TestObj))
-"Derp" #["length"] EchoLn #length EchoLn Pop
+"Length of string \"" "Derp" Dup Dig(3) Swap ++ Swap #["length"] Swap #length Dig(3) " " Swap ++ ++ Dig(3) "\": " ++ Swap ++ EchoLn Pop
 
 /* OpenFile("test.lyte", "r") -> file
 file.readLn -> line

@@ -40,12 +40,13 @@ public class LyteBindStatement extends LyteStatement {
       if (target.isSimpleAssignment()) {
         context.set(target.getPrimaryIdentifier());
       } else {
-        LyteValue val = context.resolve(target, false);
+        LyteValue newValue = context.stack.pop();
+        LyteValue targetObj = context.resolve(target, false);
         LyteInvokeStatement.LyteSpecifier specifier = target.getLastSpecifier();
         if (specifier.identifier != null) {
-          val.setProperty(specifier.identifier, context.stack.pop());
+          targetObj.setProperty(specifier.identifier, newValue);
         } else {
-          val.setProperty(specifier.invokables.apply(context).toString(), context.stack.pop());
+          targetObj.setProperty(specifier.invokables.apply(context).toString(), newValue);
         }
       }
     }

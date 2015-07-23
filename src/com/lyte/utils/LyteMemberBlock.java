@@ -17,7 +17,7 @@ public abstract class LyteMemberBlock<T extends LyteValue> extends LyteNativeBlo
   private Class<T> mClass;
 
   public LyteMemberBlock(String fullname) {
-    super("Member", fullname);
+    super("Member", fullname, fullname, true);
 
     try {
       inferClass();

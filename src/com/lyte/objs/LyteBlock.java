@@ -16,21 +16,26 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
   private List<String> mArgs;
   protected LyteContext mContext;
   private boolean mCanEnterScope;
-  private final boolean mHasSelf;
+  private final boolean mHasSelf, mMaintainsObjs;
   private LinkedList<LyteValue> mObjContexts;
 
   public LyteBlock(LyteContext context, List<LyteStatement> statements) {
-    this(context, statements, null, true, false);
+    this(context, statements, null, true, false, true);
   }
 
   public LyteBlock(LyteContext context, List<LyteStatement> statements, List<String> args, boolean canEnter, boolean hasSelf) {
+    this(context, statements, args, canEnter, hasSelf, true);
+  }
+
+  public LyteBlock(LyteContext context, List<LyteStatement> statements, List<String> args, boolean canEnter, boolean hasSelf, boolean maintainsObjs) {
     super(statements);
     mArgs = args;
     mCanEnterScope = canEnter;
     mContext = context;
-
     mObjContexts = new LinkedList<>();
-    if (mHasSelf = hasSelf) {
+    mMaintainsObjs = maintainsObjs;
+
+    if (mHasSelf = hasSelf && mMaintainsObjs) {
       mObjContexts.push(context.self);
     }
   }
@@ -116,16 +121,14 @@ public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
     throw new LyteError("Cannot encode a block as JSON!");
   }
 
-  private int mLastSize = 0;
   public void pushObjContext(LyteValue value) {
+    if (!mMaintainsObjs) {
+      return;
+    }
+
     if (value != null && !(hasObjContexts() && value.equals(mObjContexts.peek()))) {
       mObjContexts.push(value);
     }
-    if (mObjContexts.size() > mLastSize && mLastSize >= 2) {
-      System.out.println(this + " has grown, now contains " + mObjContexts);
-      System.out.println();
-    }
-    mLastSize = mObjContexts.size();
   }
 
   protected LyteValue popObjContext() {
