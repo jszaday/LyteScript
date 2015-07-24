@@ -3,7 +3,7 @@ package com.lyte.objs;
 /**
  * Created by jszaday on 6/22/15.
  */
-public class LyteBoolean extends LytePrimitive<Boolean> {
+public class LyteBoolean extends LytePrimitive<Boolean> implements LyteComparable {
 
     public static final LyteBoolean TRUE = new LyteBoolean(true);
     public static final LyteBoolean FALSE = new LyteBoolean(false);
@@ -39,5 +39,14 @@ public class LyteBoolean extends LytePrimitive<Boolean> {
     @Override
     public String toJSONString() {
         return toString();
+    }
+    
+    @Override
+    public int compareTo(LyteValue o) {
+        if (o.is(typeOf())) {
+            return get().compareTo(((LyteBoolean) o).get());
+        } else {
+            throw new LyteError("Cannot compare a(n) " + typeOf() + " to a(n) " + o.typeOf());
+        }
     }
 }

@@ -12,7 +12,7 @@ import java.util.*;
 /**
  * Created by jszaday on 6/22/15.
  */
-public class LyteString extends LytePrimitive<String> implements LyteIterable {
+public class LyteString extends LytePrimitive<String> implements LyteIterable, LyteComparable {
 
   private static final LyteStringMembers STRING_FUNCTIONS = new LyteStringMembers();
 
@@ -113,5 +113,14 @@ public class LyteString extends LytePrimitive<String> implements LyteIterable {
     }
 
     return characters.iterator();
+  }
+
+  @Override
+  public int compareTo(LyteValue o) {
+    if (o.is(typeOf())) {
+      return get().compareTo(((LyteString) o).get());
+    } else {
+      throw new LyteError("Cannot compare a(n) " + typeOf() + " to a(n) " + o.typeOf());
+    }
   }
 }

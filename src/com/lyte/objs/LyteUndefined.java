@@ -4,12 +4,14 @@ import com.lyte.core.LyteContext;
 import com.lyte.core.LyteScope;
 import com.lyte.core.LyteStack;
 
+import java.io.Closeable;
+import java.util.LinkedList;
 import java.util.Set;
 
 /**
  * Created by jszaday on 6/19/15.
  */
-public enum LyteUndefined implements LyteValue {
+public enum LyteUndefined implements LyteValue<LyteUndefined> {
 
   NULL("null"), UNDEFINED("undefined");
 
@@ -39,9 +41,8 @@ public enum LyteUndefined implements LyteValue {
     return 0;
   }
 
-
   @Override
-  public Object get() {
+  public LyteUndefined get() {
     return this;
   }
 

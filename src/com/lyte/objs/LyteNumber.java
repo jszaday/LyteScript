@@ -8,7 +8,7 @@ import java.util.HashMap;
 /**
  * Created by jszaday on 6/17/15.
  */
-public class LyteNumber extends LytePrimitive<Double> {
+public class LyteNumber extends LytePrimitive<Double> implements LyteComparable {
 
   /* Cache of the integers from -128 to 127
    *  This behavior is copied from the JRE
@@ -90,5 +90,14 @@ public class LyteNumber extends LytePrimitive<Double> {
   @Override
   public String toJSONString() {
     return JSONValue.toJSONString(this.get());
+  }
+
+  @Override
+  public int compareTo(LyteValue o) {
+    if (o.is(typeOf())) {
+      return get().compareTo(((LyteNumber) o).get());
+    } else {
+      throw new LyteError("Cannot compare a(n) " + typeOf() + " to a(n) " + o.typeOf());
+    }
   }
 }
