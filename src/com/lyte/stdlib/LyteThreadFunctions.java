@@ -41,6 +41,7 @@ public class LyteThreadFunctions extends LyteSimpleInjectable {
     @Override
     public void invoke(LyteContext context) {
       context.push(LyteLockTemplate.getSingleton());
+      LyteUtilFunctions.utilInstantiate.invoke(context);
     }
   };
 }

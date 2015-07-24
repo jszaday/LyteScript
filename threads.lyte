@@ -2,7 +2,7 @@
 Import("Lyte.Thread.*")
 // Get the number of available processors & initialize a lock and the thread pool
 AvailableProcessors -> numThreads
-  Instantiate(Lock) -> lock
+               Lock -> lock
                 %[] -> threadPool
 // Then set up the custom thread class
 MyThread <- %{

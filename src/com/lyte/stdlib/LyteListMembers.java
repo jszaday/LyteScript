@@ -5,9 +5,7 @@ import com.lyte.objs.*;
 import com.lyte.utils.LyteMemberBlock;
 import com.lyte.utils.LyteSimpleInjectable;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by a0225785 on 6/29/2015.
@@ -17,6 +15,28 @@ public class LyteListMembers extends LyteSimpleInjectable {
     @Override
     public void invoke(LyteList self, LyteContext context) {
       self.add(context.apply());
+    }
+  };
+  public static LyteNativeBlock listAddAll = new LyteMemberBlock<LyteList>("addAll") {
+    @Override
+    public void invoke(LyteList self, LyteContext context) {
+      LyteValue other = context.apply();
+      if (other.is("list")) {
+        self.addAll((LyteList) other);
+      } else {
+        throw new LyteError("Cannot add all elements of a(n) " + other.typeOf() + " to a List!");
+      }
+    }
+  };
+  public static LyteNativeBlock listConcat = new LyteMemberBlock<LyteList>("concat") {
+    @Override
+    public void invoke(LyteList self, LyteContext context) {
+      LyteValue other = context.apply();
+      if (other.is("list")) {
+        context.push(new LyteList(self, (LyteList) other));
+      } else {
+        throw new LyteError("Cannot concatenate a(n) " + other.typeOf() + " and a List!");
+      }
     }
   };
   public static LyteNativeBlock listPush = new LyteMemberBlock<LyteList>("push") {
@@ -75,7 +95,38 @@ public class LyteListMembers extends LyteSimpleInjectable {
       self.remove((int) context.apply().toNumber());
     }
   };
+  public static LyteNativeBlock listSwap = new LyteMemberBlock<LyteList>("swap") {
+    @Override
+    public void invoke(LyteList self, LyteContext context) {
+      int i = (int) context.apply().toNumber();
+      int j = (int) context.apply().toNumber();
+      Collections.swap(self, i, j);
+    }
+  };
+  public static LyteNativeBlock listSlice = new LyteMemberBlock<LyteList>("slice") {
+    @Override
+    public void invoke(LyteList self, LyteContext context) {
+      int i = (int) context.apply().toNumber();
+      int j = (int) context.apply().toNumber();
+
+      if (i < 0) {
+        i += self.size();
+      }
+
+      if (j < 0) {
+        j += self.size();
+      }
+
+      context.push(new LyteList(self.subList(i, j)));
+    }
+  };
   public static LyteNativeBlock listSearch = new LyteMemberBlock<LyteList>("search") {
+    @Override
+    public void invoke(LyteList self, LyteContext context) {
+      context.push(self.indexOf(context.apply()));
+    }
+  };
+  public static LyteNativeBlock listContains = new LyteMemberBlock<LyteList>("contains") {
     @Override
     public void invoke(LyteList self, LyteContext context) {
       context.push(self.contains(context.apply()));
@@ -146,7 +197,44 @@ public class LyteListMembers extends LyteSimpleInjectable {
 
     @Override
     public void invoke(LyteList self, LyteContext context) {
-//      Collections.sort((List<LyteComparable>) self);
+      LyteList sortedList = new LyteList(self);
+      Collections.sort(sortedList, new Comparator<LyteValue>() {
+        @Override
+        public int compare(LyteValue o1, LyteValue o2) {
+          if (!(o1 instanceof LyteComparable && o2 instanceof LyteComparable)) {
+            throw new LyteError("Cannot compare a(n) " + o1.typeOf() + " and a(n) " + o2.typeOf());
+          } else if (o2.is("object")) {
+            return -1 * ((LyteComparable) o2).compareTo(o1);
+          } else {
+            return ((LyteComparable) o1).compareTo(o2);
+          }
+        }
+      });
+      context.push(sortedList);
+    }
+  };
+
+  public static LyteNativeBlock listUsort = new LyteMemberBlock<LyteList>("usort") {
+
+    @Override
+    public void invoke(LyteList self, final LyteContext context) {
+      final LyteValue sortFunction = context.pop();
+      LyteList sortedList = new LyteList(self);
+
+      if (!sortFunction.is("block")) {
+        throw new LyteError("Expected sort function to be a block, not a(n) " + sortFunction.typeOf());
+      }
+
+      Collections.sort(sortedList, new Comparator<LyteValue>() {
+        @Override
+        public int compare(LyteValue o1, LyteValue o2) {
+          context.push(o2);
+          context.push(o1);
+          return (int) sortFunction.apply(context).toNumber();
+        }
+      });
+
+      context.push(sortedList);
     }
   };
 }

@@ -9,6 +9,18 @@ import org.apache.commons.lang3.StringEscapeUtils;
  */
 public class LyteUtilFunctions {
 
+  public static LyteNativeBlock utilIterator = new LyteNativeBlock("Util", "Iterator") {
+    @Override
+    public void invoke(LyteContext context) {
+      LyteValue value = context.apply();
+
+      if (value instanceof LyteIterable) {
+        context.push(new LyteIterator((LyteIterable) value));
+      } else {
+        throw new LyteError("Cannot iterate over a(n) " + value.typeOf());
+      }
+    }
+  };
 
   public static LyteNativeBlock utilInstantiate = new LyteNativeBlock("Util", "Instantiate") {
     @Override
@@ -45,7 +57,7 @@ public class LyteUtilFunctions {
     }
   };
 
-  public static LyteNativeBlock utilMakeList = new LyteNativeBlock("Util", "MakeList") {
+  public static LyteNativeBlock utilList = new LyteNativeBlock("Util", "List") {
     @Override
     public void invoke(LyteContext context) {
       LyteList list = new LyteList(context.stack);

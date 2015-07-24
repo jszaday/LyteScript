@@ -13,7 +13,7 @@ import java.util.*;
  * Created by a0225785 on 6/17/2015.
  */
 public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<HashMap<String, LyteValue>>,
-        LyteIterable {
+        LyteIterable, LyteComparable {
 
   private LyteRawObject mBase = null;
   private HashMap<String, Object> mMetadata;
@@ -237,12 +237,12 @@ public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<
     return mMetadata.get(key);
   }
 
-//  @Override
-//  public int compareTo(LyteValue o) {
-//    if (hasProperty("__compareTo")) {
-//      return (int) getProperty("__compareTo").apply(new LyteContext(this, o)).toNumber();
-//    } else {
-//      throw new LyteError("Object does not have a definition for comparison function.");
-//    }
-//  }
+  @Override
+  public int compareTo(LyteValue o) {
+    if (hasProperty("__compareTo")) {
+      return (int) getProperty("__compareTo").apply(new LyteContext(this, o)).toNumber();
+    } else {
+      throw new LyteError("Object does not have a definition for a comparison function.");
+    }
+  }
 }

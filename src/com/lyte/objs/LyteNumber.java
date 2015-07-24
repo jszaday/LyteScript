@@ -1,6 +1,5 @@
 package com.lyte.objs;
 
-import com.lyte.core.LyteScope;
 import org.json.simple.JSONValue;
 
 import java.util.HashMap;
