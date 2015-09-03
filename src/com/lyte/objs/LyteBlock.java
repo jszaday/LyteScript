@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by a0225785 on 6/17/2015.
+ * Created by jszaday on 6/17/2015.
  */
 public class LyteBlock extends LytePrimitive<List<LyteStatement>> {
 

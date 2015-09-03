@@ -13,7 +13,9 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * Created by a0225785 on 7/2/2015.
+ * LyteClassLoader
+ * 	The class loader for importing external .lyte files
+ * @author Justin Szaday
  */
 public class LyteClassLoader {
   private static final String LYTE_CLASSPATH = System.getenv().get("LYTE_CLASSPATH");
@@ -24,38 +26,49 @@ public class LyteClassLoader {
   static {
     classPath = new ArrayList<>();
     cachedClasses = new HashMap<>();
-
+    // If the class path has a value
     if (LYTE_CLASSPATH != null) {
+      // Split the path based the system's path seperator and iterate over each of the parts
       for (String path : LYTE_CLASSPATH.split(File.pathSeparator)) {
+        // If the path ends with a / or \ trim it off (for consistency)
         if (path.endsWith(File.separator)) {
           path = path.substring(0, path.length() - 1);
         }
+        // Then, add it to the paths list
         classPath.add(path);
       }
     } else {
+      // Otherwise, just add the current directory to the path
       classPath.add(".");
     }
   }
 
+  /**
+   * Import native functions into a given context
+   */
   private static void importNatives(LyteContext context, String[] paths) {
+    // Grab the package from the context (since it's already there)
     LyteValue lytePackage = context.get(paths[0]);
     int i;
 
+    // "Recursively" get all the last property from the first package
     for (i = 1; i < (paths.length - 1); i++) {
       lytePackage = lytePackage.getProperty(paths[i]);
     }
 
+    // If there are still paths left to resolve
     if (i < paths.length) {
+      // Then, if the path is a wildcard
       if (paths[i].equals("*")) {
+        // We'll have to grab all of the properties and add them to the path
         for (String property : (Set<String>) lytePackage.getProperties()) {
           if (!context.has(property)) {
             context.set(property, lytePackage.getProperty(property), true);
           }
         }
-      } else {
-        if (!context.has(paths[i])) {
-          context.set(paths[i], lytePackage.getProperty(paths[i]), true);
-        }
+      } else if (!context.has(paths[i])) {
+        // Otherwise, just set the variable (but don't override any existing definitions)
+        context.set(paths[i], lytePackage.getProperty(paths[i]), true);
       }
     }
 
@@ -150,6 +163,9 @@ public class LyteClassLoader {
     }
   }
 
+  /**
+   * Loads a class (parsing it or pulling it from a cache)
+   */
   public static LyteValue loadFile(File file, String name) throws IOException {
     if (cachedClasses.containsKey(file.getCanonicalPath())) {
       return cachedClasses.get(file.getCanonicalPath());
@@ -160,6 +176,9 @@ public class LyteClassLoader {
     }
   }
 
+  /**
+   * Adds a class to the cache (saving it so you don't have to parse it again later)
+   */
   private static LyteValue cacheClass(String path, LyteValue value) {
     cachedClasses.put(path, value);
     return value;

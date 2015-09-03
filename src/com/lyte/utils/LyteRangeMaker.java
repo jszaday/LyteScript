@@ -5,7 +5,7 @@ import com.lyte.objs.LyteList;
 import com.lyte.objs.LyteNumber;
 
 /**
- * Created by a0225785 on 7/13/2015.
+ * Created by jszaday on 7/13/2015.
  */
 public class LyteRangeMaker {
   public static LyteList linspace(double start, double finish, double number) {

@@ -10,7 +10,7 @@ import org.json.simple.JSONObject;
 import java.util.*;
 
 /**
- * Created by a0225785 on 6/17/2015.
+ * Created by jszaday on 6/17/2015.
  */
 public class LyteObject extends HashMap<String, LyteValue> implements LyteValue<HashMap<String, LyteValue>>,
         LyteIterable, LyteComparable {

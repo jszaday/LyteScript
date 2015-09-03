@@ -6,7 +6,7 @@ import com.lyte.utils.LyteMemberBlock;
 import com.lyte.utils.LyteSimpleInjectable;
 
 /**
- * Created by a0225785 on 6/29/2015.
+ * Created by jszaday on 6/29/2015.
  */
 public class LyteStringMembers extends LyteSimpleInjectable {
 

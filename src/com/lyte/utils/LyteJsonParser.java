@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayDeque;
 
 /**
- * Created by a0225785 on 7/9/2015.
+ * Created by jszaday on 7/9/2015.
  */
 public class LyteJsonParser implements ContentHandler {
   private static final JSONParser JSON_PARSER = new JSONParser();

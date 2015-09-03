@@ -8,7 +8,7 @@ import com.lyte.utils.LyteSimpleInjectable;
 import java.util.*;
 
 /**
- * Created by a0225785 on 6/29/2015.
+ * Created by jszaday on 6/29/2015.
  */
 public class LyteListMembers extends LyteSimpleInjectable {
   public static LyteNativeBlock listAdd = new LyteMemberBlock<LyteList>("add") {

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by a0225785 on 6/23/2015.
+ * Created by jszaday on 6/23/2015.
  */
 public class LyteError extends RuntimeException implements LyteValue<RuntimeException> {
 

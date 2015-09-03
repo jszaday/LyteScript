@@ -6,7 +6,7 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.SourceDataLine;
 
 /**
- * Created by a0225785 on 7/7/2015.
+ * Created by jszaday on 7/7/2015.
  */
 public class LyteBeeper {
   public static final int SAMPLE_RATE = 16 * 1024; // ~16KHz

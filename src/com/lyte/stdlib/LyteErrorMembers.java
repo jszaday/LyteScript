@@ -10,7 +10,7 @@ import com.lyte.utils.LyteSimpleInjectable;
 import java.util.List;
 
 /**
- * Created by a0225785 on 7/9/2015.
+ * Created by jszaday on 7/9/2015.
  */
 public class LyteErrorMembers extends LyteSimpleInjectable {
 

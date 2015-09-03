@@ -11,7 +11,7 @@ import java.util.LinkedList;
 import static com.lyte.core.LyteInvokeStatement.LyteSpecifier;
 
 /**
- * Created by a0225785 on 6/30/2015.
+ * Created by jszaday on 6/30/2015.
  */
 public class LyteContext implements LyteInjectable {
   public LyteValue self;

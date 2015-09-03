@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * Created by a0225785 on 6/29/2015.
+ * Created by jszaday on 6/29/2015.
  */
 public abstract class LyteSimpleInjectable extends LytePackage implements LyteInjectable {
 

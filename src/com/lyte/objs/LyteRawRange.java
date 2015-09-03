@@ -9,7 +9,7 @@ import com.lyte.utils.LyteRangeMaker;
 import java.util.List;
 
 /**
- * Created by a0225785 on 7/13/2015.
+ * Created by jszaday on 7/13/2015.
  */
 public class LyteRawRange extends LyteRawValue {
 

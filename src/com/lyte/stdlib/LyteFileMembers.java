@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by a0225785 on 7/17/2015.
+ * Created by jszaday on 7/17/2015.
  */
 public class LyteFileMembers extends LyteSimpleInjectable {
 

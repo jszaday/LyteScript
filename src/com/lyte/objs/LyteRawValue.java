@@ -7,7 +7,7 @@ import com.lyte.core.LyteStack;
 import java.util.Set;
 
 /**
- * Created by a0225785 on 6/24/2015.
+ * Created by jszaday on 6/24/2015.
  */
 public abstract class LyteRawValue<T> implements LyteValue<T> {
 

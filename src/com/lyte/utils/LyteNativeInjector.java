@@ -7,7 +7,7 @@ import com.lyte.objs.LyteNativeBlock;
 import java.lang.reflect.Field;
 
 /**
- * Created by a0225785 on 6/29/2015.
+ * Created by jszaday on 6/29/2015.
  */
 public class LyteNativeInjector {
   public static LytePackage getNatives(Class source, Object instance) {

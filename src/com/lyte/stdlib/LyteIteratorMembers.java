@@ -7,7 +7,7 @@ import com.lyte.utils.LyteMemberBlock;
 import com.lyte.utils.LyteSimpleInjectable;
 
 /**
- * Created by a0225785 on 7/24/2015.
+ * Created by jszaday on 7/24/2015.
  */
 public class LyteIteratorMembers extends LyteSimpleInjectable {
   public static LyteNativeBlock hasNext = new LyteMemberBlock<LyteIterator>("next?") {

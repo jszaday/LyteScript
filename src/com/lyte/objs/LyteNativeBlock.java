@@ -8,7 +8,7 @@ import com.lyte.objs.LyteObject;
 import com.lyte.objs.LyteValue;
 
 /**
- * Created by a0225785 on 6/19/2015.
+ * Created by jszaday on 6/19/2015.
  */
 public abstract class LyteNativeBlock extends LyteBlock {
 

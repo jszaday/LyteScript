@@ -11,7 +11,7 @@ import com.lyte.utils.LyteSimpleInjectable;
 import java.util.concurrent.Semaphore;
 
 /**
- * Created by a0225785 on 7/15/2015.
+ * Created by jszaday on 7/15/2015.
  */
 public class LyteLockTemplate extends LyteSimpleInjectable {
   private static final String LOCK_METADATA = "lock";

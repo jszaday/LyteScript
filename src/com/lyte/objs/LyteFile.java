@@ -9,7 +9,7 @@ import java.net.URI;
 import java.util.Set;
 
 /**
- * Created by a0225785 on 7/17/2015.
+ * Created by jszaday on 7/17/2015.
  */
 public class LyteFile extends File implements LyteValue<File> {
 

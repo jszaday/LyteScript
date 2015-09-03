@@ -6,7 +6,7 @@ import com.lyte.objs.LyteNativeBlock;
 import com.lyte.utils.LyteSimpleInjectable;
 
 /**
- * Created by a0225785 on 7/14/2015.
+ * Created by jszaday on 7/14/2015.
  */
 public class LyteThreadFunctions extends LyteSimpleInjectable {
 

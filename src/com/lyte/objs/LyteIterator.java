@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Created by a0225785 on 7/24/2015.
+ * Created by jszaday on 7/24/2015.
  */
 public class LyteIterator extends LytePrimitive<Iterator<LyteValue>> implements Iterator<LyteValue>, LyteIterable {
 

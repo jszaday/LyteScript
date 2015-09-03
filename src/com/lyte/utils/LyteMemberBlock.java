@@ -10,7 +10,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * Created by a0225785 on 7/9/2015.
+ * Created by jszaday on 7/9/2015.
  */
 public abstract class LyteMemberBlock<T extends LyteValue> extends LyteNativeBlock {
 
