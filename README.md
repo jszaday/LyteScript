@@ -23,9 +23,6 @@ Lytescript provides multiple ways to invoke a function for the sake of code read
     4 `+` 2 `*` 6 /* This results in 36 rather than the result accounting for
                      the order of operations, 16 */
 
-**  
-**
-
 ## Primitives
 
 ### Numbers & Strings
@@ -43,7 +40,7 @@ Objects are sets of key-value pairs (aka maps) that allow for keys that are vali
 
 ### Lists
 
-  %\[ \(Value | Range\), \(Value | Range\), ... \]
+    %\[ \(Value | Range\), \(Value | Range\), ... \]
 
 Lists are integer-indexed collections of values of any type and ranges.
 
