@@ -97,4 +97,5 @@ Lytes standard library is made up of several packages that provide over 100 diff
 
 Lyte’s standard library is made up of several packages that provide over 100 different functions. For ease of use, some of these functions are accessible via aliases in the global scope (such as `Lyte.Math.Add` which has the alias `+`).
 
-For the full reference, please consult the word file in the master branch
+# A Note About the Status of the Docs
+For the full reference, please consult the word file in the master branch. It does not have a lot of the standard methods (for Objects) so for now, the best way to see those would be to use Reflection. If you are still confused, consult the example programs (which might help). I am working on improving our docs but it is a tedious process that tends to get depriotized.
