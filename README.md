@@ -14,25 +14,25 @@ Lytescript (also referred to as Lyte) is a stack-based, multi-paradigm programmi
 
 ## In-line Functions
 
-![{ /* Function Body */ }
+<code>
 @( /* Arguments */ ) { /* Function Body */ }
-](Lytescript_files/image001.png)
+</code>
 
 Lytescript provides two ways to create in-line functions, also called blocks, which simply create a new block and push it onto the stack. The first of these is simply the function’s body surrounded by curly-brackets whereas the second method denotes a set of named arguments. The latter is especially useful whenever arguments that would normally be lost after being popped off of the stack need to be used multiple times.
 
 ## Function Invocation
 
-![F(a, b)   // Traditional
+<code>
 b a F     // Stack-based
 b `F` a   // Infix notation
 
-](Lytescript_files/image002.png)
+</code>
 
 Lytescript provides multiple ways to invoke a function for the sake of code readability. The first of which is the “traditional” method which “invisibly” wraps each of its arguments in blocks and pushes them onto the stack in reverse-order. The stack-based method is the simplest way to invoke a function, as it simply assumes that the programmer has prepared the arguments on the stack and invokes the function. Lastly, using infix notation swaps the order of execution of the statement surrounded by back ticks and the following statement. Because of these properties, all three of the above examples are equivalent. Note, the infix method does not imply anything about the order of operations besides the aforementioned swapping; the limitation of this can be seen in the example below.
 
-![4 `+` 2 `*` 6 /* This results in 36 rather than the result accounting for
+<code>
                  the order of operations, 16 */
-](Lytescript_files/image003.png)
+</code>
 
 **<span style="font-size:13.0pt;line-height:115%;font-family:&quot;Cambria&quot;,serif;
 color:#4F81BD">  
@@ -42,56 +42,56 @@ color:#4F81BD">
 
 ### Numbers & Strings
 
-![4 4.0 0b100 0x4 04 4E0
+<code>
 "An example string"
-](Lytescript_files/image004.png)
+</code>
 
 Lytescript provides several ways to represent a number, from right to left (in the above example) integer, floating point, binary, hexadecimal, octal and scientific. Each of these will push a representative Number object onto the stack. Strings are single-line chunks of text surrounded by double-quotes that allow for Javascript-style escapes.
 
 ### Objects
 
-![%{ Key: Value, Key: Value, ... }](Lytescript_files/image005.png)
+<code>
 
 Objects are sets of key-value pairs (aka maps) that allow for keys that are valid identifiers, numbers or strings while values can be of any type. For more information about valid keys and different kinds of properties see <u>Working with Objects</u>.
 
 ### Lists
 
-![%[ (Value | Range), (Value | Range), ... ]](Lytescript_files/image006.png)
+<code>
 
 Lists are integer-indexed collections of values of any type and ranges.
 
 ### Ranges
 
-![Start:Finish
+<code>
 Start:Step:Finish
-](Lytescript_files/image007.png)
+</code>
 
 Ranges are lists of numbers over that step by 1, -1 or a given amount over a given range (inclusive). They can only be created within Lists.
 
 ## Assignment Operations
 
-![Destination <- value
+<code>
 -> Destination
 -> [First, Second, Third, ...]
-](Lytescript_files/image008.png)
+</code>
 
 Like infix notation, the first of these assignment operations swaps the order of execution for readability purposes (in this case pushing the value onto the stack before popping it into the destination, it is important to note this only swaps the order of one statement so things like <span style="font-size:10.0pt;line-height:115%;font-family:&quot;Courier New&quot;;background:
 #F2F2F2">i <- i <span style="color:#548DD4">`+`</span> <span style="color:#E36C0A">1</span></span> will produce unexpected results). This syntax is typically used to initialize objects, templates or global functions. The second method simply pops a value off of the stack into the destination and should generally be used for updating/setting any other values. Finally, the third method binds to one (or more) destinations, popping the values into their destinations in left-to-right order.  
 
 ## Accessing List Elements and Object Properties
 
-![object[key/index] –or- list[index]
+<code>
 object.key –or- list.key
 #key –or- @key
 #[index/key] –or- @[index/key]
-](Lytescript_files/image009.png)
+</code>
 
 Lytescript provides a few different ways to index an object/list, the first two being fairly self-explanatory (as they mimic the behavior of many other languages). The latter two provide a way to access a specific object, the <span style="font-size:10.0pt;line-height:115%;font-family:
 &quot;Courier New&quot;">#</span> prefix accesses the object on top of the stack whereas the <span style="font-size:10.0pt;line-height:115%;font-family:&quot;Courier New&quot;">@</span> prefix accesses <span style="font-size:10.0pt;line-height:115%;font-family:&quot;Courier New&quot;"></span> the object set as the scope’s “self.”
 
 ## A Brief Example/Recap
 
-![HelloWorld <- @(times) {
+<code>
   If(times `>` 1, HelloWorld(times `-` 1), {})
   EchoLn("Hello, World!")
 }
@@ -112,9 +112,9 @@ Fido <- %{
 }
 
 Fido.doTricks()
-](Lytescript_files/image010.png)
+</code>
 
-![](Lytescript_files/image011.jpg)Upon first looking at this example, one might be confused by the sudden appearance of things that resemble keywords. These “keywords” are actually functions from within Lyte’s Standard Library. Based on its output, it’s pretty easy to see the <span style="font-size:10.0pt;line-height:115%;font-family:&quot;Courier New&quot;">HelloWorld</span> function just recursively prints a hello world message. Next, we can see that <span style="font-size:10.0pt;line-height:115%;font-family:&quot;Courier New&quot;">Fido</span> is an object with a list of <span style="font-size:10.0pt;line-height:115%;
+<code>
 font-family:&quot;Courier New&quot;">tricks</span>. When the <span style="font-size:10.0pt;
 line-height:115%;font-family:&quot;Courier New&quot;">doTricks</span> function is invoked, it iterates through this list and “performs” each of the tricks.
 
@@ -2576,20 +2576,20 @@ In Lytescript, the underlying type for all keys is <span style="font-size:10.0pt
 
 ## Computed Property Names
 
-![%{
+<code>
    [Statements]: Value
  }
-](Lytescript_files/image012.png)
+</code>
 
 Lytescript allows for computed property names at the time of an object’s initialization by simply wrapping the statements in brackets.
 
 ## Getters/Setters
 
-![%{
+<code>
    <- Getter: Block,
    -> Setter: Block
  }
-](Lytescript_files/image013.png)
+</code>
 
 At the time of an object’s initialization, one can override the default getting/setting behavior of a property using a getter/setter pair. Instead of getting/setting the objects properties directly, Lyte will invoke the block. In the case of a Getter it expects the block to push a value onto the stack whereas in the case of a Setter it expects the block to pop the new value off of the stack.
 
