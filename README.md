@@ -1,10 +1,6 @@
-<div class="WordSection1">
+# Lytescript (Revision 1) Specification
 
-<div style="border:none;border-bottom:solid #4F81BD 1.0pt;padding:0in 0in 4.0pt 0in">
-
-Lytescript (Revision 1) Specification
-
-</div>
+Note, this document was converted from a Microsoft Word document and contains numerous errors, for the original version please see the .docx file present in the master branch.
 
 # Abstract
 
